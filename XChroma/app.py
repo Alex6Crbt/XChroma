@@ -4,18 +4,16 @@ import pyqtgraph as pg
 from PyQt6 import QtCore, uic
 from PyQt6.QtWidgets import QMainWindow
 from seabreeze.spectrometers import Spectrometer, list_devices
+import textwrap
 
 
 from .arduino_control import ArduinoController
-from .sequence_control import SequenceWorker
 from .data_spectro import DataSpecro
 
 LEN = 2048
-EPS = 1e-12
 # Configuration PyQtGraph (fond sombre)
 pg.setConfigOption("background", "#121212")  # Fond
 pg.setConfigOption("foreground", "#E0E0E0")  # Texte et lignes
-LAMBD = 600
 
 # TODO :
 # - Refaire le self.thread = None
@@ -23,7 +21,7 @@ LAMBD = 600
 # ATTENTION LE RESET DES VALEURS EST IMPORTANT !!!
 #
 class MainWindow(QMainWindow):
-    def __init__(self):
+    def __init__(self, CustomSequence):
         super().__init__()
 
         # Load UI from the .ui file
@@ -50,6 +48,7 @@ class MainWindow(QMainWindow):
         self.reseta_pushButton.clicked.connect(self.reset_servo)
         # Try connecting to spectro during init
         #
+        self.SequenceWorker = CustomSequence
         self.data_spectro = DataSpecro()
         self.connect_ocean()
         self.connect_arduino()
@@ -63,23 +62,8 @@ class MainWindow(QMainWindow):
             int(self.delay_doubleSpinBox.value() * 1000)
         )  # Convertir secondes en millisecondes
 
-        self.saver = QtCore.QTimer()
-        self.saver.timeout.connect(self.save_data)
-        self.saver.start(1000)
-
         self.delay_doubleSpinBox.valueChanged.connect(self.up_delay)
         self.integrationtime_spinBox.valueChanged.connect(self.up_inttime)
-        self.idarck = np.abs(0.25 * np.random.randn(LEN))
-
-    def save_data(self):
-        # if self.save_checkBox.isChecked():
-        #     timestamp = time.time()
-        #     num = self.yaydat - self.static
-        #     den = np.maximum(self.zero - self.static, EPS)
-        #     abs = -np.log10(np.maximum(num / den, EPS))
-        #     np.save(f"Data/A_{timestamp}.npy", abs)
-        #     print(f"Added at : {timestamp}")
-        pass
 
     def up_delay(self, value):
         self.timer.setInterval(int(value * 1000))  # Convertir secondes en millisecondes
@@ -107,12 +91,27 @@ class MainWindow(QMainWindow):
             )  # 0.1 seconds
             self.data_spectro.wavelengths = self.spectro.wavelengths()
             self.data_spectro.intensities = self.spectro.intensities()
+            info_text = textwrap.dedent(f"""
+            **Spectrometer Information**
+            - **Model:** {self.spectro.model}
+            - **Serial Number:** {self.spectro.serial_number}
+            - **Wavelength Range:** {self.data_spectro.wavelengths[0]:.2f} - {self.data_spectro.wavelengths[-1]:.2f} nm
+            - **Samples:** {len(self.data_spectro.wavelengths)}
+            """)
+            self.info_display.setMarkdown(info_text)
 
         else:
             self.device_found = False
             print("No device found, click on CONNECT button")
             self.data_spectro.wavelengths = np.linspace(400, 800, LEN)
             self.data_spectro.intensities = np.random.rand(LEN)
+            info_text = textwrap.dedent(f"""
+            **No Spectrometer Found**
+            - **Displaying Synthetic Data**
+              - **Wavelength Range:** {self.data_spectro.wavelengths[0]:.2f} - {self.data_spectro.wavelengths[-1]:.2f} nm
+              - **Samples:** {len(self.data_spectro.wavelengths)}
+            """)
+            self.info_display.setMarkdown(info_text)
 
         print(len(self.data_spectro.wavelengths))
         print(len(self.data_spectro.intensities))
@@ -372,7 +371,7 @@ class MainWindow(QMainWindow):
             self.thread.stop()  # Arrêter proprement
             self.launchseq_pushButton.setText("Launch Sequence")
         else:
-            self.thread = SequenceWorker(self.controller, self.data_spectro)
+            self.thread = self.SequenceWorker(self.controller, self.data_spectro)
             self.thread.progress_signal.connect(
                 self.update_progress_bar
             )  # Connecte la mise à jour de la ProgressBar

@@ -8,24 +8,38 @@ class ArduinoController:
         self.connect_arduino()
 
     def connect_arduino(self):
-        """Find and connect to an available Arduino device."""
+        """Find and connect to an available Arduino device on Windows or macOS."""
         def find_arduino():
-            """Search for Arduino device in available serial ports."""
+            """Search for an Arduino device in available serial ports."""
             ports = serial.tools.list_ports.comports()
             for port in ports:
-                if any(keyword in port.description or keyword in port.device for keyword in ["Arduino", "CH340", "ttyUSB", "ttyACM", "cu.usbmodem"]):
+                if any(keyword.lower() in (port.description or '').lower() or
+                       keyword.lower() in (port.device or '').lower()
+                       for keyword in ["arduino", "ch340", "ttyusb", "ttyacm", "cu.usbmodem"]):
                     return port.device
+
+                # For Windows, ensure we get the correct COM port
+                if "COM" in port.device.upper():
+                    try:
+                        test_serial = serial.Serial(port.device, 9600, timeout=1)
+                        test_serial.close()
+                        return port.device
+                    except serial.SerialException:
+                        continue
             return None
 
         self.arduino_port = find_arduino()
-        if self.arduino_port:
-            try:
-                self.arduino = serial.Serial(self.arduino_port, 9600, timeout=1)
-                print("Arduino connected successfully.")
-            except serial.SerialException as e:
-                print(f"Failed to connect to Arduino: {e}")
-        else:
-            print("Arduino not found.")
+        if not self.arduino_port:
+            print("Arduino not found. Ensure it is connected and try again.")
+            return
+
+        try:
+            self.arduino = serial.Serial(self.arduino_port, 9600, timeout=1)
+            print(f"Arduino connected successfully on {self.arduino_port}.")
+        except serial.SerialException as e:
+            print(f"Failed to connect to Arduino on {self.arduino_port}: {e}")
+            self.arduino = None
+
 
     def send_command(self, command):
         """Send a command to the Arduino device."""

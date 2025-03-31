@@ -1,18 +1,7 @@
-from PyQt6.QtCore import QThread, pyqtSignal
-import time
+from XChroma.sequence_control import SequenceWorker
 
 
-class SequenceWorker(QThread):
-    finished_signal = pyqtSignal()
-    progress_signal = pyqtSignal(int)  # To send progress updates to the MainWindow
-
-    def __init__(self, arduino_controller, data_spectro):
-        super().__init__()
-        self.controller = arduino_controller  # Store the reference to ArduinoController instance
-        self.data_spectro = data_spectro
-        self.stop_signal = False  # Flag to stop the thread
-        self.is_paused = False
-
+class Sequence(SequenceWorker):
     def run(self):
         print("Sequence started")
         self.reset_servo()
@@ -32,8 +21,6 @@ class SequenceWorker(QThread):
             if self.stop_signal:
                 print("Sequence stopped!")
                 break
-            while self.is_paused:
-                time.sleep(0.1)  # Non-blocking wait
 
             print(f"Step {i + 1}/20:")
             self.reset_servo()
@@ -71,17 +58,3 @@ class SequenceWorker(QThread):
 
         print("Sequence finished")
         self.finished_signal.emit()  # Emit finished signal
-
-    def stop(self):
-        """Request the thread to stop."""
-        self.stop_signal = True
-
-    def toggle_servo(self, command, delay=1):
-        """Toggle servo by sending a specific command."""
-        self.controller.send_command(command)
-        time.sleep(delay)
-
-    def reset_servo(self, delay=1):
-        """Reset the servo to its initial position."""
-        self.controller.send_command("r")
-        time.sleep(delay)

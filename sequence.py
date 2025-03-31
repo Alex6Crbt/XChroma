@@ -1,5 +1,5 @@
 from XChroma.sequence_control import SequenceWorker
-
+import time
 
 class Sequence(SequenceWorker):
     def run(self):

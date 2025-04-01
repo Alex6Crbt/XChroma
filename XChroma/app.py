@@ -762,5 +762,5 @@ class MainWindow(QMainWindow):
 
     def mousePressEvent(self, event):
         if self.label_10.rect().contains(event.pos()):
-            QDesktopServices.openUrl(QUrl("https://github.com/Alex6Crbt/XChroma"))
+            QDesktopServices.openUrl(QUrl("https://alex6crbt.github.io/XChroma"))
         super().mousePressEvent(event)

@@ -5,10 +5,10 @@ XChroma.app module
 .. autosummary::
    :nosignatures:
 
-   XChroma.app.MainWindow
+   XChroma.arduino_control.ArduinoController
 
 
-.. automodule:: XChroma.app
+.. automodule:: XChroma.arduino_control
    :members:
    :undoc-members:
    :show-inheritance:

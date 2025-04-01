@@ -48,7 +48,7 @@ html_theme_options = {
 }
 html_theme_options = {
     "footer_start": ["copyright"],
-    "footer_end": ["sphinx-version"],
+    "footer_end": [],
     "logo": {
         "text": "XChroma",
         },
@@ -58,6 +58,4 @@ html_theme_options = {
         "url": "https://github.com/Alex6Crbt/XChroma",
         "icon": "fa-brands fa-github",
     },],
-    "footer_start": ["copyright"],
-    "footer_end": [],
 }

@@ -372,8 +372,443 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="xchroma-app-module">
-<h1>XChroma.app module<a class="headerlink" href="#xchroma-app-module" title="Link to this heading">#</a></h1>
+  <section id="module-XChroma.app">
+<span id="xchroma-app-module"></span><h1>XChroma.app module<a class="headerlink" href="#module-XChroma.app" title="Link to this heading">#</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="XChroma.app.MainWindow">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">XChroma.app.</span></span><span class="sig-name descname"><span class="pre">MainWindow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/XChroma/app.html#MainWindow"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#XChroma.app.MainWindow" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">QMainWindow</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="XChroma.app.MainWindow.clear_avg">
+<span class="sig-name descname"><span class="pre">clear_avg</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/XChroma/app.html#MainWindow.clear_avg"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#XChroma.app.MainWindow.clear_avg" title="Link to this definition">#</a></dt>
+<dd><p>Clear the averaged data stored in the data_spectro class</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="XChroma.app.MainWindow.clear_plot">
+<span class="sig-name descname"><span class="pre">clear_plot</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/XChroma/app.html#MainWindow.clear_plot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#XChroma.app.MainWindow.clear_plot" title="Link to this definition">#</a></dt>
+<dd><p>Clear plots, and init them back</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="XChroma.app.MainWindow.clear_static">
+<span class="sig-name descname"><span class="pre">clear_static</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/XChroma/app.html#MainWindow.clear_static"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#XChroma.app.MainWindow.clear_static" title="Link to this definition">#</a></dt>
+<dd><p>Clear the static data stored in the data_spectro class</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="XChroma.app.MainWindow.clear_temp">
+<span class="sig-name descname"><span class="pre">clear_temp</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/XChroma/app.html#MainWindow.clear_temp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#XChroma.app.MainWindow.clear_temp" title="Link to this definition">#</a></dt>
+<dd><p>Clear the temporal averaged data stored in the data_spectro class</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="XChroma.app.MainWindow.closeEvent">
+<span class="sig-name descname"><span class="pre">closeEvent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/XChroma/app.html#MainWindow.closeEvent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#XChroma.app.MainWindow.closeEvent" title="Link to this definition">#</a></dt>
+<dd><p>Handles the event when the main window is closed.</p>
+<p>This method is called when the main window is closed. It performs cleanup tasks
+before the application exits:</p>
+<ul class="simple">
+<li><p>If an Arduino is connected, it sends a command to the Arduino to signal the
+termination of communication.</p></li>
+<li><p>Closes the serial connection with the Arduino to safely disconnect.</p></li>
+</ul>
+<p>Additionally, it could optionally save data to a CSV file, though this functionality
+is currently commented out.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>event</strong> (<em>QCloseEvent</em>) – The close event triggered when the user attempts to close the window.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="XChroma.app.MainWindow.connect_arduino">
+<span class="sig-name descname"><span class="pre">connect_arduino</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/XChroma/app.html#MainWindow.connect_arduino"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#XChroma.app.MainWindow.connect_arduino" title="Link to this definition">#</a></dt>
+<dd><p>Initializes and connects to the Arduino controller.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="XChroma.app.MainWindow.connect_ocean">
+<span class="sig-name descname"><span class="pre">connect_ocean</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/XChroma/app.html#MainWindow.connect_ocean"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#XChroma.app.MainWindow.connect_ocean" title="Link to this definition">#</a></dt>
+<dd><p>Connects to an Ocean Optics spectrometer and initializes it.</p>
+<p>This function detects connected spectrometer devices, establishes a connection
+to the first available device, and initializes its integration time. If no
+spectrometer is found, it generates synthetic data for display.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="XChroma.app.MainWindow.init_plots">
+<span class="sig-name descname"><span class="pre">init_plots</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/XChroma/app.html#MainWindow.init_plots"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#XChroma.app.MainWindow.init_plots" title="Link to this definition">#</a></dt>
+<dd><p>Initializes the PyQtGraph plots for displaying spectrometer data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="XChroma.app.MainWindow.mousePressEvent">
+<span class="sig-name descname"><span class="pre">mousePressEvent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/XChroma/app.html#MainWindow.mousePressEvent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#XChroma.app.MainWindow.mousePressEvent" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="XChroma.app.MainWindow.reset_sequence">
+<span class="sig-name descname"><span class="pre">reset_sequence</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/XChroma/app.html#MainWindow.reset_sequence"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#XChroma.app.MainWindow.reset_sequence" title="Link to this definition">#</a></dt>
+<dd><p>Stops and resets the sequence execution.</p>
+<p>If a sequence thread is running, it sends a stop request to ensure the
+sequence is properly terminated before resetting.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="XChroma.app.MainWindow.reset_servo">
+<span class="sig-name descname"><span class="pre">reset_servo</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/XChroma/app.html#MainWindow.reset_servo"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#XChroma.app.MainWindow.reset_servo" title="Link to this definition">#</a></dt>
+<dd><p>Reset the state of all Servo’s and the checkbox status.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="XChroma.app.MainWindow.sequence_finished">
+<span class="sig-name descname"><span class="pre">sequence_finished</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/XChroma/app.html#MainWindow.sequence_finished"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#XChroma.app.MainWindow.sequence_finished" title="Link to this definition">#</a></dt>
+<dd><p>Handles actions to perform when a sequence is finished.</p>
+<ul class="simple">
+<li><p>Resets the button text and icon to indicate that the sequence has stopped.</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="XChroma.app.MainWindow.set_roi">
+<span class="sig-name descname"><span class="pre">set_roi</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/XChroma/app.html#MainWindow.set_roi"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#XChroma.app.MainWindow.set_roi" title="Link to this definition">#</a></dt>
+<dd><p>Set the Region Of Interest, also update it if units are changed</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="XChroma.app.MainWindow.set_static">
+<span class="sig-name descname"><span class="pre">set_static</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/XChroma/app.html#MainWindow.set_static"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#XChroma.app.MainWindow.set_static" title="Link to this definition">#</a></dt>
+<dd><p>Sets the static intensity data in the <cite>data_spectro</cite> class.</p>
+<p>This function updates the <cite>static</cite> attribute in the <cite>data_spectro</cite> class based on
+the current checkbox selection:</p>
+<ul class="simple">
+<li><p>If the “Avg” checkbox is checked, the static data is set to the average intensity data (<cite>avg_i</cite>).</p></li>
+<li><p>If the “Avg” checkbox is not checked, the static data is set to the raw intensity data (<cite>intensities</cite>).</p></li>
+</ul>
+<p>The <cite>static</cite> value is used for baseline correction and further data analysis.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="XChroma.app.MainWindow.set_zero">
+<span class="sig-name descname"><span class="pre">set_zero</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/XChroma/app.html#MainWindow.set_zero"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#XChroma.app.MainWindow.set_zero" title="Link to this definition">#</a></dt>
+<dd><p>Sets the baseline (zero) intensity data in the <cite>data_spectro</cite> class.</p>
+<p>This function updates the <cite>zero</cite> attribute in <cite>data_spectro</cite> based on the current
+checkbox selection:</p>
+<ul class="simple">
+<li><p>If the “Avg” checkbox is checked, the baseline is set to the average intensity data.</p></li>
+<li><p>If the “Avg” checkbox is not checked, the baseline is set to the raw intensity data.</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="XChroma.app.MainWindow.toggle_sequence">
+<span class="sig-name descname"><span class="pre">toggle_sequence</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/XChroma/app.html#MainWindow.toggle_sequence"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#XChroma.app.MainWindow.toggle_sequence" title="Link to this definition">#</a></dt>
+<dd><p>Starts, pauses, or resumes the sequence execution.</p>
+<ul>
+<li><p>If a sequence thread is running:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Toggles between pausing and resuming.</p></li>
+<li><p>Updates the button text and icon accordingly.</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>If no sequence is running:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Creates a new <cite>SequenceWorker</cite> thread to handle the sequence.</p></li>
+<li><p>Connects thread signals for progress updates and completion handling.</p></li>
+<li><p>Starts the thread and updates the button to indicate a running sequence.</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="XChroma.app.MainWindow.toggle_servo1">
+<span class="sig-name descname"><span class="pre">toggle_servo1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/XChroma/app.html#MainWindow.toggle_servo1"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#XChroma.app.MainWindow.toggle_servo1" title="Link to this definition">#</a></dt>
+<dd><p>Toggles the state of Servo 1 based on the checkbox status.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="XChroma.app.MainWindow.toggle_servo2">
+<span class="sig-name descname"><span class="pre">toggle_servo2</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/XChroma/app.html#MainWindow.toggle_servo2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#XChroma.app.MainWindow.toggle_servo2" title="Link to this definition">#</a></dt>
+<dd><p>Toggles the state of Servo 2 based on the checkbox status.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="XChroma.app.MainWindow.toggle_servo3">
+<span class="sig-name descname"><span class="pre">toggle_servo3</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/XChroma/app.html#MainWindow.toggle_servo3"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#XChroma.app.MainWindow.toggle_servo3" title="Link to this definition">#</a></dt>
+<dd><p>Toggles the state of Servo 3 based on the checkbox status.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="XChroma.app.MainWindow.up_delay">
+<span class="sig-name descname"><span class="pre">up_delay</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/XChroma/app.html#MainWindow.up_delay"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#XChroma.app.MainWindow.up_delay" title="Link to this definition">#</a></dt>
+<dd><p>Sets the time interval between two acquisitions.
+This affects both the display refresh rate and the minimum time between two redundant saves.</p>
+<p>This function is triggered when the value of <cite>delay_doubleSpinBox</cite> changes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>value</strong> (<em>int</em>) – timer interval.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="XChroma.app.MainWindow.up_inttime">
+<span class="sig-name descname"><span class="pre">up_inttime</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/XChroma/app.html#MainWindow.up_inttime"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#XChroma.app.MainWindow.up_inttime" title="Link to this definition">#</a></dt>
+<dd><p>Sets the integration time for the spectrometer.</p>
+<p>This function is triggered when the value of <cite>integrationtime_spinBox</cite> changes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>value</strong> (<em>int</em><em> or </em><em>float</em>) – Integration time in milliseconds.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="XChroma.app.MainWindow.update_axis_units">
+<span class="sig-name descname"><span class="pre">update_axis_units</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/XChroma/app.html#MainWindow.update_axis_units"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#XChroma.app.MainWindow.update_axis_units" title="Link to this definition">#</a></dt>
+<dd><p>Updates the x-axis label based on the selected unit.</p>
+<p>This function checks the current selection of <cite>units_comboBox</cite> and updates
+the x-axis labels of multiple plots accordingly.
+Depending on the selected unit, the x-axis could be labeled with:</p>
+<ul class="simple">
+<li><p><strong>Wavelength (nm)</strong>: For normal people.</p></li>
+<li><p><strong>Energy (eV)</strong>: For energy enthusiasts.</p></li>
+<li><p><strong>Frequency (THz)</strong>: Who use this ?</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="XChroma.app.MainWindow.update_plots">
+<span class="sig-name descname"><span class="pre">update_plots</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/XChroma/app.html#MainWindow.update_plots"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#XChroma.app.MainWindow.update_plots" title="Link to this definition">#</a></dt>
+<dd><p>Updates all plots with the latest data.</p>
+<p>This function checks whether a device is connected:</p>
+<ul class="simple">
+<li><p>If a device is found, it fetches the latest intensity data from the spectrometer.</p></li>
+<li><p>If no device is found, it uses synthetic data for the plots.</p></li>
+</ul>
+<p>After updating the intensity data, the function:</p>
+<ul class="simple">
+<li><p>Updates the moving average of the intensity data based on the value from the <cite>avgspinBox</cite>.</p></li>
+<li><p>Updates all four plots (<cite>uplot_1</cite>, <cite>uplot_2</cite>, <cite>uplot_3</cite>, and <cite>uplot_4</cite>) with the latest data.</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="XChroma.app.MainWindow.update_progress_bar">
+<span class="sig-name descname"><span class="pre">update_progress_bar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">progress</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/XChroma/app.html#MainWindow.update_progress_bar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#XChroma.app.MainWindow.update_progress_bar" title="Link to this definition">#</a></dt>
+<dd><p>Updates the progress bar based on the received progress value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>progress</strong> (<em>int</em>) – The current progress value (typically between 0 and 100).</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="XChroma.app.MainWindow.uplot_1">
+<span class="sig-name descname"><span class="pre">uplot_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/XChroma/app.html#MainWindow.uplot_1"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#XChroma.app.MainWindow.uplot_1" title="Link to this definition">#</a></dt>
+<dd><p>Updates the first plot with spectrometer data.</p>
+<p>This function updates Plot 1 based on the current settings:</p>
+<ul class="simple">
+<li><p>If the “Static” checkbox is checked, the static data is plotted with a custom color.</p></li>
+<li><p>If the “Avg” checkbox is checked, the average intensity data is plotted, adjusted for static values, with a yellow line.</p></li>
+<li><p>If neither checkbox is selected, the static plot is cleared, and only the raw intensity data is shown.</p></li>
+</ul>
+<p>What is displayed:</p>
+<ul class="simple">
+<li><p><strong>Raw Data</strong>: A plot of the intensity values against the wavelength (scaled data) with a gray line.</p></li>
+<li><p><strong>Static Data</strong>: If enabled, a plot of the static values against the wavelength with a purple line.</p></li>
+<li><p><strong>Average Data</strong>: If enabled, a plot of the average intensity values with the static data subtracted, displayed in yellow.</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="XChroma.app.MainWindow.uplot_2">
+<span class="sig-name descname"><span class="pre">uplot_2</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/XChroma/app.html#MainWindow.uplot_2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#XChroma.app.MainWindow.uplot_2" title="Link to this definition">#</a></dt>
+<dd><p>Updates the second plot with absorbance data.</p>
+<p>This function updates Plot 2 (For the Spetral Tab) based on the current settings:</p>
+<ul class="simple">
+<li><p>If the “Static” checkbox is checked, the static data is considered when calculating absorbance.</p></li>
+<li><p>If the “Avg” checkbox is checked, the average intensity is used for absorbance calculation.</p></li>
+<li><p>If the “Avg” checkbox is not checked, the raw intensity is used instead.</p></li>
+</ul>
+<p>The absorbance is calculated directly with the compute_absorbance method of the Dataclass</p>
+<p>What is displayed:</p>
+<ul class="simple">
+<li><p><strong>Absorbance Data</strong>: A plot of absorbance values.</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="XChroma.app.MainWindow.uplot_3">
+<span class="sig-name descname"><span class="pre">uplot_3</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/XChroma/app.html#MainWindow.uplot_3"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#XChroma.app.MainWindow.uplot_3" title="Link to this definition">#</a></dt>
+<dd><p>Updates the second plot with absorbance data.</p>
+<p>This function updates Plot 3 (For the Temporal Tab) based on the current settings:</p>
+<ul class="simple">
+<li><p>If the “Static” checkbox is checked, the static data is considered when calculating absorbance.</p></li>
+<li><p>If the “Avg” checkbox is checked, the average intensity is used for absorbance calculation.</p></li>
+<li><p>If the “Avg” checkbox is not checked, the raw intensity is used instead.</p></li>
+</ul>
+<p>The absorbance is calculated directly with the compute_absorbance method of the Dataclass</p>
+<p>What is displayed:</p>
+<ul class="simple">
+<li><p><strong>Absorbance Data</strong>: A plot of absorbance values.</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="XChroma.app.MainWindow.uplot_4">
+<span class="sig-name descname"><span class="pre">uplot_4</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/XChroma/app.html#MainWindow.uplot_4"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#XChroma.app.MainWindow.uplot_4" title="Link to this definition">#</a></dt>
+<dd><p>Updates the Plot 4 with temporal absorbance data.</p>
+<p>This function updates Plot 4 based on the current settings:</p>
+<ul class="simple">
+<li><p>If the “Static” checkbox is checked, the static data is considered when calculating temporal absorbance.</p></li>
+<li><p>If the “Avg” checkbox is checked, the average intensity is used for the absorbance calculation.</p></li>
+<li><p>If the “Avg” checkbox is not checked, the raw intensity is used instead.</p></li>
+</ul>
+<p>The absorbance is calculated over a selected region, and the time series data is plotted accordingly.</p>
+<p>What is displayed:</p>
+<ul class="simple">
+<li><p><strong>Temporal Absorbance Data</strong>: A plot of temporal absorbance over the selected wavelength region. The x-axis represents time (relative to the start time), and the y-axis represents the absorbance values.</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 
 
@@ -414,6 +849,48 @@
                 <dialog id="pst-secondary-sidebar-modal"></dialog>
                 <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#XChroma.app.MainWindow"><code class="docutils literal notranslate"><span class="pre">MainWindow</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#XChroma.app.MainWindow.clear_avg"><code class="docutils literal notranslate"><span class="pre">MainWindow.clear_avg()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#XChroma.app.MainWindow.clear_plot"><code class="docutils literal notranslate"><span class="pre">MainWindow.clear_plot()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#XChroma.app.MainWindow.clear_static"><code class="docutils literal notranslate"><span class="pre">MainWindow.clear_static()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#XChroma.app.MainWindow.clear_temp"><code class="docutils literal notranslate"><span class="pre">MainWindow.clear_temp()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#XChroma.app.MainWindow.closeEvent"><code class="docutils literal notranslate"><span class="pre">MainWindow.closeEvent()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#XChroma.app.MainWindow.connect_arduino"><code class="docutils literal notranslate"><span class="pre">MainWindow.connect_arduino()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#XChroma.app.MainWindow.connect_ocean"><code class="docutils literal notranslate"><span class="pre">MainWindow.connect_ocean()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#XChroma.app.MainWindow.init_plots"><code class="docutils literal notranslate"><span class="pre">MainWindow.init_plots()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#XChroma.app.MainWindow.mousePressEvent"><code class="docutils literal notranslate"><span class="pre">MainWindow.mousePressEvent()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#XChroma.app.MainWindow.reset_sequence"><code class="docutils literal notranslate"><span class="pre">MainWindow.reset_sequence()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#XChroma.app.MainWindow.reset_servo"><code class="docutils literal notranslate"><span class="pre">MainWindow.reset_servo()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#XChroma.app.MainWindow.sequence_finished"><code class="docutils literal notranslate"><span class="pre">MainWindow.sequence_finished()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#XChroma.app.MainWindow.set_roi"><code class="docutils literal notranslate"><span class="pre">MainWindow.set_roi()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#XChroma.app.MainWindow.set_static"><code class="docutils literal notranslate"><span class="pre">MainWindow.set_static()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#XChroma.app.MainWindow.set_zero"><code class="docutils literal notranslate"><span class="pre">MainWindow.set_zero()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#XChroma.app.MainWindow.toggle_sequence"><code class="docutils literal notranslate"><span class="pre">MainWindow.toggle_sequence()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#XChroma.app.MainWindow.toggle_servo1"><code class="docutils literal notranslate"><span class="pre">MainWindow.toggle_servo1()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#XChroma.app.MainWindow.toggle_servo2"><code class="docutils literal notranslate"><span class="pre">MainWindow.toggle_servo2()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#XChroma.app.MainWindow.toggle_servo3"><code class="docutils literal notranslate"><span class="pre">MainWindow.toggle_servo3()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#XChroma.app.MainWindow.up_delay"><code class="docutils literal notranslate"><span class="pre">MainWindow.up_delay()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#XChroma.app.MainWindow.up_inttime"><code class="docutils literal notranslate"><span class="pre">MainWindow.up_inttime()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#XChroma.app.MainWindow.update_axis_units"><code class="docutils literal notranslate"><span class="pre">MainWindow.update_axis_units()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#XChroma.app.MainWindow.update_plots"><code class="docutils literal notranslate"><span class="pre">MainWindow.update_plots()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#XChroma.app.MainWindow.update_progress_bar"><code class="docutils literal notranslate"><span class="pre">MainWindow.update_progress_bar()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#XChroma.app.MainWindow.uplot_1"><code class="docutils literal notranslate"><span class="pre">MainWindow.uplot_1()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#XChroma.app.MainWindow.uplot_2"><code class="docutils literal notranslate"><span class="pre">MainWindow.uplot_2()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#XChroma.app.MainWindow.uplot_3"><code class="docutils literal notranslate"><span class="pre">MainWindow.uplot_3()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#XChroma.app.MainWindow.uplot_4"><code class="docutils literal notranslate"><span class="pre">MainWindow.uplot_4()</span></code></a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
 
   <div class="sidebar-secondary-item">
   <div role="note" aria-label="source link">

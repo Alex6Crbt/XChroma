@@ -1,0 +1,1264 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" data-theme="dark">
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>XChroma.app &#8212; XChroma 1.1 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "dark";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "dark";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../_static/documentation_options.js?v=56dcb7b8"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/XChroma/app';</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="dark">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+    
+    <img src="../../_static/captX.png" class="logo__image only-dark" alt=""/>
+    <img src="../../_static/captX.png" class="logo__image only-light pst-js-only" alt=""/>
+  
+  
+    <p class="title logo__title">XChroma</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../quickstart.html">
+    QuickStart
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../userguide.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../code/XChroma.html">
+    Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/Alex6Crbt/XChroma" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../quickstart.html">
+    QuickStart
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../userguide.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../code/XChroma.html">
+    Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/Alex6Crbt/XChroma" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Module code</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">XChroma.app</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for XChroma.app</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyqtgraph</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pg</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">PyQt6</span><span class="w"> </span><span class="kn">import</span> <span class="n">QtCore</span><span class="p">,</span> <span class="n">uic</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">PyQt6.QtGui</span><span class="w"> </span><span class="kn">import</span> <span class="n">QFontDatabase</span><span class="p">,</span> <span class="n">QIcon</span><span class="p">,</span> <span class="n">QDesktopServices</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">PyQt6.QtCore</span><span class="w"> </span><span class="kn">import</span> <span class="n">QUrl</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">PyQt6.QtWidgets</span><span class="w"> </span><span class="kn">import</span> <span class="n">QMainWindow</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">seabreeze.spectrometers</span><span class="w"> </span><span class="kn">import</span> <span class="n">Spectrometer</span><span class="p">,</span> <span class="n">list_devices</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">textwrap</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.arduino_control</span><span class="w"> </span><span class="kn">import</span> <span class="n">ArduinoController</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.data_spectro</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataSpecro</span>
+
+<span class="n">LEN</span> <span class="o">=</span> <span class="mi">2048</span>
+<span class="c1"># Configuration PyQtGraph (fond sombre)</span>
+<span class="n">pg</span><span class="o">.</span><span class="n">setConfigOption</span><span class="p">(</span><span class="s2">&quot;background&quot;</span><span class="p">,</span> <span class="s2">&quot;#121212&quot;</span><span class="p">)</span>  <span class="c1"># Fond</span>
+<span class="n">pg</span><span class="o">.</span><span class="n">setConfigOption</span><span class="p">(</span><span class="s2">&quot;foreground&quot;</span><span class="p">,</span> <span class="s2">&quot;#E0E0E0&quot;</span><span class="p">)</span>  <span class="c1"># Texte et lignes</span>
+
+<span class="c1"># TODO :</span>
+<span class="c1"># - Refaire le self.thread = None</span>
+<span class="c1"># - Refaire le bouton save_data</span>
+<span class="c1"># ATTENTION LE RESET DES VALEURS EST IMPORTANT !!!</span>
+<span class="c1">#</span>
+<div class="viewcode-block" id="MainWindow">
+<a class="viewcode-back" href="../../code/XChromaapp.html#XChroma.app.MainWindow">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">MainWindow</span><span class="p">(</span><span class="n">QMainWindow</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">CustomSequence</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+        <span class="n">font_folder</span> <span class="o">=</span> <span class="s2">&quot;XChroma/ui/fonts&quot;</span>
+        <span class="n">font_folder_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">font_folder</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">font_folder_path</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Font folder not found: </span><span class="si">{</span><span class="n">font_folder_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">font_file</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">font_folder_path</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">font_file</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.ttf&quot;</span><span class="p">):</span>  <span class="c1"># Only load TTF fonts</span>
+                    <span class="n">font_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">font_folder_path</span><span class="p">,</span> <span class="n">font_file</span><span class="p">)</span>
+                    <span class="n">font_id</span> <span class="o">=</span> <span class="n">QFontDatabase</span><span class="o">.</span><span class="n">addApplicationFont</span><span class="p">(</span><span class="n">font_path</span><span class="p">)</span>
+
+                    <span class="k">if</span> <span class="n">font_id</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+                        <span class="n">font_family</span> <span class="o">=</span> <span class="n">QFontDatabase</span><span class="o">.</span><span class="n">applicationFontFamilies</span><span class="p">(</span><span class="n">font_id</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                        <span class="c1"># print(f&quot;Successfully loaded font: {font_family} ({font_file})&quot;)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to load font: </span><span class="si">{</span><span class="n">font_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="c1"># Load UI from the .ui file</span>
+        <span class="n">uic</span><span class="o">.</span><span class="n">loadUi</span><span class="p">(</span><span class="s2">&quot;XChroma/ui/MainWindow.ui&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;XChroma&quot;</span><span class="p">)</span>
+
+        <span class="c1"># cst</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">thread</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Pas de thread au départ</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="c1"># Connect buttons</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">units_comboBox</span><span class="o">.</span><span class="n">currentIndexChanged</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">update_axis_units</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">clearplot_pushButton</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">clear_plot</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">clearavg_pushButton</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">clear_avg</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">connectOcean_pushButton</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">connect_ocean</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">connectArduino_pushButton</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">connect_arduino</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">zero_pushButton</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">set_zero</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">static_pushButton</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">set_static</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">clearstatic_pushButton</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">clear_static</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cleartemporal_pushButton</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">clear_temp</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">launchseq_pushButton</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">toggle_sequence</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">resetseq_pushButton</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reset_sequence</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">s1_checkBox</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">toggle_servo1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">s2_checkBox</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">toggle_servo2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">s3_checkBox</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">toggle_servo3</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reseta_pushButton</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reset_servo</span><span class="p">)</span>
+        <span class="c1"># Try connecting to spectro during init</span>
+        <span class="c1">#</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">SequenceWorker</span> <span class="o">=</span> <span class="n">CustomSequence</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span> <span class="o">=</span> <span class="n">DataSpecro</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">connect_ocean</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">connect_arduino</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_plots</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">timer</span> <span class="o">=</span> <span class="n">QtCore</span><span class="o">.</span><span class="n">QTimer</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">timer</span><span class="o">.</span><span class="n">timeout</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">update_plots</span><span class="p">)</span>
+        <span class="c1"># self.timer.start(50)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">timer</span><span class="o">.</span><span class="n">start</span><span class="p">(</span>
+            <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">delay_doubleSpinBox</span><span class="o">.</span><span class="n">value</span><span class="p">()</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">)</span>
+        <span class="p">)</span>  <span class="c1"># Convertir secondes en millisecondes</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">delay_doubleSpinBox</span><span class="o">.</span><span class="n">valueChanged</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">up_delay</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">integrationtime_spinBox</span><span class="o">.</span><span class="n">valueChanged</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">up_inttime</span><span class="p">)</span>
+
+<div class="viewcode-block" id="MainWindow.up_delay">
+<a class="viewcode-back" href="../../code/XChromaapp.html#XChroma.app.MainWindow.up_delay">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">up_delay</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sets the time interval between two acquisitions.</span>
+<span class="sd">        This affects both the display refresh rate and the minimum time between two redundant saves.</span>
+
+<span class="sd">        This function is triggered when the value of `delay_doubleSpinBox` changes.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        value : int</span>
+<span class="sd">            timer interval.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">timer</span><span class="o">.</span><span class="n">setInterval</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">value</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">))</span>  <span class="c1"># Convertir secondes en millisecondes</span></div>
+
+
+<div class="viewcode-block" id="MainWindow.up_inttime">
+<a class="viewcode-back" href="../../code/XChromaapp.html#XChroma.app.MainWindow.up_inttime">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">up_inttime</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sets the integration time for the spectrometer.</span>
+
+<span class="sd">        This function is triggered when the value of `integrationtime_spinBox` changes.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        value : int or float</span>
+<span class="sd">            Integration time in milliseconds.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">spectro</span><span class="o">.</span><span class="n">integration_time_micros</span><span class="p">(</span><span class="n">value</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MainWindow.connect_arduino">
+<a class="viewcode-back" href="../../code/XChromaapp.html#XChroma.app.MainWindow.connect_arduino">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">connect_arduino</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes and connects to the Arduino controller.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">controller</span> <span class="o">=</span> <span class="n">ArduinoController</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="o">.</span><span class="n">send_command</span><span class="p">(</span><span class="s2">&quot;r&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MainWindow.connect_ocean">
+<a class="viewcode-back" href="../../code/XChromaapp.html#XChroma.app.MainWindow.connect_ocean">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">connect_ocean</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Connects to an Ocean Optics spectrometer and initializes it.</span>
+
+<span class="sd">        This function detects connected spectrometer devices, establishes a connection</span>
+<span class="sd">        to the first available device, and initializes its integration time. If no</span>
+<span class="sd">        spectrometer is found, it generates synthetic data for display.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Init spectrometer&quot;</span><span class="p">)</span>
+        <span class="n">devices</span> <span class="o">=</span> <span class="n">list_devices</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;devices found : </span><span class="si">{</span><span class="n">devices</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">devices</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">device_found</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">spectro</span> <span class="o">=</span> <span class="n">Spectrometer</span><span class="p">(</span><span class="n">devices</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Connected to </span><span class="si">{</span><span class="n">devices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">spectro</span><span class="o">.</span><span class="n">integration_time_micros</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">integrationtime_spinBox</span><span class="o">.</span><span class="n">value</span><span class="p">()</span> <span class="o">*</span> <span class="mi">1000</span>
+            <span class="p">)</span>  <span class="c1"># 0.1 seconds</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">wavelengths</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">spectro</span><span class="o">.</span><span class="n">wavelengths</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">intensities</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">spectro</span><span class="o">.</span><span class="n">intensities</span><span class="p">()</span>
+            <span class="n">info_text</span> <span class="o">=</span> <span class="n">textwrap</span><span class="o">.</span><span class="n">dedent</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">            **Spectrometer Information**</span>
+<span class="s2">            - **Model:** </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">spectro</span><span class="o">.</span><span class="n">model</span><span class="si">}</span>
+<span class="s2">            - **Serial Number:** </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">spectro</span><span class="o">.</span><span class="n">serial_number</span><span class="si">}</span>
+<span class="s2">            - **Wavelength Range:** </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">wavelengths</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">wavelengths</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> nm</span>
+<span class="s2">            - **Samples:** </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">wavelengths</span><span class="p">)</span><span class="si">}</span>
+<span class="s2">            &quot;&quot;&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">info_display</span><span class="o">.</span><span class="n">setMarkdown</span><span class="p">(</span><span class="n">info_text</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">device_found</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No device found, click on CONNECT button&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">wavelengths</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">400</span><span class="p">,</span> <span class="mi">800</span><span class="p">,</span> <span class="n">LEN</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">intensities</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">LEN</span><span class="p">)</span>
+            <span class="n">info_text</span> <span class="o">=</span> <span class="n">textwrap</span><span class="o">.</span><span class="n">dedent</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">            **No Spectrometer Found**</span>
+<span class="s2">            - **Displaying Synthetic Data**</span>
+<span class="s2">              - **Wavelength Range:** </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">wavelengths</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">wavelengths</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> nm</span>
+<span class="s2">              - **Samples:** </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">wavelengths</span><span class="p">)</span><span class="si">}</span>
+<span class="s2">            &quot;&quot;&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">info_display</span><span class="o">.</span><span class="n">setMarkdown</span><span class="p">(</span><span class="n">info_text</span><span class="p">)</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">wavelengths</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">intensities</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="MainWindow.init_plots">
+<a class="viewcode-back" href="../../code/XChromaapp.html#XChroma.app.MainWindow.init_plots">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">init_plots</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes the PyQtGraph plots for displaying spectrometer data.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">c1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">p1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">wavelengths</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">intensities</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">clear_avg</span><span class="p">()</span>  <span class="c1"># init le plot avg</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p1</span><span class="o">.</span><span class="n">setLabel</span><span class="p">(</span><span class="s2">&quot;left&quot;</span><span class="p">,</span> <span class="s2">&quot;Intensity&quot;</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s2">&quot;counts&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p1</span><span class="o">.</span><span class="n">setTitle</span><span class="p">(</span><span class="s2">&quot;Raw Data&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p1</span><span class="o">.</span><span class="n">enableAutoRange</span><span class="p">(</span><span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">leg1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">p1</span><span class="o">.</span><span class="n">addLegend</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">leg1</span><span class="o">.</span><span class="n">addItem</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">c1</span><span class="p">,</span> <span class="s2">&quot;Raw Data&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">leg1</span><span class="o">.</span><span class="n">addItem</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">c1_avg</span><span class="p">,</span> <span class="s2">&quot;Avg Data&quot;</span><span class="p">)</span>
+
+        <span class="c1"># ATTENTION LE RESET DES VALEURS EST IMPORTANT !!!</span>
+        <span class="c1"># self.zero = np.ones(len(self.xdata))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">zero</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">wavelengths</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">clear_static</span><span class="p">()</span>  <span class="c1"># Here self.static is set to [0, ..., 0], et definit le plot avec la référence</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">leg1</span><span class="o">.</span><span class="n">addItem</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">c1_static</span><span class="p">,</span> <span class="s2">&quot;Static signal&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">c2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">p2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">wavelengths</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">compute_absorbance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">intensities</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p2</span><span class="o">.</span><span class="n">setLabel</span><span class="p">(</span><span class="s2">&quot;left&quot;</span><span class="p">,</span> <span class="s2">&quot;Absorbance&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p2</span><span class="o">.</span><span class="n">setTitle</span><span class="p">(</span><span class="s2">&quot;Absorbance&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p2</span><span class="o">.</span><span class="n">enableAutoRange</span><span class="p">(</span><span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">c3</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">p3</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">wavelengths</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">compute_absorbance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">intensities</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p3</span><span class="o">.</span><span class="n">setLabel</span><span class="p">(</span><span class="s2">&quot;left&quot;</span><span class="p">,</span> <span class="s2">&quot;Absorbance&quot;</span><span class="p">)</span>
+        <span class="c1"># self.p3.setTitle(&quot;Raw Data&quot;)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p3</span><span class="o">.</span><span class="n">enableAutoRange</span><span class="p">(</span><span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">leg3</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">p3</span><span class="o">.</span><span class="n">addLegend</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">leg3</span><span class="o">.</span><span class="n">addItem</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">c3</span><span class="p">,</span> <span class="s2">&quot;Intensity Data&quot;</span><span class="p">)</span>
+        <span class="c1"># self.leg3.addItem(self.c1_avg, &#39;Absorbance Data&#39;)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_roi</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">clear_temp</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p4</span><span class="o">.</span><span class="n">setClipToView</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">c4</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">p4</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p4</span><span class="o">.</span><span class="n">setLabel</span><span class="p">(</span><span class="s2">&quot;bottom&quot;</span><span class="p">,</span> <span class="s2">&quot;Time&quot;</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s2">&quot;s&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p4</span><span class="o">.</span><span class="n">setLabel</span><span class="p">(</span><span class="s2">&quot;left&quot;</span><span class="p">,</span> <span class="s2">&quot;Absorbance&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">leg4</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">p4</span><span class="o">.</span><span class="n">addLegend</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">leg4</span><span class="o">.</span><span class="n">addItem</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">c4</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Absorbance </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">roi_pos</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="c1"># print(self.leg4)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_axis_units</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="MainWindow.update_axis_units">
+<a class="viewcode-back" href="../../code/XChromaapp.html#XChroma.app.MainWindow.update_axis_units">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_axis_units</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Updates the x-axis label based on the selected unit.</span>
+
+<span class="sd">        This function checks the current selection of `units_comboBox` and updates</span>
+<span class="sd">        the x-axis labels of multiple plots accordingly.</span>
+<span class="sd">        Depending on the selected unit, the x-axis could be labeled with:</span>
+
+<span class="sd">        - **Wavelength (nm)**: For normal people.</span>
+<span class="sd">        - **Energy (eV)**: For energy enthusiasts.</span>
+<span class="sd">        - **Frequency (THz)**: Who use this ?</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">units_comboBox</span><span class="o">.</span><span class="n">currentIndex</span><span class="p">()</span>
+        <span class="k">if</span> <span class="nb">id</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># Revenir à l&#39;échelle des longueurs d&#39;onde en nm</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">p1</span><span class="o">.</span><span class="n">setLabel</span><span class="p">(</span><span class="s2">&quot;bottom&quot;</span><span class="p">,</span> <span class="s2">&quot;Wavelength&quot;</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s2">&quot;nm&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">p2</span><span class="o">.</span><span class="n">setLabel</span><span class="p">(</span><span class="s2">&quot;bottom&quot;</span><span class="p">,</span> <span class="s2">&quot;Wavelength&quot;</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s2">&quot;nm&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">p3</span><span class="o">.</span><span class="n">setLabel</span><span class="p">(</span><span class="s2">&quot;bottom&quot;</span><span class="p">,</span> <span class="s2">&quot;Wavelength&quot;</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s2">&quot;nm&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">scaledxdata</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">wavelengths</span>
+
+            <span class="c1"># Update de la ROI</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">region</span><span class="o">.</span><span class="n">setBounds</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">scaledxdata</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">scaledxdata</span><span class="p">)])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">region</span><span class="o">.</span><span class="n">setRegion</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">scaledxdata</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">roi_idxs</span><span class="p">])</span>
+
+        <span class="k">elif</span> <span class="nb">id</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="c1"># Convertir de nm à THz (c = 3e8 m/s)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">p1</span><span class="o">.</span><span class="n">setLabel</span><span class="p">(</span><span class="s2">&quot;bottom&quot;</span><span class="p">,</span> <span class="s2">&quot;Frequency&quot;</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s2">&quot;THz&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">p2</span><span class="o">.</span><span class="n">setLabel</span><span class="p">(</span><span class="s2">&quot;bottom&quot;</span><span class="p">,</span> <span class="s2">&quot;Frequency&quot;</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s2">&quot;THz&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">p3</span><span class="o">.</span><span class="n">setLabel</span><span class="p">(</span><span class="s2">&quot;bottom&quot;</span><span class="p">,</span> <span class="s2">&quot;Frequency&quot;</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s2">&quot;THz&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">scaledxdata</span> <span class="o">=</span> <span class="mf">3e5</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">wavelengths</span>  <span class="c1"># Conversion nm -&gt; THz</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">region</span><span class="o">.</span><span class="n">setBounds</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">scaledxdata</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">scaledxdata</span><span class="p">)])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">region</span><span class="o">.</span><span class="n">setRegion</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">scaledxdata</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">roi_idxs</span><span class="p">])</span>
+
+        <span class="k">elif</span> <span class="nb">id</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="c1"># Convertir de nm à eV (E = hc/λ, h*c = 1240 eV·nm)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">p1</span><span class="o">.</span><span class="n">setLabel</span><span class="p">(</span><span class="s2">&quot;bottom&quot;</span><span class="p">,</span> <span class="s2">&quot;Energy&quot;</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s2">&quot;eV&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">p2</span><span class="o">.</span><span class="n">setLabel</span><span class="p">(</span><span class="s2">&quot;bottom&quot;</span><span class="p">,</span> <span class="s2">&quot;Energy&quot;</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s2">&quot;eV&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">p3</span><span class="o">.</span><span class="n">setLabel</span><span class="p">(</span><span class="s2">&quot;bottom&quot;</span><span class="p">,</span> <span class="s2">&quot;Energy&quot;</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s2">&quot;eV&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">scaledxdata</span> <span class="o">=</span> <span class="mi">1240</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">wavelengths</span>  <span class="c1"># Conversion nm -&gt; eV</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">region</span><span class="o">.</span><span class="n">setBounds</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">scaledxdata</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">scaledxdata</span><span class="p">)])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">region</span><span class="o">.</span><span class="n">setRegion</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">scaledxdata</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">roi_idxs</span><span class="p">])</span>
+
+        <span class="c1"># Mettre à jour les données du graphique</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">c1</span><span class="o">.</span><span class="n">setData</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">scaledxdata</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">intensities</span><span class="p">,</span> <span class="n">pen</span><span class="o">=</span><span class="p">(</span><span class="mi">154</span><span class="p">,</span> <span class="mi">109</span><span class="p">,</span> <span class="mi">198</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">c2</span><span class="o">.</span><span class="n">setData</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">scaledxdata</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">compute_absorbance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">intensities</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">c3</span><span class="o">.</span><span class="n">setData</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">scaledxdata</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">intensities</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MainWindow.uplot_1">
+<a class="viewcode-back" href="../../code/XChromaapp.html#XChroma.app.MainWindow.uplot_1">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">uplot_1</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Updates the first plot with spectrometer data.</span>
+
+<span class="sd">        This function updates Plot 1 based on the current settings:</span>
+
+<span class="sd">        - If the &quot;Static&quot; checkbox is checked, the static data is plotted with a custom color.</span>
+<span class="sd">        - If the &quot;Avg&quot; checkbox is checked, the average intensity data is plotted, adjusted for static values, with a yellow line.</span>
+<span class="sd">        - If neither checkbox is selected, the static plot is cleared, and only the raw intensity data is shown.</span>
+
+<span class="sd">        What is displayed:</span>
+
+<span class="sd">        - **Raw Data**: A plot of the intensity values against the wavelength (scaled data) with a gray line.</span>
+<span class="sd">        - **Static Data**: If enabled, a plot of the static values against the wavelength with a purple line.</span>
+<span class="sd">        - **Average Data**: If enabled, a plot of the average intensity values with the static data subtracted, displayed in yellow.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">static_checkBox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">():</span>
+            <span class="n">static</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">static</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">c1_static</span><span class="o">.</span><span class="n">setData</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">scaledxdata</span><span class="p">,</span> <span class="n">static</span><span class="p">,</span> <span class="n">pen</span><span class="o">=</span><span class="p">(</span><span class="mi">134</span><span class="p">,</span> <span class="mi">79</span><span class="p">,</span> <span class="mi">178</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">static</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">wavelengths</span><span class="p">))</span>
+        <span class="c1"># ICI UPDATE DU TRUC LAVG</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">avg_checkBox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">c1_avg</span><span class="o">.</span><span class="n">setData</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">scaledxdata</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">avg_i</span> <span class="o">-</span> <span class="n">static</span><span class="p">,</span> <span class="n">pen</span><span class="o">=</span><span class="p">(</span><span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="p">)</span>  <span class="c1"># Couleur Jaune</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">c1_avg</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">c1</span><span class="o">.</span><span class="n">setData</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">scaledxdata</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">intensities</span><span class="p">,</span> <span class="n">pen</span><span class="o">=</span><span class="p">(</span><span class="mi">128</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="mi">128</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="MainWindow.uplot_2">
+<a class="viewcode-back" href="../../code/XChromaapp.html#XChroma.app.MainWindow.uplot_2">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">uplot_2</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Updates the second plot with absorbance data.</span>
+
+<span class="sd">        This function updates Plot 2 (For the Spetral Tab) based on the current settings:</span>
+
+<span class="sd">        - If the &quot;Static&quot; checkbox is checked, the static data is considered when calculating absorbance.</span>
+<span class="sd">        - If the &quot;Avg&quot; checkbox is checked, the average intensity is used for absorbance calculation.</span>
+<span class="sd">        - If the &quot;Avg&quot; checkbox is not checked, the raw intensity is used instead.</span>
+
+<span class="sd">        The absorbance is calculated directly with the compute_absorbance method of the Dataclass</span>
+
+<span class="sd">        What is displayed:</span>
+
+<span class="sd">        - **Absorbance Data**: A plot of absorbance values.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">static_checkBox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">():</span>
+            <span class="n">static</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">static</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">static</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">wavelengths</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">avg_checkBox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">():</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">avg_i</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">intensities</span>
+
+        <span class="n">absorbance</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">compute_absorbance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">static</span><span class="o">=</span><span class="n">static</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">c2</span><span class="o">.</span><span class="n">setData</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">scaledxdata</span><span class="p">,</span> <span class="n">absorbance</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MainWindow.uplot_3">
+<a class="viewcode-back" href="../../code/XChromaapp.html#XChroma.app.MainWindow.uplot_3">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">uplot_3</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Updates the second plot with absorbance data.</span>
+
+<span class="sd">        This function updates Plot 3 (For the Temporal Tab) based on the current settings:</span>
+
+<span class="sd">        - If the &quot;Static&quot; checkbox is checked, the static data is considered when calculating absorbance.</span>
+<span class="sd">        - If the &quot;Avg&quot; checkbox is checked, the average intensity is used for absorbance calculation.</span>
+<span class="sd">        - If the &quot;Avg&quot; checkbox is not checked, the raw intensity is used instead.</span>
+
+<span class="sd">        The absorbance is calculated directly with the compute_absorbance method of the Dataclass</span>
+
+<span class="sd">        What is displayed:</span>
+
+<span class="sd">        - **Absorbance Data**: A plot of absorbance values.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">static_checkBox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">():</span>
+            <span class="n">static</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">static</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">static</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">wavelengths</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">avg_checkBox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">():</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">avg_i</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">intensities</span>
+
+        <span class="n">absorbance</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">compute_absorbance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">static</span><span class="o">=</span><span class="n">static</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">c3</span><span class="o">.</span><span class="n">setData</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">scaledxdata</span><span class="p">,</span> <span class="n">absorbance</span><span class="p">,</span> <span class="n">pen</span><span class="o">=</span><span class="p">(</span><span class="mi">154</span><span class="p">,</span> <span class="mi">109</span><span class="p">,</span> <span class="mi">198</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="MainWindow.uplot_4">
+<a class="viewcode-back" href="../../code/XChromaapp.html#XChroma.app.MainWindow.uplot_4">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">uplot_4</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Updates the Plot 4 with temporal absorbance data.</span>
+
+<span class="sd">        This function updates Plot 4 based on the current settings:</span>
+
+<span class="sd">        - If the &quot;Static&quot; checkbox is checked, the static data is considered when calculating temporal absorbance.</span>
+<span class="sd">        - If the &quot;Avg&quot; checkbox is checked, the average intensity is used for the absorbance calculation.</span>
+<span class="sd">        - If the &quot;Avg&quot; checkbox is not checked, the raw intensity is used instead.</span>
+
+<span class="sd">        The absorbance is calculated over a selected region, and the time series data is plotted accordingly.</span>
+
+<span class="sd">        What is displayed:</span>
+
+<span class="sd">        - **Temporal Absorbance Data**: A plot of temporal absorbance over the selected wavelength region. The x-axis represents time (relative to the start time), and the y-axis represents the absorbance values.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">static_checkBox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">():</span>
+            <span class="n">static</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">static</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">static</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">wavelengths</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">avg_checkBox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">():</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">avg_i</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">intensities</span>
+        <span class="n">idxs</span><span class="p">,</span> <span class="n">temp_dat</span><span class="p">,</span> <span class="n">times_temp_dat</span> <span class="o">=</span>  <span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">temporal_abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">region</span><span class="o">.</span><span class="n">getRegion</span><span class="p">(),</span> <span class="n">data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">scaledxdata</span><span class="p">,</span> <span class="n">static</span><span class="o">=</span><span class="n">static</span><span class="p">,</span> <span class="n">zero</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">zero</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">roi_idxs</span> <span class="o">=</span> <span class="n">idxs</span>
+
+        <span class="n">legtxt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">leg4</span><span class="o">.</span><span class="n">getLabel</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">c4</span><span class="p">)</span>
+        <span class="n">legtxt</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Absorbance [</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">wavelengths</span><span class="p">[</span><span class="n">idxs</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="si">:</span><span class="s2">0.1f</span><span class="si">}</span><span class="s2"> nm, </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">wavelengths</span><span class="p">[</span><span class="n">idxs</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span><span class="si">:</span><span class="s2">0.1f</span><span class="si">}</span><span class="s2"> nm]&quot;</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">c4</span><span class="o">.</span><span class="n">setData</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">times_temp_dat</span><span class="p">)</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">start_time</span><span class="p">,</span> <span class="n">temp_dat</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MainWindow.update_plots">
+<a class="viewcode-back" href="../../code/XChromaapp.html#XChroma.app.MainWindow.update_plots">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_plots</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Updates all plots with the latest data.</span>
+
+<span class="sd">        This function checks whether a device is connected:</span>
+
+<span class="sd">        - If a device is found, it fetches the latest intensity data from the spectrometer.</span>
+<span class="sd">        - If no device is found, it uses synthetic data for the plots.</span>
+
+<span class="sd">        After updating the intensity data, the function:</span>
+
+<span class="sd">        - Updates the moving average of the intensity data based on the value from the `avgspinBox`.</span>
+<span class="sd">        - Updates all four plots (`uplot_1`, `uplot_2`, `uplot_3`, and `uplot_4`) with the latest data.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">device_found</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">intensities</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">spectro</span><span class="o">.</span><span class="n">intensities</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">intensities</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">synthetic_data</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">update_moving_avg</span><span class="p">(</span><span class="n">avg_window</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">avgspinBox</span><span class="o">.</span><span class="n">value</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">uplot_1</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">uplot_2</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">uplot_3</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">uplot_4</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="MainWindow.clear_plot">
+<a class="viewcode-back" href="../../code/XChromaapp.html#XChroma.app.MainWindow.clear_plot">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">clear_plot</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Clear plots, and init them back</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p1</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p2</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p3</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p4</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_plots</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="MainWindow.set_zero">
+<a class="viewcode-back" href="../../code/XChromaapp.html#XChroma.app.MainWindow.set_zero">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_zero</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sets the baseline (zero) intensity data in the `data_spectro` class.</span>
+
+<span class="sd">        This function updates the `zero` attribute in `data_spectro` based on the current</span>
+<span class="sd">        checkbox selection:</span>
+
+<span class="sd">        - If the &quot;Avg&quot; checkbox is checked, the baseline is set to the average intensity data.</span>
+<span class="sd">        - If the &quot;Avg&quot; checkbox is not checked, the baseline is set to the raw intensity data.</span>
+
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">avg_checkBox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">zero</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">avg_i</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">zero</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">intensities</span></div>
+
+
+<div class="viewcode-block" id="MainWindow.set_static">
+<a class="viewcode-back" href="../../code/XChromaapp.html#XChroma.app.MainWindow.set_static">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_static</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sets the static intensity data in the `data_spectro` class.</span>
+
+<span class="sd">        This function updates the `static` attribute in the `data_spectro` class based on</span>
+<span class="sd">        the current checkbox selection:</span>
+
+<span class="sd">        - If the &quot;Avg&quot; checkbox is checked, the static data is set to the average intensity data (`avg_i`).</span>
+<span class="sd">        - If the &quot;Avg&quot; checkbox is not checked, the static data is set to the raw intensity data (`intensities`).</span>
+
+<span class="sd">        The `static` value is used for baseline correction and further data analysis.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">avg_checkBox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">static</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">avg_i</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">static</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">intensities</span></div>
+
+
+<div class="viewcode-block" id="MainWindow.set_roi">
+<a class="viewcode-back" href="../../code/XChromaapp.html#XChroma.app.MainWindow.set_roi">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_roi</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the Region Of Interest, also update it if units are changed</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">roi_pos</span> <span class="o">=</span> <span class="p">(</span><span class="mi">590</span><span class="p">,</span> <span class="mi">610</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">region</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">LinearRegionItem</span><span class="p">(</span>
+            <span class="n">values</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">roi_pos</span>
+        <span class="p">)</span>  <span class="c1"># , bounds = [np.min(self.xdata), np.max(self.xdata)])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">roi_idxs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">wavelengths</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">region</span><span class="o">.</span><span class="n">getRegion</span><span class="p">())),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">p3</span><span class="o">.</span><span class="n">addItem</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">region</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MainWindow.clear_avg">
+<a class="viewcode-back" href="../../code/XChromaapp.html#XChroma.app.MainWindow.clear_avg">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">clear_avg</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Clear the averaged data stored in the data_spectro class</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># self.lavg = []</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">lavg</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">c1_avg</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">c1_avg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">p1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">pen</span><span class="o">=</span><span class="p">(</span><span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="MainWindow.clear_static">
+<a class="viewcode-back" href="../../code/XChromaapp.html#XChroma.app.MainWindow.clear_static">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">clear_static</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Clear the static data stored in the data_spectro class</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># self.static = np.zeros(len(self.xdata))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">static</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">wavelengths</span><span class="p">))</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">c1_static</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">c1_static</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">p1</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="MainWindow.clear_temp">
+<a class="viewcode-back" href="../../code/XChromaapp.html#XChroma.app.MainWindow.clear_temp">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">clear_temp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Clear the temporal averaged data stored in the data_spectro class</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">temp_dat</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">times_temp_dat</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="MainWindow.toggle_servo1">
+<a class="viewcode-back" href="../../code/XChromaapp.html#XChroma.app.MainWindow.toggle_servo1">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">toggle_servo1</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Toggles the state of Servo 1 based on the checkbox status.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># self.controller.send_command(&quot;a&quot;)  # Commande pour activer le servo 1</span>
+        <span class="n">command</span> <span class="o">=</span> <span class="s2">&quot;a&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">s1_checkBox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;A&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="o">.</span><span class="n">send_command</span><span class="p">(</span><span class="n">command</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MainWindow.toggle_servo2">
+<a class="viewcode-back" href="../../code/XChromaapp.html#XChroma.app.MainWindow.toggle_servo2">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">toggle_servo2</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Toggles the state of Servo 2 based on the checkbox status.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># self.controller.send_command(&quot;z&quot;)  # Commande pour activer le servo 1</span>
+        <span class="n">command</span> <span class="o">=</span> <span class="s2">&quot;z&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">s2_checkBox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;Z&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="o">.</span><span class="n">send_command</span><span class="p">(</span><span class="n">command</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MainWindow.toggle_servo3">
+<a class="viewcode-back" href="../../code/XChromaapp.html#XChroma.app.MainWindow.toggle_servo3">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">toggle_servo3</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Toggles the state of Servo 3 based on the checkbox status.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># self.controller.send_command(&quot;e&quot;)  # Commande pour activer le servo 3</span>
+        <span class="c1"># self.controller.send_command(&quot;e&quot;)  # Commande pour activer le servo 1</span>
+        <span class="n">command</span> <span class="o">=</span> <span class="s2">&quot;e&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">s3_checkBox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;E&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="o">.</span><span class="n">send_command</span><span class="p">(</span><span class="n">command</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MainWindow.reset_servo">
+<a class="viewcode-back" href="../../code/XChromaapp.html#XChroma.app.MainWindow.reset_servo">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">reset_servo</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reset the state of all Servo&#39;s and the checkbox status.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="o">.</span><span class="n">send_command</span><span class="p">(</span><span class="s2">&quot;r&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">s1_checkBox</span><span class="o">.</span><span class="n">setChecked</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">s2_checkBox</span><span class="o">.</span><span class="n">setChecked</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">s3_checkBox</span><span class="o">.</span><span class="n">setChecked</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MainWindow.closeEvent">
+<a class="viewcode-back" href="../../code/XChromaapp.html#XChroma.app.MainWindow.closeEvent">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">closeEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Handles the event when the main window is closed.</span>
+
+<span class="sd">        This method is called when the main window is closed. It performs cleanup tasks</span>
+<span class="sd">        before the application exits:</span>
+
+<span class="sd">        - If an Arduino is connected, it sends a command to the Arduino to signal the</span>
+<span class="sd">          termination of communication.</span>
+<span class="sd">        - Closes the serial connection with the Arduino to safely disconnect.</span>
+
+<span class="sd">        Additionally, it could optionally save data to a CSV file, though this functionality</span>
+<span class="sd">        is currently commented out.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        event : QCloseEvent</span>
+<span class="sd">            The close event triggered when the user attempts to close the window.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># df = pd.DataFrame(self.data_buffer)  # Convertir le tampon en DataFrame</span>
+        <span class="c1"># df.to_csv(&quot;data.csv&quot;, mode=&quot;a&quot;, header=False, index=False)  # Append au fichier</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="o">.</span><span class="n">arduino</span><span class="p">:</span>  <span class="c1"># Vérifie si l&#39;arduino est connecté</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="o">.</span><span class="n">send_command</span><span class="p">(</span><span class="s2">&quot;r&quot;</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="o">.</span><span class="n">arduino</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>  <span class="c1"># Ferme la connexion série avec l&#39;Arduino</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Connexion Arduino fermée.&quot;</span><span class="p">)</span>
+
+        <span class="n">event</span><span class="o">.</span><span class="n">accept</span><span class="p">()</span>  <span class="c1"># Accepte la fermeture de la fenêtre</span></div>
+
+
+<div class="viewcode-block" id="MainWindow.toggle_sequence">
+<a class="viewcode-back" href="../../code/XChromaapp.html#XChroma.app.MainWindow.toggle_sequence">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">toggle_sequence</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Starts, pauses, or resumes the sequence execution.</span>
+
+<span class="sd">        - If a sequence thread is running:</span>
+
+<span class="sd">            - Toggles between pausing and resuming.</span>
+<span class="sd">            - Updates the button text and icon accordingly.</span>
+
+<span class="sd">        - If no sequence is running:</span>
+
+<span class="sd">            - Creates a new `SequenceWorker` thread to handle the sequence.</span>
+<span class="sd">            - Connects thread signals for progress updates and completion handling.</span>
+<span class="sd">            - Starts the thread and updates the button to indicate a running sequence.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">thread</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">thread</span><span class="o">.</span><span class="n">isRunning</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">thread</span><span class="o">.</span><span class="n">pause_resume</span><span class="p">()</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">thread</span><span class="o">.</span><span class="n">is_paused</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">launchseq_pushButton</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot;Resume&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">launchseq_pushButton</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">QIcon</span><span class="p">(</span><span class="s2">&quot;XChroma/ui/icons/play.svg&quot;</span><span class="p">))</span>  <span class="c1"># Set Play icon</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">launchseq_pushButton</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot;Paused&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">launchseq_pushButton</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">QIcon</span><span class="p">(</span><span class="s2">&quot;XChroma/ui/icons/pause.svg&quot;</span><span class="p">))</span>  <span class="c1"># Set Pause icon</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">thread</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">SequenceWorker</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">thread</span><span class="o">.</span><span class="n">progress_signal</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">update_progress_bar</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">thread</span><span class="o">.</span><span class="n">finished_signal</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sequence_finished</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">launchseq_pushButton</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot;Paused&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">launchseq_pushButton</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">QIcon</span><span class="p">(</span><span class="s2">&quot;XChroma/ui/icons/pause.svg&quot;</span><span class="p">))</span>  <span class="c1"># Set Pause icon</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="MainWindow.reset_sequence">
+<a class="viewcode-back" href="../../code/XChromaapp.html#XChroma.app.MainWindow.reset_sequence">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">reset_sequence</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Stops and resets the sequence execution.</span>
+
+<span class="sd">        If a sequence thread is running, it sends a stop request to ensure the</span>
+<span class="sd">        sequence is properly terminated before resetting.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">thread</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">thread</span><span class="o">.</span><span class="n">request_stop</span><span class="p">()</span>  <span class="c1"># Ensure the thread stops before resetting</span></div>
+
+
+
+<div class="viewcode-block" id="MainWindow.sequence_finished">
+<a class="viewcode-back" href="../../code/XChromaapp.html#XChroma.app.MainWindow.sequence_finished">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sequence_finished</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Handles actions to perform when a sequence is finished.</span>
+
+<span class="sd">        - Resets the button text and icon to indicate that the sequence has stopped.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">launchseq_pushButton</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot;Launch Sequence&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">launchseq_pushButton</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">QIcon</span><span class="p">(</span><span class="s2">&quot;XChroma/ui/icons/play.svg&quot;</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="MainWindow.update_progress_bar">
+<a class="viewcode-back" href="../../code/XChromaapp.html#XChroma.app.MainWindow.update_progress_bar">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_progress_bar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">progress</span><span class="p">):</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Updates the progress bar based on the received progress value.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        progress : int</span>
+<span class="sd">            The current progress value (typically between 0 and 100).</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">progressBar</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span>
+            <span class="n">progress</span>
+        <span class="p">)</span>  <span class="c1"># Mise à jour de la valeur de la ProgressBar</span></div>
+
+
+<div class="viewcode-block" id="MainWindow.mousePressEvent">
+<a class="viewcode-back" href="../../code/XChromaapp.html#XChroma.app.MainWindow.mousePressEvent">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">mousePressEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">label_10</span><span class="o">.</span><span class="n">rect</span><span class="p">()</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">pos</span><span class="p">()):</span>
+            <span class="n">QDesktopServices</span><span class="o">.</span><span class="n">openUrl</span><span class="p">(</span><span class="n">QUrl</span><span class="p">(</span><span class="s2">&quot;https://alex6crbt.github.io/XChroma&quot;</span><span class="p">))</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">mousePressEvent</span><span class="p">(</span><span class="n">event</span><span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2025, Alexis C.
+      <br/>
+    
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+  </body>
+</html>

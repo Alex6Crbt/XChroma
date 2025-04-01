@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>XChroma.app module &#8212; XChroma 1.1 documentation</title>
+    <title>XChroma.arduino_control module &#8212; XChroma 1.1 documentation</title>
   
   
   
@@ -46,11 +46,11 @@
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../_static/copybutton.js?v=f281be69"></script>
     <script src="../_static/design-tabs.js?v=f930bc37"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'code/XChroma.app';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'code/XChromaarduino_control';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="XChroma.arduino_control module" href="XChroma.arduino_control.html" />
-    <link rel="prev" title="Reference" href="XChroma.html" />
+    <link rel="next" title="XChroma.data_spectro module" href="XChromadata_spectro.html" />
+    <link rel="prev" title="XChroma.app module" href="XChromaapp.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -308,10 +308,10 @@
      aria-label="Section Navigation">
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
   <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">XChroma.app module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="XChroma.arduino_control.html">XChroma.arduino_control module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="XChroma.data_spectro.html">XChroma.data_spectro module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="XChroma.sequence_control.html">XChroma.sequence_control module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="XChromaapp.html">XChroma.app module</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">XChroma.arduino_control module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="XChromadata_spectro.html">XChroma.data_spectro module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="XChromasequence_control.html">XChroma.sequence_control module</a></li>
 </ul>
 </div>
 </nav></div>
@@ -355,7 +355,7 @@
     
     <li class="breadcrumb-item"><a href="XChroma.html" class="nav-link">Reference</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">XChroma.app module</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">XChroma.arduino_control module</span></li>
   </ul>
 </nav>
 </div>
@@ -372,13 +372,34 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="xchroma-app-module">
-<h1>XChroma.app module<a class="headerlink" href="#xchroma-app-module" title="Link to this heading">#</a></h1>
+  <section id="xchroma-arduino-control-module">
+<h1>XChroma.arduino_control module<a class="headerlink" href="#xchroma-arduino-control-module" title="Link to this heading">#</a></h1>
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table">
 <tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#XChroma.arduino_control.ArduinoController" title="XChroma.arduino_control.ArduinoController"><code class="xref py py-obj docutils literal notranslate"><span class="pre">XChroma.arduino_control.ArduinoController</span></code></a></p></td>
+<td><p></p></td>
+</tr>
 </tbody>
 </table>
 </div>
+<dl class="py class" id="module-XChroma.arduino_control">
+<dt class="sig sig-object py" id="XChroma.arduino_control.ArduinoController">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">XChroma.arduino_control.</span></span><span class="sig-name descname"><span class="pre">ArduinoController</span></span><a class="reference internal" href="../_modules/XChroma/arduino_control.html#ArduinoController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#XChroma.arduino_control.ArduinoController" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="XChroma.arduino_control.ArduinoController.connect_arduino">
+<span class="sig-name descname"><span class="pre">connect_arduino</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/XChroma/arduino_control.html#ArduinoController.connect_arduino"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#XChroma.arduino_control.ArduinoController.connect_arduino" title="Link to this definition">#</a></dt>
+<dd><p>Find and connect to an available Arduino device on Windows or macOS.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="XChroma.arduino_control.ArduinoController.send_command">
+<span class="sig-name descname"><span class="pre">send_command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/XChroma/arduino_control.html#ArduinoController.send_command"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#XChroma.arduino_control.ArduinoController.send_command" title="Link to this definition">#</a></dt>
+<dd><p>Send a command to the Arduino device.</p>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 
 
@@ -392,20 +413,20 @@
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="XChroma.html"
+       href="XChromaapp.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Reference</p>
+        <p class="prev-next-title">XChroma.app module</p>
       </div>
     </a>
     <a class="right-next"
-       href="XChroma.arduino_control.html"
+       href="XChromadata_spectro.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">XChroma.arduino_control module</p>
+        <p class="prev-next-title">XChroma.data_spectro module</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -421,10 +442,26 @@
 
 
   <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#XChroma.arduino_control.ArduinoController"><code class="docutils literal notranslate"><span class="pre">ArduinoController</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#XChroma.arduino_control.ArduinoController.connect_arduino"><code class="docutils literal notranslate"><span class="pre">ArduinoController.connect_arduino()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#XChroma.arduino_control.ArduinoController.send_command"><code class="docutils literal notranslate"><span class="pre">ArduinoController.send_command()</span></code></a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="../_sources/code/XChroma.app.rst.txt"
+      <li><a href="../_sources/code/XChromaarduino_control.rst.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div></div>

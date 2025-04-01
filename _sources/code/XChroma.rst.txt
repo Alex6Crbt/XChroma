@@ -47,10 +47,10 @@ Module contents
 .. toctree::
     :maxdepth: 2
 
-    XChroma.app
+    XChromaapp
 
-    XChroma.arduino_control
+    XChromaarduino_control
 
-    XChroma.data_spectro
+    XChromadata_spectro
 
-    XChroma.sequence_control
+    XChromasequence_control

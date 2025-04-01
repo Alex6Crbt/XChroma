@@ -358,7 +358,7 @@
 
 
 <div class="viewcode-block" id="SequenceWorker">
-<a class="viewcode-back" href="../../code/XChroma.sequence_control.html#XChroma.sequence_control.SequenceWorker">[docs]</a>
+<a class="viewcode-back" href="../../code/XChromasequence_control.html#XChroma.sequence_control.SequenceWorker">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">SequenceWorker</span><span class="p">(</span><span class="n">QThread</span><span class="p">):</span>
     <span class="n">finished_signal</span> <span class="o">=</span> <span class="n">pyqtSignal</span><span class="p">()</span> <span class="c1">#: To send end signal to the MainWindow</span>
     <span class="n">progress_signal</span> <span class="o">=</span> <span class="n">pyqtSignal</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>  <span class="c1">#: To send progress updates to the MainWindow</span>
@@ -371,7 +371,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">is_paused</span> <span class="o">=</span> <span class="kc">False</span>
 
 <div class="viewcode-block" id="SequenceWorker.run">
-<a class="viewcode-back" href="../../code/XChroma.sequence_control.html#XChroma.sequence_control.SequenceWorker.run">[docs]</a>
+<a class="viewcode-back" href="../../code/XChromasequence_control.html#XChroma.sequence_control.SequenceWorker.run">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Sequence started&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">reset_servo</span><span class="p">()</span>
@@ -433,7 +433,7 @@
 
 
 <div class="viewcode-block" id="SequenceWorker.request_stop">
-<a class="viewcode-back" href="../../code/XChroma.sequence_control.html#XChroma.sequence_control.SequenceWorker.request_stop">[docs]</a>
+<a class="viewcode-back" href="../../code/XChromasequence_control.html#XChroma.sequence_control.SequenceWorker.request_stop">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">request_stop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Request the thread to stop.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">stop_signal</span> <span class="o">=</span> <span class="kc">True</span>
@@ -442,7 +442,7 @@
 
 
 <div class="viewcode-block" id="SequenceWorker.toggle_servo">
-<a class="viewcode-back" href="../../code/XChroma.sequence_control.html#XChroma.sequence_control.SequenceWorker.toggle_servo">[docs]</a>
+<a class="viewcode-back" href="../../code/XChromasequence_control.html#XChroma.sequence_control.SequenceWorker.toggle_servo">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">toggle_servo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">,</span> <span class="n">delay</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Toggle a servo by sending a specific command.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="o">.</span><span class="n">send_command</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
@@ -450,7 +450,7 @@
 
 
 <div class="viewcode-block" id="SequenceWorker.reset_servo">
-<a class="viewcode-back" href="../../code/XChroma.sequence_control.html#XChroma.sequence_control.SequenceWorker.reset_servo">[docs]</a>
+<a class="viewcode-back" href="../../code/XChromasequence_control.html#XChroma.sequence_control.SequenceWorker.reset_servo">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">reset_servo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">delay</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Reset all servo&#39;s to their respective initial positions.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="o">.</span><span class="n">send_command</span><span class="p">(</span><span class="s2">&quot;r&quot;</span><span class="p">)</span>
@@ -458,7 +458,7 @@
 
 
 <div class="viewcode-block" id="SequenceWorker.pause_resume">
-<a class="viewcode-back" href="../../code/XChroma.sequence_control.html#XChroma.sequence_control.SequenceWorker.pause_resume">[docs]</a>
+<a class="viewcode-back" href="../../code/XChromasequence_control.html#XChroma.sequence_control.SequenceWorker.pause_resume">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">pause_resume</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">is_paused</span> <span class="o">=</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_paused</span></div>
 </div>

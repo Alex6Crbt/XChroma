@@ -72,9 +72,11 @@ class SequenceWorker(QThread):
         print("Sequence finished")
         self.finished_signal.emit()  # Emit finished signal
 
-    def stop(self):
+    def request_stop(self):
         """Request the thread to stop."""
         self.stop_signal = True
+        print("Stopping !")
+        self.progress_signal.emit(int(100))
 
     def toggle_servo(self, command, delay=1):
         """Toggle servo by sending a specific command."""
@@ -85,3 +87,6 @@ class SequenceWorker(QThread):
         """Reset the servo to its initial position."""
         self.controller.send_command("r")
         time.sleep(delay)
+
+    def pause_resume(self):
+        self.is_paused = not self.is_paused

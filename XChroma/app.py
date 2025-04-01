@@ -2,10 +2,11 @@ import time
 import numpy as np
 import pyqtgraph as pg
 from PyQt6 import QtCore, uic
+from PyQt6.QtGui import QFontDatabase, QIcon
 from PyQt6.QtWidgets import QMainWindow
 from seabreeze.spectrometers import Spectrometer, list_devices
 import textwrap
-
+import os
 
 from .arduino_control import ArduinoController
 from .data_spectro import DataSpecro
@@ -24,6 +25,22 @@ class MainWindow(QMainWindow):
     def __init__(self, CustomSequence):
         super().__init__()
 
+        font_folder = "XChroma/ui/fonts"
+        font_folder_path = os.path.abspath(font_folder)
+
+        if not os.path.exists(font_folder_path):
+            print(f"Font folder not found: {font_folder_path}")
+        else:
+            for font_file in os.listdir(font_folder_path):
+                if font_file.endswith(".ttf"):  # Only load TTF fonts
+                    font_path = os.path.join(font_folder_path, font_file)
+                    font_id = QFontDatabase.addApplicationFont(font_path)
+
+                    if font_id != -1:
+                        font_family = QFontDatabase.applicationFontFamilies(font_id)[0]
+                        print(f"Successfully loaded font: {font_family} ({font_file})")
+                    else:
+                        print(f"Failed to load font: {font_file}")
         # Load UI from the .ui file
         uic.loadUi("XChroma/ui/MainWindow.ui", self)
         self.setWindowTitle("XChroma")
@@ -42,6 +59,7 @@ class MainWindow(QMainWindow):
         self.clearstatic_pushButton.clicked.connect(self.clear_static)
         self.cleartemporal_pushButton.clicked.connect(self.clear_temp)
         self.launchseq_pushButton.clicked.connect(self.toggle_sequence)
+        self.resetseq_pushButton.clicked.connect(self.reset_sequence)
         self.s1_checkBox.clicked.connect(self.toggle_servo1)
         self.s2_checkBox.clicked.connect(self.toggle_servo2)
         self.s3_checkBox.clicked.connect(self.toggle_servo3)
@@ -368,18 +386,29 @@ class MainWindow(QMainWindow):
 
     def toggle_sequence(self):
         if self.thread and self.thread.isRunning():
-            self.thread.stop()  # Arrêter proprement
-            self.launchseq_pushButton.setText("Launch Sequence")
+            self.thread.pause_resume()
+            if self.thread.is_paused:
+                self.launchseq_pushButton.setText("Resume")
+                self.launchseq_pushButton.setIcon(QIcon("XChroma/ui/icons/play.svg"))  # Set Play icon
+            else:
+                self.launchseq_pushButton.setText("Paused")
+                self.launchseq_pushButton.setIcon(QIcon("XChroma/ui/icons/pause.svg"))  # Set Pause icon
         else:
             self.thread = self.SequenceWorker(self.controller, self.data_spectro)
-            self.thread.progress_signal.connect(
-                self.update_progress_bar
-            )  # Connecte la mise à jour de la ProgressBar
-            self.thread.finished_signal.connect(
-                lambda: self.launchseq_pushButton.setText("Launch Sequence")
-            )
-            self.launchseq_pushButton.setText("Stop")
+            self.thread.progress_signal.connect(self.update_progress_bar)
+            self.thread.finished_signal.connect(self.sequence_finished)
+            self.launchseq_pushButton.setText("Paused")
+            self.launchseq_pushButton.setIcon(QIcon("XChroma/ui/icons/pause.svg"))  # Set Pause icon
             self.thread.start()
+
+    def reset_sequence(self):
+        if self.thread:
+            self.thread.request_stop()  # Ensure the thread stops before resetting
+
+
+    def sequence_finished(self):
+        self.launchseq_pushButton.setText("Launch Sequence")
+        self.launchseq_pushButton.setIcon(QIcon("XChroma/ui/icons/play.svg"))
 
     def update_progress_bar(self, progress):
         """Mettre à jour la ProgressBar avec la progression reçue"""

@@ -22,20 +22,31 @@ class Sequence(SequenceWorker):
         self.controller.send_command("a")
         self.controller.send_command("e")
         # Loop to save I_on data
-        for i in range(100):
+        i = 0
+        while not self.stop_signal:
+            if self.is_paused:
+                while self.is_paused and not self.stop_signal:  # Stay in pause loop until resumed or stopped
+                    time.sleep(0.1)
+                if self.stop_signal:
+                    print("Sequence stopping!")
+                    break
+
+            i += 1
+            self.progress_signal.emit(int(i % 100))  # Emit progress update
+
             self.data_spectro.lavg.clear()
-            time.sleep(0.3)
+            time.sleep(1)
             self.data_spectro.save_data(self.data_spectro.avg_i, cycle=0, spectype="on")
-            self.progress_signal.emit(int((i + 1)))
+
 
         time.sleep(2)
         self.reset_servo()
-        self.controller.send_command("a")
         self.controller.send_command("e")
         self.data_spectro.lavg.clear()
         time.sleep(10)
 
         self.data_spectro.save_data(self.data_spectro.avg_i, cycle=0, spectype="static")
+        self.data_spectro.static = self.data_spectro.avg_i
         # Update progress
 
         print("Sequence finished")

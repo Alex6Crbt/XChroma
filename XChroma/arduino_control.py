@@ -15,17 +15,8 @@ class ArduinoController:
             for port in ports:
                 if any(keyword.lower() in (port.description or '').lower() or
                        keyword.lower() in (port.device or '').lower()
-                       for keyword in ["arduino", "ch340", "ttyusb", "ttyacm", "cu.usbmodem"]):
+                       for keyword in ["arduino", "cu.usbmodem", "ch340", "ttyusb", "ttyacm"]):
                     return port.device
-
-                # For Windows, ensure we get the correct COM port
-                if "COM" in port.device.upper():
-                    try:
-                        test_serial = serial.Serial(port.device, 9600, timeout=1)
-                        test_serial.close()
-                        return port.device
-                    except serial.SerialException:
-                        continue
             return None
 
         self.arduino_port = find_arduino()

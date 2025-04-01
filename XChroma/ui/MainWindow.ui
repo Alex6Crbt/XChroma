@@ -23,7 +23,7 @@
 QWidget {
     background-color: #121212;
     color: #E0E0E0;
-    font: 13pt &quot;JetBrains Mono&quot;;
+    font: 13pt &quot;Poppins&quot;;
 }
 QToolBox {
     background-color: #121212;  /* Dark background */
@@ -36,7 +36,9 @@ QToolBox::tab {
     color: #E0E0E0;
     border: 1px solid #3A3A3A;
     border-radius: 4px;
-    padding: 6px;
+    padding: -1px;
+    font-weight: 600; /* Black weight */
+
 }
 
 QToolBox::tab:selected {
@@ -69,6 +71,7 @@ QPushButton {
     border: 1px solid #555555;
     border-radius: 4px;
     padding: 6px 12px;
+    font-weight: 700;
 }
 
 QPushButton:hover {
@@ -133,6 +136,7 @@ QHeaderView::section {
     border: 1px solid #3A3A3A;
 }
 
+
 /* Progress Bar */
 /* Progress Bar Container */
 QProgressBar {
@@ -146,7 +150,7 @@ QProgressBar {
 
 /* Progress Bar Fill */
 QProgressBar::chunk {
-    background: qlineargradient(x1:0, y1:0, x2:1, y2:0, 
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
         stop:0 #4AC7E6, stop:1 #65DBF9);  /* Smooth gradient */
     border-radius: 4px;
 }
@@ -173,12 +177,158 @@ QFrame[frameShape=&quot;4&quot;], QFrame[frameShape=&quot;5&quot;] {
     width: 2px;   /* Thickness for vertical lines */
 }
 
+
 </string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout_5">
-    <item row="3" column="0">
-     <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,0,0">
+    <item row="1" column="0">
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <item>
+       <widget class="QLabel" name="label_10">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>124</width>
+          <height>64</height>
+         </size>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="pixmap">
+         <pixmap>static/captX.png</pixmap>
+        </property>
+        <property name="scaledContents">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="zero_pushButton">
+        <property name="styleSheet">
+         <string notr="true"/>
+        </property>
+        <property name="text">
+         <string> Zero</string>
+        </property>
+        <property name="icon">
+         <iconset>
+          <normaloff>icons/0-square-fill.svg</normaloff>icons/0-square-fill.svg</iconset>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="static_pushButton">
+        <property name="styleSheet">
+         <string notr="true"/>
+        </property>
+        <property name="text">
+         <string> Static</string>
+        </property>
+        <property name="icon">
+         <iconset>
+          <normaloff>icons/soundwave.svg</normaloff>icons/soundwave.svg</iconset>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer_3">
+        <property name="orientation">
+         <enum>Qt::Orientation::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QPushButton" name="launchseq_pushButton">
+        <property name="styleSheet">
+         <string notr="true"/>
+        </property>
+        <property name="text">
+         <string>Launch Sequence</string>
+        </property>
+        <property name="icon">
+         <iconset>
+          <normaloff>icons/play.svg</normaloff>icons/play.svg</iconset>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QProgressBar" name="progressBar">
+        <property name="value">
+         <number>0</number>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="resetseq_pushButton">
+        <property name="text">
+         <string>Reset</string>
+        </property>
+        <property name="icon">
+         <iconset>
+          <normaloff>icons/stop.svg</normaloff>icons/stop.svg</iconset>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Orientation::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
+    </item>
+    <item row="2" column="0">
+     <widget class="Line" name="line">
+      <property name="orientation">
+       <enum>Qt::Orientation::Horizontal</enum>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="0">
+     <widget class="Line" name="line_15">
+      <property name="orientation">
+       <enum>Qt::Orientation::Horizontal</enum>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="0">
+     <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,0,0,0,0">
+      <item>
+       <spacer name="horizontalSpacer_4">
+        <property name="orientation">
+         <enum>Qt::Orientation::Horizontal</enum>
+        </property>
+        <property name="sizeType">
+         <enum>QSizePolicy::Policy::Fixed</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>10</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
       <item>
        <widget class="QTabWidget" name="tabWidget">
         <property name="sizePolicy">
@@ -187,8 +337,14 @@ QFrame[frameShape=&quot;4&quot;], QFrame[frameShape=&quot;5&quot;] {
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
+        <property name="tabPosition">
+         <enum>QTabWidget::TabPosition::North</enum>
+        </property>
+        <property name="tabShape">
+         <enum>QTabWidget::TabShape::Rounded</enum>
+        </property>
         <property name="currentIndex">
-         <number>0</number>
+         <number>1</number>
         </property>
         <widget class="QWidget" name="tab">
          <property name="sizePolicy">
@@ -197,10 +353,23 @@ QFrame[frameShape=&quot;4&quot;], QFrame[frameShape=&quot;5&quot;] {
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
+         <attribute name="icon">
+          <iconset>
+           <normaloff>icons/bar-chart-line-fill.svg</normaloff>icons/bar-chart-line-fill.svg</iconset>
+         </attribute>
          <attribute name="title">
           <string>Spectral View</string>
          </attribute>
          <layout class="QGridLayout" name="gridLayout">
+          <item row="1" column="0">
+           <widget class="PlotWidget" name="p2">
+            <property name="styleSheet">
+             <string notr="true">padding: 0px;
+border: 0px
+</string>
+            </property>
+           </widget>
+          </item>
           <item row="0" column="0">
            <widget class="PlotWidget" name="p1">
             <property name="sizePolicy">
@@ -222,18 +391,13 @@ border: 0px
             </property>
            </widget>
           </item>
-          <item row="1" column="0">
-           <widget class="PlotWidget" name="p2">
-            <property name="styleSheet">
-             <string notr="true">padding: 0px;
-border: 0px
-</string>
-            </property>
-           </widget>
-          </item>
          </layout>
         </widget>
         <widget class="QWidget" name="tab_2">
+         <attribute name="icon">
+          <iconset>
+           <normaloff>icons/graph-up.svg</normaloff>icons/graph-up.svg</iconset>
+         </attribute>
          <attribute name="title">
           <string>Temporal View</string>
          </attribute>
@@ -299,7 +463,7 @@ border: 0px
            </size>
           </property>
           <property name="currentIndex">
-           <number>1</number>
+           <number>2</number>
           </property>
           <widget class="QWidget" name="page">
            <property name="geometry">
@@ -307,7 +471,7 @@ border: 0px
              <x>0</x>
              <y>0</y>
              <width>225</width>
-             <height>444</height>
+             <height>452</height>
             </rect>
            </property>
            <property name="sizePolicy">
@@ -316,6 +480,10 @@ border: 0px
              <verstretch>0</verstretch>
             </sizepolicy>
            </property>
+           <attribute name="icon">
+            <iconset>
+             <normaloff>icons/sliders2.svg</normaloff>icons/sliders2.svg</iconset>
+           </attribute>
            <attribute name="label">
             <string>Plotting settings</string>
            </attribute>
@@ -509,16 +677,66 @@ border: 0px
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>225</width>
-             <height>444</height>
+             <width>280</width>
+             <height>452</height>
             </rect>
            </property>
+           <attribute name="icon">
+            <iconset>
+             <normaloff>icons/gear-wide-connected.svg</normaloff>icons/gear-wide-connected.svg</iconset>
+           </attribute>
            <attribute name="label">
             <string>Ocean Settings</string>
            </attribute>
            <layout class="QGridLayout" name="gridLayout_4">
-            <item row="7" column="0">
-             <widget class="Line" name="line_8">
+            <item row="0" column="0">
+             <widget class="QPushButton" name="connectOcean_pushButton">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="styleSheet">
+               <string notr="true"/>
+              </property>
+              <property name="text">
+               <string>Connect</string>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="0">
+             <widget class="QLabel" name="label_5">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">border: 0px</string>
+              </property>
+              <property name="text">
+               <string>Delay</string>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="0">
+             <widget class="Line" name="line_7">
+              <property name="orientation">
+               <enum>Qt::Orientation::Horizontal</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="Line" name="line_6">
+              <property name="orientation">
+               <enum>Qt::Orientation::Horizontal</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="9" column="0">
+             <widget class="Line" name="line_9">
               <property name="orientation">
                <enum>Qt::Orientation::Horizontal</enum>
               </property>
@@ -531,7 +749,7 @@ border: 0px
               </property>
               <property name="sizeHint" stdset="0">
                <size>
-                <width>20</width>
+                <width>2</width>
                 <height>40</height>
                </size>
               </property>
@@ -564,7 +782,7 @@ border: 0px
               <item>
                <widget class="QLabel" name="label_6">
                 <property name="sizePolicy">
-                 <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                 <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
                   <horstretch>0</horstretch>
                   <verstretch>0</verstretch>
                  </sizepolicy>
@@ -579,23 +797,26 @@ border: 0px
               </item>
              </layout>
             </item>
-            <item row="0" column="0">
-             <widget class="QPushButton" name="connectOcean_pushButton">
-              <property name="styleSheet">
-               <string notr="true"/>
+            <item row="2" column="0">
+             <widget class="QLabel" name="label_3">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
               </property>
-              <property name="text">
-               <string>Connect</string>
-              </property>
-             </widget>
-            </item>
-            <item row="5" column="0">
-             <widget class="QLabel" name="label_5">
               <property name="styleSheet">
                <string notr="true">border: 0px</string>
               </property>
               <property name="text">
-               <string>Delay</string>
+               <string>Integration Time</string>
+              </property>
+             </widget>
+            </item>
+            <item row="7" column="0">
+             <widget class="Line" name="line_8">
+              <property name="orientation">
+               <enum>Qt::Orientation::Horizontal</enum>
               </property>
              </widget>
             </item>
@@ -623,7 +844,7 @@ border: 0px
               <item>
                <widget class="QLabel" name="label_4">
                 <property name="sizePolicy">
-                 <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+                 <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
                   <horstretch>0</horstretch>
                   <verstretch>0</verstretch>
                  </sizepolicy>
@@ -638,39 +859,14 @@ border: 0px
               </item>
              </layout>
             </item>
-            <item row="4" column="0">
-             <widget class="Line" name="line_7">
-              <property name="orientation">
-               <enum>Qt::Orientation::Horizontal</enum>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="0">
-             <widget class="QLabel" name="label_3">
-              <property name="styleSheet">
-               <string notr="true">border: 0px</string>
-              </property>
-              <property name="text">
-               <string>Integration Time</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="0">
-             <widget class="Line" name="line_6">
-              <property name="orientation">
-               <enum>Qt::Orientation::Horizontal</enum>
-              </property>
-             </widget>
-            </item>
-            <item row="9" column="0">
-             <widget class="Line" name="line_9">
-              <property name="orientation">
-               <enum>Qt::Orientation::Horizontal</enum>
-              </property>
-             </widget>
-            </item>
             <item row="8" column="0">
              <widget class="QTextEdit" name="info_display">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
               <property name="readOnly">
                <bool>true</bool>
               </property>
@@ -684,9 +880,13 @@ border: 0px
              <x>0</x>
              <y>0</y>
              <width>225</width>
-             <height>444</height>
+             <height>452</height>
             </rect>
            </property>
+           <attribute name="icon">
+            <iconset>
+             <normaloff>icons/cpu.svg</normaloff>icons/cpu.svg</iconset>
+           </attribute>
            <attribute name="label">
             <string>Arduino Settings</string>
            </attribute>
@@ -801,7 +1001,7 @@ border: 0px
              <x>0</x>
              <y>0</y>
              <width>225</width>
-             <height>444</height>
+             <height>452</height>
             </rect>
            </property>
            <attribute name="label">
@@ -812,123 +1012,23 @@ border: 0px
         </item>
        </layout>
       </item>
-     </layout>
-    </item>
-    <item row="2" column="0">
-     <widget class="Line" name="line">
-      <property name="orientation">
-       <enum>Qt::Orientation::Horizontal</enum>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="0">
-     <layout class="QHBoxLayout" name="horizontalLayout_2">
       <item>
-       <widget class="QLabel" name="label_10">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>124</width>
-          <height>64</height>
-         </size>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-        <property name="pixmap">
-         <pixmap>static/captX.png</pixmap>
-        </property>
-        <property name="scaledContents">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="launchaqc_pushButton">
-        <property name="styleSheet">
-         <string notr="true"/>
-        </property>
-        <property name="text">
-         <string>Launch Aqcuisition</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="zero_pushButton">
-        <property name="styleSheet">
-         <string notr="true"/>
-        </property>
-        <property name="text">
-         <string>Zero</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="static_pushButton">
-        <property name="styleSheet">
-         <string notr="true"/>
-        </property>
-        <property name="text">
-         <string>Static</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <spacer name="horizontalSpacer_3">
+       <spacer name="horizontalSpacer_2">
         <property name="orientation">
          <enum>Qt::Orientation::Horizontal</enum>
         </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item>
-       <widget class="QPushButton" name="launchseq_pushButton">
-        <property name="styleSheet">
-         <string notr="true"/>
-        </property>
-        <property name="text">
-         <string>Launch Sequence</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QProgressBar" name="progressBar">
-        <property name="value">
-         <number>0</number>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <spacer name="horizontalSpacer">
-        <property name="orientation">
-         <enum>Qt::Orientation::Horizontal</enum>
+        <property name="sizeType">
+         <enum>QSizePolicy::Policy::Fixed</enum>
         </property>
         <property name="sizeHint" stdset="0">
          <size>
-          <width>40</width>
+          <width>10</width>
           <height>20</height>
          </size>
         </property>
        </spacer>
       </item>
      </layout>
-    </item>
-    <item row="0" column="0">
-     <widget class="Line" name="line_15">
-      <property name="orientation">
-       <enum>Qt::Orientation::Horizontal</enum>
-      </property>
-     </widget>
     </item>
    </layout>
   </widget>

@@ -1,6 +1,8 @@
 import serial
 import serial.tools.list_ports
 
+DEVICE_PORT = "COM3"
+
 class ArduinoController:
     def __init__(self):
         self.arduino = None
@@ -15,7 +17,7 @@ class ArduinoController:
             for port in ports:
                 if any(keyword.lower() in (port.description or '').lower() or
                        keyword.lower() in (port.device or '').lower()
-                       for keyword in ["arduino", "cu.usbmodem", "ch340", "ttyusb", "ttyacm"]):
+                       for keyword in ["arduino", "cu.usbmodem", "ch340", "ttyusb", "ttyacm", DEVICE_PORT]):
                     return port.device
             return None
 

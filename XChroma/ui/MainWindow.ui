@@ -89,7 +89,7 @@ QLabel {
 }
 
 /* ComboBox */
-QComboBox, QSpinBox {
+QComboBox, QSpinBox, QDoubleSpinBox {
     background-color: #1E1E1E;
     color: #E0E0E0;
     border: 1px solid #65DBF9; /* Blue highlight */
@@ -97,7 +97,7 @@ QComboBox, QSpinBox {
     padding: 2px;
 }
 
-QComboBox:hover, QSpinBox:hover {
+QComboBox:hover, QSpinBox:hover, QDoubleSpinBox:hover {
     border: 1px solid #65DBF9;
 }
 
@@ -354,6 +354,9 @@ QFrame[frameShape=&quot;4&quot;], QFrame[frameShape=&quot;5&quot;] {
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
+        <property name="currentIndex">
+         <number>0</number>
+        </property>
         <widget class="QWidget" name="tab">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -471,7 +474,7 @@ border: 0px
            </size>
           </property>
           <property name="currentIndex">
-           <number>2</number>
+           <number>1</number>
           </property>
           <widget class="QWidget" name="page">
            <property name="geometry">
@@ -531,7 +534,7 @@ border: 0px
                <string notr="true">border: 0px</string>
               </property>
               <property name="text">
-               <string>Average</string>
+               <string>Average :</string>
               </property>
              </widget>
             </item>
@@ -644,7 +647,7 @@ border: 0px
                <string notr="true">border: 0px</string>
               </property>
               <property name="text">
-               <string>Units</string>
+               <string>Units :</string>
               </property>
              </widget>
             </item>
@@ -725,7 +728,7 @@ border: 0px
                <string notr="true">border: 0px</string>
               </property>
               <property name="text">
-               <string>Delay</string>
+               <string>Delay :</string>
               </property>
              </widget>
             </item>
@@ -817,7 +820,7 @@ border: 0px
                <string notr="true">border: 0px</string>
               </property>
               <property name="text">
-               <string>Integration Time</string>
+               <string>Integration Time :</string>
               </property>
              </widget>
             </item>

@@ -38,7 +38,7 @@ class MainWindow(QMainWindow):
 
                     if font_id != -1:
                         font_family = QFontDatabase.applicationFontFamilies(font_id)[0]
-                        print(f"Successfully loaded font: {font_family} ({font_file})")
+                        # print(f"Successfully loaded font: {font_family} ({font_file})")
                     else:
                         print(f"Failed to load font: {font_file}")
         # Load UI from the .ui file

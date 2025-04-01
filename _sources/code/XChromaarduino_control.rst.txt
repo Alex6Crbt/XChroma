@@ -7,6 +7,7 @@ XChroma.arduino\_control module
 
    XChroma.arduino_control.ArduinoController
 
+
 .. automodule:: XChroma.arduino_control
    :members:
    :undoc-members:

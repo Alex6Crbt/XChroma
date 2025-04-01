@@ -2,7 +2,8 @@ import time
 import numpy as np
 import pyqtgraph as pg
 from PyQt6 import QtCore, uic
-from PyQt6.QtGui import QFontDatabase, QIcon
+from PyQt6.QtGui import QFontDatabase, QIcon, QDesktopServices
+from PyQt6.QtCore import QUrl
 from PyQt6.QtWidgets import QMainWindow
 from seabreeze.spectrometers import Spectrometer, list_devices
 import textwrap
@@ -84,19 +85,70 @@ class MainWindow(QMainWindow):
         self.integrationtime_spinBox.valueChanged.connect(self.up_inttime)
 
     def up_delay(self, value):
+        r"""
+        Sets the time interval between two acquisitions.
+        This affects both the display refresh rate and the minimum time between two redundant saves.
+
+        This function is triggered when the value of `delay_doubleSpinBox` changes.
+
+        Parameters
+        ----------
+        value : int
+            timer interval.
+
+        Returns
+        -------
+        None.
+
+        """
         self.timer.setInterval(int(value * 1000))  # Convertir secondes en millisecondes
 
     def up_inttime(self, value):
+        r"""
+        Sets the integration time for the spectrometer.
+
+        This function is triggered when the value of `integrationtime_spinBox` changes.
+
+        Parameters
+        ----------
+        value : int or float
+            Integration time in milliseconds.
+
+        Returns
+        -------
+        None
+
+        """
         try:
             self.spectro.integration_time_micros(value * 1000)
         except Exception as e:
             print(e)
 
     def connect_arduino(self):
+        r"""
+        Initializes and connects to the Arduino controller.
+
+        Returns
+        -------
+        None.
+
+        """
         self.controller = ArduinoController()
         self.controller.send_command("r")
 
     def connect_ocean(self):
+        r"""
+        Connects to an Ocean Optics spectrometer and initializes it.
+
+        This function detects connected spectrometer devices, establishes a connection
+        to the first available device, and initializes its integration time. If no
+        spectrometer is found, it generates synthetic data for display.
+
+        Returns
+        -------
+        None.
+
+        """
         print("Init spectrometer")
         devices = list_devices()
         print(f"devices found : {devices}")
@@ -133,7 +185,16 @@ class MainWindow(QMainWindow):
 
         print(len(self.data_spectro.wavelengths))
         print(len(self.data_spectro.intensities))
+
     def init_plots(self):
+        """
+        Initializes the PyQtGraph plots for displaying spectrometer data.
+
+        Returns
+        -------
+        None.
+
+        """
         self.c1 = self.p1.plot(self.data_spectro.wavelengths, self.data_spectro.intensities)
         self.clear_avg()  # init le plot avg
         self.p1.setLabel("left", "Intensity", units="counts")
@@ -182,6 +243,22 @@ class MainWindow(QMainWindow):
         self.update_axis_units()
 
     def update_axis_units(self):
+        r"""
+        Updates the x-axis label based on the selected unit.
+
+        This function checks the current selection of `units_comboBox` and updates
+        the x-axis labels of multiple plots accordingly.
+        Depending on the selected unit, the x-axis could be labeled with:
+
+        - **Wavelength (nm)**: For normal people.
+        - **Energy (eV)**: For energy enthusiasts.
+        - **Frequency (THz)**: Who use this ?
+
+        Returns
+        -------
+        None.
+
+        """
         id = self.units_comboBox.currentIndex()
         if id == 0:
             # Revenir à l'échelle des longueurs d'onde en nm
@@ -218,6 +295,26 @@ class MainWindow(QMainWindow):
         self.c3.setData(self.data_spectro.scaledxdata, self.data_spectro.intensities)
 
     def uplot_1(self):
+        """
+        Updates the first plot with spectrometer data.
+
+        This function updates Plot 1 based on the current settings:
+
+        - If the "Static" checkbox is checked, the static data is plotted with a custom color.
+        - If the "Avg" checkbox is checked, the average intensity data is plotted, adjusted for static values, with a yellow line.
+        - If neither checkbox is selected, the static plot is cleared, and only the raw intensity data is shown.
+
+        What is displayed:
+
+        - **Raw Data**: A plot of the intensity values against the wavelength (scaled data) with a gray line.
+        - **Static Data**: If enabled, a plot of the static values against the wavelength with a purple line.
+        - **Average Data**: If enabled, a plot of the average intensity values with the static data subtracted, displayed in yellow.
+
+        Returns
+        -------
+        None.
+
+        """
 
         if self.static_checkBox.isChecked():
             static = self.data_spectro.static
@@ -234,6 +331,26 @@ class MainWindow(QMainWindow):
         self.c1.setData(self.data_spectro.scaledxdata, self.data_spectro.intensities, pen=(128, 128, 128))
 
     def uplot_2(self):
+        r"""
+        Updates the second plot with absorbance data.
+
+        This function updates Plot 2 (For the Spetral Tab) based on the current settings:
+
+        - If the "Static" checkbox is checked, the static data is considered when calculating absorbance.
+        - If the "Avg" checkbox is checked, the average intensity is used for absorbance calculation.
+        - If the "Avg" checkbox is not checked, the raw intensity is used instead.
+
+        The absorbance is calculated directly with the compute_absorbance method of the Dataclass
+
+        What is displayed:
+
+        - **Absorbance Data**: A plot of absorbance values.
+
+        Returns
+        -------
+        None.
+
+        """
         if self.static_checkBox.isChecked():
             static = self.data_spectro.static
         else:
@@ -248,6 +365,26 @@ class MainWindow(QMainWindow):
         self.c2.setData(self.data_spectro.scaledxdata, absorbance)
 
     def uplot_3(self):
+        r"""
+        Updates the second plot with absorbance data.
+
+        This function updates Plot 3 (For the Temporal Tab) based on the current settings:
+
+        - If the "Static" checkbox is checked, the static data is considered when calculating absorbance.
+        - If the "Avg" checkbox is checked, the average intensity is used for absorbance calculation.
+        - If the "Avg" checkbox is not checked, the raw intensity is used instead.
+
+        The absorbance is calculated directly with the compute_absorbance method of the Dataclass
+
+        What is displayed:
+
+        - **Absorbance Data**: A plot of absorbance values.
+
+        Returns
+        -------
+        None.
+
+        """
         if self.static_checkBox.isChecked():
             static = self.data_spectro.static
         else:
@@ -262,6 +399,26 @@ class MainWindow(QMainWindow):
         self.c3.setData(self.data_spectro.scaledxdata, absorbance, pen=(154, 109, 198))
 
     def uplot_4(self):
+        r"""
+        Updates the Plot 4 with temporal absorbance data.
+
+        This function updates Plot 4 based on the current settings:
+
+        - If the "Static" checkbox is checked, the static data is considered when calculating temporal absorbance.
+        - If the "Avg" checkbox is checked, the average intensity is used for the absorbance calculation.
+        - If the "Avg" checkbox is not checked, the raw intensity is used instead.
+
+        The absorbance is calculated over a selected region, and the time series data is plotted accordingly.
+
+        What is displayed:
+
+        - **Temporal Absorbance Data**: A plot of temporal absorbance over the selected wavelength region. The x-axis represents time (relative to the start time), and the y-axis represents the absorbance values.
+
+        Returns
+        -------
+        None.
+
+        """
         if self.static_checkBox.isChecked():
             static = self.data_spectro.static
         else:
@@ -281,6 +438,24 @@ class MainWindow(QMainWindow):
         self.c4.setData(np.array(times_temp_dat)-self.start_time, temp_dat)
 
     def update_plots(self):
+        r"""
+        Updates all plots with the latest data.
+
+        This function checks whether a device is connected:
+
+        - If a device is found, it fetches the latest intensity data from the spectrometer.
+        - If no device is found, it uses synthetic data for the plots.
+
+        After updating the intensity data, the function:
+
+        - Updates the moving average of the intensity data based on the value from the `avgspinBox`.
+        - Updates all four plots (`uplot_1`, `uplot_2`, `uplot_3`, and `uplot_4`) with the latest data.
+
+        Returns
+        -------
+        None.
+
+        """
         if self.device_found == True:
             self.data_spectro.intensities = self.spectro.intensities()
         else:
@@ -292,6 +467,14 @@ class MainWindow(QMainWindow):
         self.uplot_4()
 
     def clear_plot(self):
+        r"""
+        Clear plots, and init them back
+
+        Returns
+        -------
+        None.
+
+        """
         self.p1.clear()
         self.p2.clear()
         self.p3.clear()
@@ -299,18 +482,57 @@ class MainWindow(QMainWindow):
         self.init_plots()
 
     def set_zero(self):
+        r"""
+        Sets the baseline (zero) intensity data in the `data_spectro` class.
+
+        This function updates the `zero` attribute in `data_spectro` based on the current
+        checkbox selection:
+
+        - If the "Avg" checkbox is checked, the baseline is set to the average intensity data.
+        - If the "Avg" checkbox is not checked, the baseline is set to the raw intensity data.
+
+
+        Returns
+        -------
+        None.
+
+        """
         if self.avg_checkBox.isChecked():
             self.data_spectro.zero = self.data_spectro.avg_i
         else:
             self.data_spectro.zero = self.data_spectro.intensities
 
     def set_static(self):
+        r"""
+        Sets the static intensity data in the `data_spectro` class.
+
+        This function updates the `static` attribute in the `data_spectro` class based on
+        the current checkbox selection:
+
+        - If the "Avg" checkbox is checked, the static data is set to the average intensity data (`avg_i`).
+        - If the "Avg" checkbox is not checked, the static data is set to the raw intensity data (`intensities`).
+
+        The `static` value is used for baseline correction and further data analysis.
+
+        Returns
+        -------
+        None.
+
+        """
         if self.avg_checkBox.isChecked():
             self.data_spectro.static = self.data_spectro.avg_i
         else:
             self.data_spectro.static = self.data_spectro.intensities
 
     def set_roi(self):
+        r"""
+        Set the Region Of Interest, also update it if units are changed
+
+        Returns
+        -------
+        None.
+
+        """
         self.roi_pos = (590, 610)
 
         self.region = pg.LinearRegionItem(
@@ -323,6 +545,14 @@ class MainWindow(QMainWindow):
         self.p3.addItem(self.region)
 
     def clear_avg(self):
+        r"""
+        Clear the averaged data stored in the data_spectro class
+
+        Returns
+        -------
+        None.
+
+        """
         # self.lavg = []
         self.data_spectro.lavg.clear()
         try:
@@ -332,6 +562,14 @@ class MainWindow(QMainWindow):
         self.c1_avg = self.p1.plot(pen=(255, 255, 0))
 
     def clear_static(self):
+        r"""
+        Clear the static data stored in the data_spectro class
+
+        Returns
+        -------
+        None.
+
+        """
         # self.static = np.zeros(len(self.xdata))
         self.data_spectro.static = np.zeros(len(self.data_spectro.wavelengths))
         try:
@@ -341,37 +579,95 @@ class MainWindow(QMainWindow):
         self.c1_static = self.p1.plot()
 
     def clear_temp(self):
+        r"""
+        Clear the temporal averaged data stored in the data_spectro class
+
+        Returns
+        -------
+        None.
+
+        """
         self.data_spectro.temp_dat.clear()
         self.data_spectro.times_temp_dat.clear()
         self.start_time = time.time()
 
 
     def toggle_servo1(self):
+        r"""
+        Toggles the state of Servo 1 based on the checkbox status.
+
+        Returns
+        -------
+        None.
+
+        """
         # self.controller.send_command("a")  # Commande pour activer le servo 1
         command = "a" if self.s1_checkBox.isChecked() else "A"
         self.controller.send_command(command)
 
     def toggle_servo2(self):
+        r"""
+        Toggles the state of Servo 2 based on the checkbox status.
+
+        Returns
+        -------
+        None.
+
+        """
         # self.controller.send_command("z")  # Commande pour activer le servo 1
         command = "z" if self.s2_checkBox.isChecked() else "Z"
         self.controller.send_command(command)
 
     def toggle_servo3(self):
+        r"""
+        Toggles the state of Servo 3 based on the checkbox status.
+
+        Returns
+        -------
+        None.
+
+        """
         # self.controller.send_command("e")  # Commande pour activer le servo 3
         # self.controller.send_command("e")  # Commande pour activer le servo 1
         command = "e" if self.s3_checkBox.isChecked() else "E"
         self.controller.send_command(command)
 
     def reset_servo(self):
+        r"""
+        Reset the state of all Servo's and the checkbox status.
+
+        Returns
+        -------
+        None.
+
+        """
         self.controller.send_command("r")
         self.s1_checkBox.setChecked(False)
         self.s2_checkBox.setChecked(False)
         self.s3_checkBox.setChecked(False)
 
     def closeEvent(self, event):
-        """
-        Cette méthode est appelée lors de la fermeture de la fenêtre principale.
-        Ici, nous fermons la connexion avec l'Arduino avant de quitter l'application.
+        r"""
+        Handles the event when the main window is closed.
+
+        This method is called when the main window is closed. It performs cleanup tasks
+        before the application exits:
+
+        - If an Arduino is connected, it sends a command to the Arduino to signal the
+          termination of communication.
+        - Closes the serial connection with the Arduino to safely disconnect.
+
+        Additionally, it could optionally save data to a CSV file, though this functionality
+        is currently commented out.
+
+        Parameters
+        ----------
+        event : QCloseEvent
+            The close event triggered when the user attempts to close the window.
+
+        Returns
+        -------
+        None.
         """
         # df = pd.DataFrame(self.data_buffer)  # Convertir le tampon en DataFrame
         # df.to_csv("data.csv", mode="a", header=False, index=False)  # Append au fichier
@@ -385,6 +681,24 @@ class MainWindow(QMainWindow):
         event.accept()  # Accepte la fermeture de la fenêtre
 
     def toggle_sequence(self):
+        r"""
+        Starts, pauses, or resumes the sequence execution.
+
+        - If a sequence thread is running:
+
+            - Toggles between pausing and resuming.
+            - Updates the button text and icon accordingly.
+
+        - If no sequence is running:
+
+            - Creates a new `SequenceWorker` thread to handle the sequence.
+            - Connects thread signals for progress updates and completion handling.
+            - Starts the thread and updates the button to indicate a running sequence.
+
+        Returns
+        -------
+        None
+        """
         if self.thread and self.thread.isRunning():
             self.thread.pause_resume()
             if self.thread.is_paused:
@@ -402,16 +716,51 @@ class MainWindow(QMainWindow):
             self.thread.start()
 
     def reset_sequence(self):
+        r"""
+        Stops and resets the sequence execution.
+
+        If a sequence thread is running, it sends a stop request to ensure the
+        sequence is properly terminated before resetting.
+
+        Returns
+        -------
+        None
+        """
         if self.thread:
             self.thread.request_stop()  # Ensure the thread stops before resetting
 
 
     def sequence_finished(self):
+        r"""
+        Handles actions to perform when a sequence is finished.
+
+        - Resets the button text and icon to indicate that the sequence has stopped.
+
+        Returns
+        -------
+        None
+        """
         self.launchseq_pushButton.setText("Launch Sequence")
         self.launchseq_pushButton.setIcon(QIcon("XChroma/ui/icons/play.svg"))
 
     def update_progress_bar(self, progress):
-        """Mettre à jour la ProgressBar avec la progression reçue"""
+        r"""
+        Updates the progress bar based on the received progress value.
+
+        Parameters
+        ----------
+        progress : int
+            The current progress value (typically between 0 and 100).
+
+        Returns
+        -------
+        None
+        """
         self.progressBar.setValue(
             progress
         )  # Mise à jour de la valeur de la ProgressBar
+
+    def mousePressEvent(self, event):
+        if self.label_10.rect().contains(event.pos()):
+            QDesktopServices.openUrl(QUrl("https://github.com/Alex6Crbt/XChroma"))
+        super().mousePressEvent(event)

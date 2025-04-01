@@ -12,15 +12,15 @@ class Sequence(SequenceWorker):
         self.data_spectro.lavg.clear()
         time.sleep(10)
 
-        self.data_spectro.save_data(self.data_spectro.avg_i, cycle=0, spectype="zero")
+        self.data_spectro.save_data(self.data_spectro.avg_i, cycle=1, spectype="zero")
         self.data_spectro.zero = self.data_spectro.avg_i
         _ = input("End I_0, place the protein container!!")
         print("measuring I_ON-->I_OFF")
-        self.controller.send_command("z")
-        time.sleep(20)
+        # self.controller.send_command("z")
+        # time.sleep(20)
         self.reset_servo()
         self.controller.send_command("a")
-        self.controller.send_command("e")
+        self.controller.send_command("z")
         # Loop to save I_on data
         i = 0
         while not self.stop_signal:
@@ -36,16 +36,16 @@ class Sequence(SequenceWorker):
 
             self.data_spectro.lavg.clear()
             time.sleep(1)
-            self.data_spectro.save_data(self.data_spectro.avg_i, cycle=0, spectype="on")
+            self.data_spectro.save_data(self.data_spectro.avg_i, cycle=1, spectype="off")
 
 
         time.sleep(2)
         self.reset_servo()
-        self.controller.send_command("e")
+        self.controller.send_command("z")
         self.data_spectro.lavg.clear()
         time.sleep(10)
 
-        self.data_spectro.save_data(self.data_spectro.avg_i, cycle=0, spectype="static")
+        self.data_spectro.save_data(self.data_spectro.avg_i, cycle=1, spectype="static")
         self.data_spectro.static = self.data_spectro.avg_i
         # Update progress
 

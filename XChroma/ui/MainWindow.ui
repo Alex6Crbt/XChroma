@@ -211,7 +211,7 @@ QFrame[frameShape=&quot;4&quot;], QFrame[frameShape=&quot;5&quot;] {
         </property>
         <property name="maximumSize">
          <size>
-          <width>124</width>
+          <width>117</width>
           <height>64</height>
          </size>
         </property>
@@ -219,9 +219,12 @@ QFrame[frameShape=&quot;4&quot;], QFrame[frameShape=&quot;5&quot;] {
          <string/>
         </property>
         <property name="pixmap">
-         <pixmap>static/captX.png</pixmap>
+         <pixmap>static/Logo.png</pixmap>
         </property>
         <property name="scaledContents">
+         <bool>true</bool>
+        </property>
+        <property name="openExternalLinks">
          <bool>true</bool>
         </property>
        </widget>

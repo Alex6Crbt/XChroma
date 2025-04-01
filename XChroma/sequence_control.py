@@ -3,8 +3,8 @@ import time
 
 
 class SequenceWorker(QThread):
-    finished_signal = pyqtSignal()
-    progress_signal = pyqtSignal(int)  # To send progress updates to the MainWindow
+    finished_signal = pyqtSignal() #: To send end signal to the MainWindow
+    progress_signal = pyqtSignal(int)  #: To send progress updates to the MainWindow
 
     def __init__(self, arduino_controller, data_spectro):
         super().__init__()
@@ -79,12 +79,12 @@ class SequenceWorker(QThread):
         self.progress_signal.emit(int(100))
 
     def toggle_servo(self, command, delay=1):
-        """Toggle servo by sending a specific command."""
+        """Toggle a servo by sending a specific command."""
         self.controller.send_command(command)
         time.sleep(delay)
 
     def reset_servo(self, delay=1):
-        """Reset the servo to its initial position."""
+        """Reset all servo's to their respective initial positions."""
         self.controller.send_command("r")
         time.sleep(delay)
 

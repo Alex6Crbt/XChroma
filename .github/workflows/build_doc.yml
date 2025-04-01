@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - name: Install graphics libraries
-        run: sudo apt-get update && sudo apt-get install -y libegl1-mesa
+        run: sudo apt-get update && sudo apt-get install -y libgl1 libglx-mesa0
 
       - name: Checkout repository
         uses: actions/checkout@v2

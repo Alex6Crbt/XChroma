@@ -2,13 +2,7 @@ XChroma.app module
 ==================
 
 
-.. autosummary::
-   :nosignatures:
-
-   XChroma.arduino_control.ArduinoController
-
-
-.. automodule:: XChroma.arduino_control
+.. automodule:: XChroma.app
    :members:
    :undoc-members:
    :show-inheritance:

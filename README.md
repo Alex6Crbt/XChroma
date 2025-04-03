@@ -4,7 +4,7 @@
 > Manage quantum yeild and photofatigue experiments
 
 
-[![Documentation](https://img.shields.io/website?url=https%3A%2F%2Falex6crbt.github.io%XChroma)](https://alex6crbt.github.io/XChroma/)
+[![Documentation](https://img.shields.io/website?url=https://alex6crbt.github.io/XChroma/)](https://alex6crbt.github.io/XChroma/)
 
 <br />
 <div align="center">

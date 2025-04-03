@@ -190,6 +190,8 @@ class SequenceFatigue(SequenceWorker):
             time.sleep(10)
             self.data_spectro.save_data(self.data_spectro.avg_i, cycle=i, spectype="static")
             self.data_spectro.static = self.data_spectro.avg_i
+            self.controller.send_command("a")
+
 
 
         time.sleep(2)

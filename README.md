@@ -1,28 +1,39 @@
 # XChroma
 
-![XChroma Logo](XChroma/ui/static/icon.png)
+<a name="readme-top"></a>
+> Manage quantum yeild and photofatigue experiments
 
-XChroma is a Python-based experiment control software designed to manage and automate optical experiments for measuring the quantum yield and photofatigue of photoswitchable proteins. It supports programmable experimental sequences, allowing users to define custom light protocols for photoactivation and switching cycles.
 
-## Table of Contents
+[[![Documentation](https://img.shields.io/website?url=https%3A%2F%2Falex6crbt.github.io%XChroma)](https://alex6crbt.github.io/XChroma/)
 
-- [Features](#features)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Screenshots](#screenshots)
-- [Project Structure](#project-structure)
-- [Development](#development)
-- [Contributing](#contributing)
-- [License](#license)
-- [Future Documentation](#future-documentation)
+<br />
+<div align="center">
+  <a href="https://alex6crbt.github.io/XChroma/">
+    <img src="XChroma/ui/static/Logo.png">
+  </a>
+
+  <h3 align="center">XChroma - Manage quantum yeild and photofatigue experiments</h3>
+
+  <p align="center">
+    XChroma is a Python-based experiment control software designed to manage and automate optical experiments for measuring the quantum yield and photofatigue of photoswitchable proteins. It supports programmable experimental sequences, allowing users to define custom light protocols for photoactivation and switching cycles.
+    <br />
+    <a href="https://alex6crbt.github.io/XChroma"><strong>Learn More »</strong></a>
+    <br />
+    <br />
+    <a href="https://github.com/Alex6Crbt/XChroma/tree/main/XChroma"><strong>Code »</strong></a>
+    ·
+    <a href="https://github.com/Alex6Crbt/XChroma/issues">Report a bug</a>
+    ·
+    <a href="https://github.com/Alex6Crbt/XChroma/issues">Ask for a feature</a>
+  </p>
+</div>
 
 ## Features
 
-- **Experiment Control:** Interfaces with hardware to manage light protocols and measure fluorescence properties.
+- **Experiment Control:** Interfaces with hardware to measure absorbance properties.
 - **Programmable Sequences:** Define and execute custom sequences to trigger photoswitchable proteins under various conditions.
 - **Real-Time Data Acquisition:** Collect and process experimental data in real time.
 - **Modular Design:** Easy to extend with additional experimental protocols and analysis routines.
-- **Python-Based:** Leverages Python’s ecosystem for scientific computing and rapid prototyping.
 
 ## Installation
 
@@ -37,21 +48,21 @@ XChroma is a Python-based experiment control software designed to manage and aut
     pip install -r requirements.txt
     ```
 
-## Usage
+3. **Launch the app:**
+    ```bash
+    python main.py
+    ```
 
-Run the main control script to start the experiment:
-```bash
-python main.py
-```
-This script initializes the experimental setup, executes programmable light sequences, and measures parameters such as quantum yield and photofatigue.
+## Custom Sequences
 
-The `sequence.py` module allows you to customize and define your own experimental sequences. Edit this file to adjust the timing and light protocol parameters for your specific experiment.
+The `sequence.py` file enables you to create and customize your own experimental sequences. For more details, refer to the [documentation](https://alex6crbt.github.io/XChroma).
+
+You can modify the `SequenceWorker` class to fit your needs or use the prebuilt measurement sequence classes available.
+
 
 ## Screenshots
 
-Below is a screenshot of the XChroma application in action:
-
-![XChroma App Screenshot](XChroma/ui/static/capt_interface.png)
+![XChroma App Screenshot](docs/sources/static/captui.png)
 
 ## Project Structure
 
@@ -72,16 +83,6 @@ XChroma/
 - **sequence.py:** Defines programmable light sequences used during experiments.
 - **assets/images:** Contains the logo and screenshot images.
 
-## Development
-
-- **Setting Up a Development Environment:**
-  1. Clone the repository and install dependencies.
-  2. Use your preferred Python IDE or text editor.
-  3. Modify `sequence.py` and update `main.py` to add new experimental protocols or analysis routines.
-
-- **Testing:**
-  (Include any unit tests or instructions for testing if available.)
-
 ## Contributing
 
 Contributions are welcome! To contribute:
@@ -93,9 +94,6 @@ Contributions are welcome! To contribute:
 
 For major changes, please open an issue first to discuss your ideas.
 
-## License
-
-This project is licensed under the MIT License – see the [LICENSE](LICENSE) file for details.
 
 ## Future Documentation
 

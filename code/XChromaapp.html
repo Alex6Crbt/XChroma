@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 
 
-<html lang="en" data-content_root="../" data-theme="dark">
+<html lang="en" data-content_root="../" data-theme="auto">
 
   <head>
     <meta charset="utf-8" />
@@ -13,8 +13,8 @@
   
   
   <script data-cfasync="false">
-    document.documentElement.dataset.mode = localStorage.getItem("mode") || "dark";
-    document.documentElement.dataset.theme = localStorage.getItem("theme") || "dark";
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "auto";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "auto";
   </script>
   <!--
     this give us a css class that will be invisible only if js is disabled
@@ -57,7 +57,7 @@
   </head>
   
   
-  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="dark">
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="auto">
 
   
   
@@ -116,9 +116,11 @@
   
     
     
+      
     
-    <img src="../_static/captX.png" class="logo__image only-dark" alt=""/>
-    <img src="../_static/captX.png" class="logo__image only-light pst-js-only" alt=""/>
+    
+    <img src="../_static/captX.png" class="logo__image only-light" alt=""/>
+    <img src="../_static/captX.png" class="logo__image only-dark pst-js-only" alt=""/>
   
   
     <p class="title logo__title">XChroma</p>
@@ -484,7 +486,8 @@ spectrometer is found, it generates synthetic data for display.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="XChroma.app.MainWindow.mousePressEvent">
 <span class="sig-name descname"><span class="pre">mousePressEvent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/XChroma/app.html#MainWindow.mousePressEvent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#XChroma.app.MainWindow.mousePressEvent" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>XChroma logo links to documentation</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="XChroma.app.MainWindow.reset_sequence">
@@ -719,6 +722,12 @@ Depending on the selected unit, the x-axis could be labeled with:</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="XChroma.app.MainWindow.update_selected_sequence">
+<span class="sig-name descname"><span class="pre">update_selected_sequence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sequence_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/XChroma/app.html#MainWindow.update_selected_sequence"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#XChroma.app.MainWindow.update_selected_sequence" title="Link to this definition">#</a></dt>
+<dd><p>Update the input fields when the user selects a sequence.</p>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="XChroma.app.MainWindow.uplot_1">
 <span class="sig-name descname"><span class="pre">uplot_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/XChroma/app.html#MainWindow.uplot_1"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#XChroma.app.MainWindow.uplot_1" title="Link to this definition">#</a></dt>
 <dd><p>Updates the first plot with spectrometer data.</p>
@@ -883,6 +892,7 @@ Depending on the selected unit, the x-axis could be labeled with:</p>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#XChroma.app.MainWindow.update_axis_units"><code class="docutils literal notranslate"><span class="pre">MainWindow.update_axis_units()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#XChroma.app.MainWindow.update_plots"><code class="docutils literal notranslate"><span class="pre">MainWindow.update_plots()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#XChroma.app.MainWindow.update_progress_bar"><code class="docutils literal notranslate"><span class="pre">MainWindow.update_progress_bar()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#XChroma.app.MainWindow.update_selected_sequence"><code class="docutils literal notranslate"><span class="pre">MainWindow.update_selected_sequence()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#XChroma.app.MainWindow.uplot_1"><code class="docutils literal notranslate"><span class="pre">MainWindow.uplot_1()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#XChroma.app.MainWindow.uplot_2"><code class="docutils literal notranslate"><span class="pre">MainWindow.uplot_2()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#XChroma.app.MainWindow.uplot_3"><code class="docutils literal notranslate"><span class="pre">MainWindow.uplot_3()</span></code></a></li>

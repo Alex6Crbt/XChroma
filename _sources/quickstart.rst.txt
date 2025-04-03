@@ -59,7 +59,20 @@ Installation
                 python -m venv myenv
                 myenv\Scripts\activate
 
-.. dropdown:: 4. **Launch the App** :octicon:`rocket`
+
+.. dropdown:: 4. Install Required Packages :octicon:`download`
+    :open:
+    :animate: fade-in-slide-down
+
+    In the virtual environment or your Python environment,
+    run the following command to install the necessary packages:
+
+    .. code-block:: console
+
+        pip install -r requirements.txt
+
+
+.. dropdown:: 5. **Launch the App** :octicon:`rocket`
     :open:
     :animate: fade-in-slide-down
 

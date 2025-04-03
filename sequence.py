@@ -135,7 +135,6 @@ class SequenceFatigue(SequenceWorker):
         super().__init__(controller, data_spectro)
         self.delay1 = delay1  # String
         self.delay2 = delay2  # Integer
-        self.servo_letter = servo_letter
 
     def run(self):
         print("Sequence started")
@@ -173,14 +172,14 @@ class SequenceFatigue(SequenceWorker):
             self.progress_signal.emit(int(i % 100))  # Emit progress update
 
             self.controller.send_command("z")
-            time.sleep(self.param1)
+            time.sleep(self.delay1)
             self.controller.send_command("Z")
             self.data_spectro.lavg.clear()
             time.sleep(10)
             self.data_spectro.save_data(self.data_spectro.avg_i, cycle=i, spectype="on")
 
             self.controller.send_command("e")
-            time.sleep(self.param2)
+            time.sleep(self.delay2)
             self.controller.send_command("E")
             self.data_spectro.lavg.clear()
             time.sleep(10)

@@ -4,7 +4,7 @@ import pyqtgraph as pg
 from PyQt6 import QtCore, uic
 from PyQt6.QtGui import QFontDatabase, QIcon, QDesktopServices
 from PyQt6.QtCore import QUrl
-from PyQt6.QtWidgets import QMainWindow
+from PyQt6.QtWidgets import QMainWindow, QLineEdit, QSpinBox, QDoubleSpinBox
 from seabreeze.spectrometers import Spectrometer, list_devices
 import textwrap
 import os
@@ -23,7 +23,7 @@ pg.setConfigOption("foreground", "#E0E0E0")  # Texte et lignes
 # ATTENTION LE RESET DES VALEURS EST IMPORTANT !!!
 #
 class MainWindow(QMainWindow):
-    def __init__(self, CustomSequence):
+    def __init__(self, Sequence_dict):
         super().__init__()
 
         font_folder = "XChroma/ui/fonts"
@@ -46,8 +46,7 @@ class MainWindow(QMainWindow):
         uic.loadUi("XChroma/ui/MainWindow.ui", self)
         self.setWindowTitle("XChroma")
 
-        # cst
-        self.thread = None  # Pas de thread au départ
+        self.available_sequences = Sequence_dict
         self.start_time = time.time()
         # Connect buttons
         self.units_comboBox.currentIndexChanged.connect(self.update_axis_units)
@@ -65,9 +64,16 @@ class MainWindow(QMainWindow):
         self.s2_checkBox.clicked.connect(self.toggle_servo2)
         self.s3_checkBox.clicked.connect(self.toggle_servo3)
         self.reseta_pushButton.clicked.connect(self.reset_servo)
+        self.sequence_selector.addItems(self.available_sequences.keys())
+        self.sequence_selector.currentTextChanged.connect(self.update_selected_sequence)
         # Try connecting to spectro during init
         #
-        self.SequenceWorker = CustomSequence
+        # Available sequence classes
+        self.thread = None
+        self.input_fields = {}  # Store input widgets
+        self.selected_sequence = next(iter(self.available_sequences))
+        self.update_selected_sequence(self.selected_sequence)
+
         self.data_spectro = DataSpecro()
         self.connect_ocean()
         self.connect_arduino()
@@ -182,9 +188,6 @@ class MainWindow(QMainWindow):
               - **Samples:** {len(self.data_spectro.wavelengths)}
             """)
             self.info_display.setMarkdown(info_text)
-
-        print(len(self.data_spectro.wavelengths))
-        print(len(self.data_spectro.intensities))
 
     def init_plots(self):
         """
@@ -708,7 +711,15 @@ class MainWindow(QMainWindow):
                 self.launchseq_pushButton.setText("Paused")
                 self.launchseq_pushButton.setIcon(QIcon("XChroma/ui/icons/pause.svg"))  # Set Pause icon
         else:
-            self.thread = self.SequenceWorker(self.controller, self.data_spectro)
+            # Retrieve user inputs based on dynamically created fields
+            args = {}
+            for arg_name, input_widget in self.input_fields.items():
+                if isinstance(input_widget, QLineEdit):
+                    args[arg_name] = input_widget.text()
+                elif isinstance(input_widget, QSpinBox) or isinstance(input_widget, QDoubleSpinBox):
+                    args[arg_name] = input_widget.value()
+            sequence_class = self.available_sequences[self.selected_sequence]["class"]
+            self.thread = sequence_class(self.controller, self.data_spectro, **args)
             self.thread.progress_signal.connect(self.update_progress_bar)
             self.thread.finished_signal.connect(self.sequence_finished)
             self.launchseq_pushButton.setText("Paused")
@@ -761,6 +772,37 @@ class MainWindow(QMainWindow):
         )  # Mise à jour de la valeur de la ProgressBar
 
     def mousePressEvent(self, event):
+        r"""
+        XChroma logo links to documentation
+        """
         if self.label_10.rect().contains(event.pos()):
             QDesktopServices.openUrl(QUrl("https://alex6crbt.github.io/XChroma"))
         super().mousePressEvent(event)
+
+    def update_selected_sequence(self, sequence_name):
+        r"""
+        Update the input fields when the user selects a sequence.
+        """
+        self.selected_sequence = sequence_name
+        sequence_info = self.available_sequences[sequence_name]
+        sequence_args = sequence_info["args"]
+
+        # Clear existing input fields
+        for i in reversed(range(self.argsformLayout.count())):
+            self.argsformLayout.itemAt(i).widget().deleteLater()
+        self.input_fields.clear()
+
+        # Generate new input fields based on sequence arguments
+        for arg_name, arg_type in sequence_args.items():
+            if arg_type == str:
+                input_widget = QLineEdit(self)
+            elif arg_type == int:
+                input_widget = QSpinBox(self)
+                input_widget.setRange(0, 1000)  # Example range
+            elif arg_type == float:
+                input_widget = QDoubleSpinBox(self)
+                input_widget.setRange(0.0, 100.0)
+                input_widget.setSingleStep(0.1)
+
+            self.argsformLayout.addRow(f"{arg_name}:", input_widget)
+            self.input_fields[arg_name] = input_widget

@@ -43,7 +43,7 @@ html_theme = 'pydata_sphinx_theme'
 html_static_path = ['_static']
 html_logo = "_static/captX.png"
 html_context = {
-    "default_mode": "dark",
+    "default_mode": "auto",
 }
 html_theme_options = {
   "show_nav_level": 2

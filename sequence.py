@@ -187,6 +187,7 @@ class SequenceFatigue(SequenceWorker):
             self.data_spectro.lavg.clear()
             time.sleep(self.param2)
             self.data_spectro.save_data(self.data_spectro.avg_i, cycle=i, spectype="static")
+            self.data_spectro.static = self.data_spectro.avg_i
 
 
         time.sleep(2)

@@ -18,6 +18,7 @@
     XChroma is a Python-based experiment control software designed to manage and automate optical experiments for measuring the quantum yield and photofatigue of photoswitchable proteins. <br /> It supports programmable experimental sequences, allowing users to define custom light protocols for photoactivation and switching cycles.
     <br />
     <br />
+  <p align="center">
     <a href="https://alex6crbt.github.io/XChroma"><strong>Learn More »</strong></a>
     <br />
     <br />
@@ -26,6 +27,7 @@
     <a href="https://github.com/Alex6Crbt/XChroma/issues">Report a bug</a>
     ·
     <a href="https://github.com/Alex6Crbt/XChroma/issues">Ask for a feature</a>
+  </p>
   </p>
 </div>
 

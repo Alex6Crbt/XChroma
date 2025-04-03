@@ -173,19 +173,22 @@ class SequenceFatigue(SequenceWorker):
             self.progress_signal.emit(int(i % 100))  # Emit progress update
 
             self.controller.send_command("z")
-            self.data_spectro.lavg.clear()
             time.sleep(self.param1)
+            self.controller.send_command("Z")
+            self.data_spectro.lavg.clear()
+            time.sleep(10)
             self.data_spectro.save_data(self.data_spectro.avg_i, cycle=i, spectype="on")
 
-            self.controller.send_command("Z")
             self.controller.send_command("e")
-            self.data_spectro.lavg.clear()
             time.sleep(self.param2)
+            self.controller.send_command("E")
+            self.data_spectro.lavg.clear()
+            time.sleep(10)
             self.data_spectro.save_data(self.data_spectro.avg_i, cycle=i, spectype="off")
 
             self.reset_servo()
             self.data_spectro.lavg.clear()
-            time.sleep(self.param2)
+            time.sleep(10)
             self.data_spectro.save_data(self.data_spectro.avg_i, cycle=i, spectype="static")
             self.data_spectro.static = self.data_spectro.avg_i
 

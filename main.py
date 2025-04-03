@@ -5,7 +5,7 @@ from sequence import SequenceQY, SequenceFatigue, SequenceBunch
 
 sequence_dict = {
     "Sequence QY": {"class": SequenceQY, "args": {"servo_letter": str, "delay": int}},
-    "Sequence Photofatigue": {"class": SequenceFatigue, "args": {"param1": int, "param2": int}},
+    "Sequence Photofatigue": {"class": SequenceFatigue, "args": {"delay1": int, "delay2": int}},
     "Sequence Bunch": {"class": SequenceBunch, "args": {}},
 }
 

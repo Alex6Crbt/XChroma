@@ -10,19 +10,19 @@ An app developped at `LOB <https://lob.ip-paris.fr>`_ to control an experimental
 
 .. grid:: 3
 
-    .. grid-item-card::  QuickStart :octicon:`rocket`
+    .. grid-item-card:: :octicon:`rocket`  QuickStart
       :link: quickstart
       :link-type: doc
 
       Get up and running quickly with a step-by-step guide.
 
-    .. grid-item-card::  User Guide :octicon:`project-roadmap`
+    .. grid-item-card:: :octicon:`project-roadmap`  User Guide
       :link: userguide
       :link-type: doc
 
       Detailed instructions on features, setup, and usage.
 
-    .. grid-item-card::  API Reference :octicon:`code-square`
+    .. grid-item-card:: :octicon:`code-square`  API Reference
       :link: code/XChroma
       :link-type: doc
 

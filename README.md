@@ -70,21 +70,39 @@ You can modify the `SequenceWorker` class to fit your needs or use the prebuilt 
 ## Project Structure
 
 ```
-XChroma/
-├── assets/
-│   └── images/
-│       ├── logo.png
-│       └── screenshot.png
-├── .gitignore
-├── README.md          # This file
-├── requirements.txt   # Python dependencies
-├── main.py            # Main entry point for experiment control
-└── sequence.py        # Module for programmable sequence definitions
+.
+├── README.md
+├── Spectrums.csv
+├── XChroma
+│   ├── __init__.py
+│   ├── app.py
+│   ├── arduino_control.py
+│   ├── data_spectro.py
+│   ├── process.py
+│   ├── sequence_control.py
+│   └── ui
+│       ├── MainWindow.ui
+│       ├── fonts/
+│       ├── icons/
+│       └── static/
+├── docs
+│   ├── Makefile
+│   ├── make.bat
+│   └── source
+│       ├── _static/
+│       ├── _templates/
+│       ├── code/
+│       ├── conf.py
+│       ├── examples/
+│       ├── index.rst
+│       ├── quickstart.rst
+│       └── userguide.rst
+├── main.py
+├── requirements.txt
+└── sequence.py
+
 ```
 
-- **main.py:** Contains the core logic for controlling the experiment.
-- **sequence.py:** Defines programmable light sequences used during experiments.
-- **assets/images:** Contains the logo and screenshot images.
 
 ## Contributing
 

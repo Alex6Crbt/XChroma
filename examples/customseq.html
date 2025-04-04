@@ -49,8 +49,8 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'examples/customseq';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Reference" href="../code/XChroma.html" />
-    <link rel="prev" title="Quantum Yield Measurments" href="qy.html" />
+    <link rel="next" title="Photofatigue Measurments" href="photofatigue.html" />
+    <link rel="prev" title="Interface walk-through" href="uiwt.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -312,9 +312,9 @@
   <div class="bd-toc-item navbar-nav"><p aria-level="2" class="caption" role="heading"><span class="caption-text">Examples</span></p>
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="uiwt.html">Interface walk-through</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Custom Sequence</a></li>
 <li class="toctree-l1"><a class="reference internal" href="photofatigue.html">Photofatigue Measurments</a></li>
 <li class="toctree-l1"><a class="reference internal" href="qy.html">Quantum Yield Measurments</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Custom Sequence</a></li>
 </ul>
 </div>
 </nav></div>
@@ -377,6 +377,176 @@
                   
   <section id="custom-sequence">
 <h1>Custom Sequence<a class="headerlink" href="#custom-sequence" title="Link to this heading">#</a></h1>
+<p>XChroma is built to handle custom-made acquisition sequences for your experiments.
+To do this, you must write a class inherited from the <code class="docutils literal notranslate"><span class="pre">SequenceWorker</span></code> class, define your custom <code class="docutils literal notranslate"><span class="pre">run</span></code> method, and then export it and define arguments in the <code class="docutils literal notranslate"><span class="pre">main.py</span></code> file.</p>
+<p>Directory structure of the files used :</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>XChroma/
+├──<span class="w"> </span>XChroma/
+├──<span class="w"> </span>main.py
+└──<span class="w"> </span>sequence.py
+</pre></div>
+</div>
+<section id="a-simple-sequence">
+<h2>A Simple Sequence<a class="headerlink" href="#a-simple-sequence" title="Link to this heading">#</a></h2>
+<p>Let’s build a simple sequence that performs measurements to get absorbance and save it.</p>
+<section id="step-1-define-the-class-in-sequence-py">
+<h3>Step 1: Define the Class in <code class="docutils literal notranslate"><span class="pre">sequence.py</span></code><a class="headerlink" href="#step-1-define-the-class-in-sequence-py" title="Link to this heading">#</a></h3>
+<p>First, let’s define the class in the <code class="docutils literal notranslate"><span class="pre">sequence.py</span></code> file:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">SequenceSimple</span><span class="p">(</span><span class="n">SequenceWorker</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Here goes the sequence code</span>
+</pre></div>
+</div>
+<p>The class needs to be inherited from the <a class="reference internal" href="../code/XChromasequence_control.html#XChroma.sequence_control.SequenceWorker" title="XChroma.sequence_control.SequenceWorker"><code class="xref py py-class docutils literal notranslate"><span class="pre">XChroma.sequence_control.SequenceWorker</span></code></a>.</p>
+</section>
+<section id="step-2-define-the-measurements">
+<h3>Step 2: Define the Measurements<a class="headerlink" href="#step-2-define-the-measurements" title="Link to this heading">#</a></h3>
+<p>To get the absorbance spectrum, we need 3 different measurements:</p>
+<ul class="simple">
+<li><p>The intensity spectrum of interest</p></li>
+<li><p>A baseline from a reference curve (zero)</p></li>
+<li><p>A dark signal spectrum</p></li>
+</ul>
+<p>We will also use <code class="docutils literal notranslate"><span class="pre">input()</span></code> to introduce delays between the measurements.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">SequenceSimple</span><span class="p">(</span><span class="n">SequenceWorker</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Sequence started!&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reset_servo</span><span class="p">()</span> <span class="c1"># Make sure all shutter are closed to start</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="o">.</span><span class="n">send_command</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">)</span>  <span class="c1"># Open the shutter for the probe signal</span>
+
+        <span class="c1"># Measurement of the baseline</span>
+        <span class="n">_</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Put the Baseline (zero) sample. Please ensure you get signal from the spectrometer.&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">lavg</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>  <span class="c1"># Wait for automatic averaging as defined in the interface</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">save_data</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">avg_i</span><span class="p">,</span> <span class="n">cycle</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">spectype</span><span class="o">=</span><span class="s2">&quot;zero&quot;</span><span class="p">,</span> <span class="n">csv_path</span><span class="o">=</span><span class="s2">&quot;Spectrums.csv&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">zero</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">avg_i</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">progress_signal</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">33</span><span class="p">))</span>  <span class="c1"># Update progress bar to 33%</span>
+
+        <span class="c1"># Measurement of the sample</span>
+        <span class="n">_</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Put the sample.&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">lavg</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>  <span class="c1"># Wait for automatic averaging as defined in the interface</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">save_data</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">avg_i</span><span class="p">,</span> <span class="n">cycle</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">spectype</span><span class="o">=</span><span class="s2">&quot;sample&quot;</span><span class="p">,</span> <span class="n">csv_path</span><span class="o">=</span><span class="s2">&quot;Spectrums.csv&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">zero</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">avg_i</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">progress_signal</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">66</span><span class="p">))</span>  <span class="c1"># Update progress bar to 66%</span>
+
+        <span class="c1"># Measurement of the static signal</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reset_servo</span><span class="p">()</span>  <span class="c1"># Make sure servos are shut for the dark measurement</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>  <span class="c1"># Wait for automatic averaging as defined in the interface</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">save_data</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">avg_i</span><span class="p">,</span> <span class="n">cycle</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">spectype</span><span class="o">=</span><span class="s2">&quot;static&quot;</span><span class="p">,</span> <span class="n">csv_path</span><span class="o">=</span><span class="s2">&quot;Spectrums.csv&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">static</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_spectro</span><span class="o">.</span><span class="n">static</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">progress_signal</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">100</span><span class="p">))</span>  <span class="c1"># Update progress bar to 100%</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="o">.</span><span class="n">send_command</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">)</span>  <span class="c1"># Open the shutter to view the result in the app</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">finished_signal</span><span class="o">.</span><span class="n">emit</span><span class="p">()</span>  <span class="c1"># Mandatory!</span>
+</pre></div>
+</div>
+</section>
+<section id="step-3-use-the-sequence-in-main-py">
+<h3>Step 3: Use the Sequence in <code class="docutils literal notranslate"><span class="pre">main.py</span></code><a class="headerlink" href="#step-3-use-the-sequence-in-main-py" title="Link to this heading">#</a></h3>
+<p>Now, in the <code class="docutils literal notranslate"><span class="pre">main.py</span></code> file, import your custom sequence:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sequence</span><span class="w"> </span><span class="kn">import</span> <span class="n">SequenceSimple</span>
+</pre></div>
+</div>
+<p>Then, add it to the <code class="docutils literal notranslate"><span class="pre">sequence_dict</span></code>:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-0" name="sd-tab-set-0" type="radio">
+<label class="sd-tab-label" for="sd-tab-item-0">
+Using the <code class="docutils literal notranslate"><span class="pre">sequence_dict</span></code> directly</label><div class="sd-tab-content docutils">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sequence_dict</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;Sequence Simple&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;class&quot;</span><span class="p">:</span> <span class="n">SequenceSimple</span><span class="p">,</span> <span class="s2">&quot;args&quot;</span><span class="p">:</span> <span class="p">{}},</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<input id="sd-tab-item-1" name="sd-tab-set-0" type="radio">
+<label class="sd-tab-label" for="sd-tab-item-1">
+Alternative approach for adding the sequence</label><div class="sd-tab-content docutils">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sequence_dict</span><span class="p">[</span><span class="s2">&quot;Sequence Simple&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;class&quot;</span><span class="p">:</span> <span class="n">SequenceSimple</span><span class="p">,</span> <span class="s2">&quot;args&quot;</span><span class="p">:</span> <span class="p">{}}</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="step-4-run-your-application">
+<h3>Step 4: Run Your Application<a class="headerlink" href="#step-4-run-your-application" title="Link to this heading">#</a></h3>
+<p>You can run your app and see the results !</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>main.py
+</pre></div>
+</div>
+</section>
+</section>
+<section id="adding-gui-control">
+<h2>Adding GUI control<a class="headerlink" href="#adding-gui-control" title="Link to this heading">#</a></h2>
+<p>To add GUI control over the parameters of the Sequence, some steps differ from the basic sequence.</p>
+<section id="update-the-class-definition">
+<h3>Update the Class Definition<a class="headerlink" href="#update-the-class-definition" title="Link to this heading">#</a></h3>
+<p>First, modify the class to include a new <code class="docutils literal notranslate"><span class="pre">__init__</span></code> method to handle the additional parameters coming from the GUI. The class will now accept parameters such as <cite>delay</cite> and <cite>servo_letter</cite> from the GUI, in addition to <cite>controller</cite> and <cite>data_spectro</cite>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">SequenceSimple</span><span class="p">(</span><span class="n">SequenceWorker</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">controller</span><span class="p">,</span> <span class="n">data_spectro</span><span class="p">,</span> <span class="n">delay</span><span class="p">,</span> <span class="n">servo_letter</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">controller</span><span class="p">,</span> <span class="n">data_spectro</span><span class="p">)</span>  <span class="c1"># Mandatory!</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">delay1</span> <span class="o">=</span> <span class="n">delay</span>  <span class="c1"># Store delay value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">servo_letter</span> <span class="o">=</span> <span class="n">servo_letter</span>  <span class="c1"># Store servo letter for reuse in the run method</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Here goes the sequence code</span>
+</pre></div>
+</div>
+<p>In this case, the <code class="docutils literal notranslate"><span class="pre">controller</span></code> and <code class="docutils literal notranslate"><span class="pre">data_spectro</span></code> arguments need to be passed to the parent class (via <code class="docutils literal notranslate"><span class="pre">super()</span></code>), and the additional arguments can be of type <code class="docutils literal notranslate"><span class="pre">str</span></code>, <code class="docutils literal notranslate"><span class="pre">float</span></code>, or <code class="docutils literal notranslate"><span class="pre">int</span></code>.</p>
+</section>
+<section id="use-gui-parameters-in-the-run-method">
+<h3>Use GUI Parameters in the <code class="docutils literal notranslate"><span class="pre">run</span></code> Method<a class="headerlink" href="#use-gui-parameters-in-the-run-method" title="Link to this heading">#</a></h3>
+<p>Now that you have added the necessary parameters to the class, you can use these GUI-defined parameters in the <code class="docutils literal notranslate"><span class="pre">run</span></code> method.</p>
+<p>For example, you can use the <code class="docutils literal notranslate"><span class="pre">delay</span></code> parameter to add a sleep time before running the next step, and the <code class="docutils literal notranslate"><span class="pre">servo_letter</span></code> parameter to control the servo:</p>
+<a class="reference internal image-reference" href="../_images/gui-control-example.png"><img alt="GUI Control Example" class="align-center" src="../_images/gui-control-example.png" style="width: 200px;" />
+</a>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">delay1</span><span class="p">)</span>  <span class="c1"># Use the delay parameter defined in the GUI</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="o">.</span><span class="n">send_command</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">servo_letter</span><span class="p">)</span>  <span class="c1"># Send the command with the selected servo letter</span>
+    <span class="c1"># Add more sequence steps...</span>
+</pre></div>
+</div>
+</section>
+<section id="add-the-sequence-to-main-py">
+<h3>Add the Sequence to <code class="docutils literal notranslate"><span class="pre">main.py</span></code><a class="headerlink" href="#add-the-sequence-to-main-py" title="Link to this heading">#</a></h3>
+<p>To use this new sequence in <code class="docutils literal notranslate"><span class="pre">main.py</span></code>, you need to update the <code class="docutils literal notranslate"><span class="pre">sequence_dict</span></code> to pass the new arguments (<code class="docutils literal notranslate"><span class="pre">servo_letter</span></code> and <code class="docutils literal notranslate"><span class="pre">delay</span></code>).</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-2" name="sd-tab-set-1" type="radio">
+<label class="sd-tab-label" for="sd-tab-item-2">
+Using the <code class="docutils literal notranslate"><span class="pre">sequence_dict</span></code> directly</label><div class="sd-tab-content docutils">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sequence_dict</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;Sequence Simple&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;class&quot;</span><span class="p">:</span> <span class="n">SequenceSimple</span><span class="p">,</span> <span class="s2">&quot;args&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;servo_letter&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;delay&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">}},</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<input id="sd-tab-item-3" name="sd-tab-set-1" type="radio">
+<label class="sd-tab-label" for="sd-tab-item-3">
+Alternative approach for adding the sequence</label><div class="sd-tab-content docutils">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sequence_dict</span><span class="p">[</span><span class="s2">&quot;Sequence Simple&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;class&quot;</span><span class="p">:</span> <span class="n">SequenceSimple</span><span class="p">,</span> <span class="s2">&quot;args&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;servo_letter&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;delay&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">}}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="admonition caution">
+<p class="admonition-title">Caution</p>
+<p>Don’t forget to define the parameters correctly in the GUI before running the sequence.</p>
+</div>
+</section>
+<section id="run-the-application">
+<h3>Run the Application<a class="headerlink" href="#run-the-application" title="Link to this heading">#</a></h3>
+<p>Once everything is set up, you can run the app with:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>main.py
+</pre></div>
+</div>
+</section>
+</section>
 </section>
 
 
@@ -390,20 +560,20 @@
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="qy.html"
+       href="uiwt.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Quantum Yield Measurments</p>
+        <p class="prev-next-title">Interface walk-through</p>
       </div>
     </a>
     <a class="right-next"
-       href="../code/XChroma.html"
+       href="photofatigue.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Reference</p>
+        <p class="prev-next-title">Photofatigue Measurments</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -417,6 +587,31 @@
                 <dialog id="pst-secondary-sidebar-modal"></dialog>
                 <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-simple-sequence">A Simple Sequence</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-define-the-class-in-sequence-py">Step 1: Define the Class in <code class="docutils literal notranslate"><span class="pre">sequence.py</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-2-define-the-measurements">Step 2: Define the Measurements</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-3-use-the-sequence-in-main-py">Step 3: Use the Sequence in <code class="docutils literal notranslate"><span class="pre">main.py</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-4-run-your-application">Step 4: Run Your Application</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#adding-gui-control">Adding GUI control</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#update-the-class-definition">Update the Class Definition</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#use-gui-parameters-in-the-run-method">Use GUI Parameters in the <code class="docutils literal notranslate"><span class="pre">run</span></code> Method</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#add-the-sequence-to-main-py">Add the Sequence to <code class="docutils literal notranslate"><span class="pre">main.py</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#run-the-application">Run the Application</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
 
   <div class="sidebar-secondary-item">
   <div role="note" aria-label="source link">

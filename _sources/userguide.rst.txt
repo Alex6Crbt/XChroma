@@ -4,13 +4,13 @@ User Guide
 
 .. grid:: 2
 
-    .. grid-item-card::  UI Walk-Through
+    .. grid-item-card:: :octicon:`file-directory` UI Walk-Through
        :link: examples/uiwt
        :link-type: doc
 
        A detailed guide to navigating, and simple spectrum measurements.
 
-    .. grid-item-card::  Custom Sequence
+    .. grid-item-card:: :octicon:`rocket` Custom Sequence
        :link: examples/customseq
        :link-type: doc
 
@@ -18,17 +18,22 @@ User Guide
 
 .. grid:: 2
 
-    .. grid-item-card::  Photofatigue Measurements
+    .. grid-item-card:: :octicon:`eye` Photofatigue Measurements
        :link: examples/photofatigue
        :link-type: doc
 
        Step-by-step instructions for conducting photofatigue measurements.
 
-    .. grid-item-card::  Quantum Yields
+    .. grid-item-card:: :octicon:`pulse` Quantum Yields
        :link: examples/qy
        :link-type: doc
 
        A comprehensive guide to measuring and analyzing quantum yields using XChroma
+
+Setup Walk-Through
+------------------
+
+
 
 
 
@@ -38,6 +43,6 @@ User Guide
    :maxdepth: 2
 
    examples/uiwt
+   examples/customseq
    examples/photofatigue
    examples/qy
-   examples/customseq

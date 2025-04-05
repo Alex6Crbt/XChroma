@@ -22,6 +22,7 @@ release = '1.1'
 
 extensions = [
     "sphinx.ext.autodoc",
+    'myst_nb',
     "sphinx.ext.autosummary",
     "sphinx.ext.viewcode",
     "sphinx.ext.napoleon",
@@ -33,6 +34,7 @@ extensions = [
 templates_path = ['_templates']
 exclude_patterns = []
 autodoc_mock_imports = ["pyqtgraph", "PyQt6"]
+nb_execution_mode = "off"
 
 language = 'en'
 

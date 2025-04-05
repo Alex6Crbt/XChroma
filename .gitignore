@@ -8,6 +8,9 @@ open.py
 .AppleDouble
 .LSOverride
 
+# Data
+DATA/
+
 # Icon must end with two \r
 Icon
 
@@ -109,6 +112,7 @@ target/
 
 # Jupyter Notebook
 .ipynb_checkpoints
+.virtual*
 
 # IPython
 profile_default/

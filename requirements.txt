@@ -1,4 +1,5 @@
 accessible-pygments==0.0.5
+myst-nb==1.2.0
 astroid==3.3.9
 babel==2.17.0
 beautifulsoup4==4.13.3

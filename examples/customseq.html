@@ -317,6 +317,8 @@
 <li class="toctree-l1"><a class="reference internal" href="photofatigue.html">Photofatigue Measurments</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="qy.html">Quantum Yield Measurments</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="Fit_DAE.html">Obtaining QY values for DAE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rsEGFP2WT.html">Fit the rsEGFP WT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="actino.html">Fit to get LED power</a></li>
 </ul>
 </details></li>
 </ul>
@@ -396,7 +398,9 @@ To do this, you must write a class inherited from the <code class="docutils lite
 <section id="step-1-define-the-class-in-sequence-py">
 <h3>Step 1: Define the Class in <code class="docutils literal notranslate"><span class="pre">sequence.py</span></code><a class="headerlink" href="#step-1-define-the-class-in-sequence-py" title="Link to this heading">#</a></h3>
 <p>First, let’s define the class in the <code class="docutils literal notranslate"><span class="pre">sequence.py</span></code> file:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">SequenceSimple</span><span class="p">(</span><span class="n">SequenceWorker</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">XChroma.sequence_control</span><span class="w"> </span><span class="kn">import</span> <span class="n">SequenceWorker</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">SequenceSimple</span><span class="p">(</span><span class="n">SequenceWorker</span><span class="p">):</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># Here goes the sequence code</span>
 </pre></div>
@@ -412,7 +416,10 @@ To do this, you must write a class inherited from the <code class="docutils lite
 <li><p>A dark signal spectrum</p></li>
 </ul>
 <p>We will also use <code class="docutils literal notranslate"><span class="pre">input()</span></code> to introduce delays between the measurements.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">SequenceSimple</span><span class="p">(</span><span class="n">SequenceWorker</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">XChroma.sequence_control</span><span class="w"> </span><span class="kn">import</span> <span class="n">SequenceWorker</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">SequenceSimple</span><span class="p">(</span><span class="n">SequenceWorker</span><span class="p">):</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Sequence started!&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">reset_servo</span><span class="p">()</span> <span class="c1"># Make sure all shutter are closed to start</span>
@@ -492,7 +499,9 @@ Alternative approach for adding the sequence</label><div class="sd-tab-content d
 <section id="update-the-class-definition">
 <h3>Update the Class Definition<a class="headerlink" href="#update-the-class-definition" title="Link to this heading">#</a></h3>
 <p>First, modify the class to include a new <code class="docutils literal notranslate"><span class="pre">__init__</span></code> method to handle the additional parameters coming from the GUI. The class will now accept parameters such as <cite>delay</cite> and <cite>servo_letter</cite> from the GUI, in addition to <cite>controller</cite> and <cite>data_spectro</cite>.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">SequenceSimple</span><span class="p">(</span><span class="n">SequenceWorker</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">XChroma.sequence_control</span><span class="w"> </span><span class="kn">import</span> <span class="n">SequenceWorker</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">SequenceSimple</span><span class="p">(</span><span class="n">SequenceWorker</span><span class="p">):</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">controller</span><span class="p">,</span> <span class="n">data_spectro</span><span class="p">,</span> <span class="n">delay</span><span class="p">,</span> <span class="n">servo_letter</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">controller</span><span class="p">,</span> <span class="n">data_spectro</span><span class="p">)</span>  <span class="c1"># Mandatory!</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">delay1</span> <span class="o">=</span> <span class="n">delay</span>  <span class="c1"># Store delay value</span>

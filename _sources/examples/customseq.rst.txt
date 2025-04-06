@@ -26,6 +26,8 @@ First, let's define the class in the ``sequence.py`` file:
 
 .. code-block:: python
 
+    from XChroma.sequence_control import SequenceWorker
+
     class SequenceSimple(SequenceWorker):
         def run(self):
             # Here goes the sequence code
@@ -47,6 +49,9 @@ To get the absorbance spectrum, we need 3 different measurements:
 We will also use ``input()`` to introduce delays between the measurements.
 
 .. code-block:: python
+
+    from XChroma.sequence_control import SequenceWorker
+
 
     class SequenceSimple(SequenceWorker):
         def run(self):
@@ -134,6 +139,8 @@ Update the Class Definition
 First, modify the class to include a new ``__init__`` method to handle the additional parameters coming from the GUI. The class will now accept parameters such as `delay` and `servo_letter` from the GUI, in addition to `controller` and `data_spectro`.
 
 .. code-block:: python
+
+    from XChroma.sequence_control import SequenceWorker
 
     class SequenceSimple(SequenceWorker):
         def __init__(self, controller, data_spectro, delay, servo_letter):

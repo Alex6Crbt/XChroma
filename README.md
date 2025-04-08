@@ -40,6 +40,8 @@
 
 ## Installation
 
+Refer to the [documentation quickstart](https://alex6crbt.github.io/XChroma/quickstart.html) for full setup instructions and usage examples.
+
 1. **Clone the repository:**
     ```bash
     git clone https://github.com/Alex6Crbt/XChroma.git
@@ -56,6 +58,12 @@
     python main.py
     ```
 
+## Preview
+
+Here’s a preview of the XChroma app interface:
+
+![XChroma App Screenshot](docs/source/_static/captui.png)
+
 ## Custom Sequences
 
 The `sequence.py` file enables you to create and customize your own experimental sequences. For more details, refer to the [documentation](https://alex6crbt.github.io/XChroma).
@@ -63,9 +71,7 @@ The `sequence.py` file enables you to create and customize your own experimental
 You can modify the `SequenceWorker` class to fit your needs or use the prebuilt measurement sequence classes available.
 
 
-## Screenshots
 
-![XChroma App Screenshot](docs/sources/static/captui.png)
 
 ## Project Structure
 

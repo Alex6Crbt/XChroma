@@ -151,26 +151,10 @@ First, modify the class to include a new ``__init__`` method to handle the addit
         def run(self):
             # Here goes the sequence code
 
-In this case, the ``controller`` and ``data_spectro`` arguments need to be passed to the parent class (via ``super()``), and the additional arguments can be of type ``str``, ``float``, or ``int``.
+.. caution::
 
-Use GUI Parameters in the ``run`` Method
-****************************************
+    In this case, the ``controller`` and ``data_spectro`` arguments need to be passed to the parent class (via ``super()``), and the additional arguments can be of type ``str``, ``float``, or ``int``.
 
-Now that you have added the necessary parameters to the class, you can use these GUI-defined parameters in the ``run`` method.
-
-For example, you can use the ``delay`` parameter to add a sleep time before running the next step, and the ``servo_letter`` parameter to control the servo:
-
-.. image:: ../_static/gui-control-example.png
-    :alt: GUI Control Example
-    :width: 200px
-    :align: center
-
-.. code-block:: python
-
-    def run(self):
-        time.sleep(self.delay1)  # Use the delay parameter defined in the GUI
-        self.controller.send_command(self.servo_letter)  # Send the command with the selected servo letter
-        # Add more sequence steps...
 
 Add the Sequence to ``main.py``
 *******************************
@@ -205,3 +189,23 @@ Once everything is set up, you can run the app with:
 .. code-block:: bash
 
     python main.py
+
+
+Use GUI Parameters in the ``run`` Method
+****************************************
+
+Now that you have added the necessary parameters to the class, you can use these GUI-defined parameters of the ``run`` method.
+
+For example, you can use the ``delay`` parameter to add a sleep time before running the next step, and the ``servo_letter`` parameter to control witch servo is used:
+
+.. image:: ../_static/gui-control-example.png
+    :alt: GUI Control Example
+    :width: 200px
+    :align: center
+
+.. code-block:: python
+
+    def run(self):
+        time.sleep(self.delay1)  # Use the delay parameter defined in the GUI
+        self.controller.send_command(self.servo_letter)  # Send the command with the selected servo letter
+        # Add more sequence steps...

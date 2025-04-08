@@ -511,19 +511,9 @@ Alternative approach for adding the sequence</label><div class="sd-tab-content d
         <span class="c1"># Here goes the sequence code</span>
 </pre></div>
 </div>
+<div class="admonition caution">
+<p class="admonition-title">Caution</p>
 <p>In this case, the <code class="docutils literal notranslate"><span class="pre">controller</span></code> and <code class="docutils literal notranslate"><span class="pre">data_spectro</span></code> arguments need to be passed to the parent class (via <code class="docutils literal notranslate"><span class="pre">super()</span></code>), and the additional arguments can be of type <code class="docutils literal notranslate"><span class="pre">str</span></code>, <code class="docutils literal notranslate"><span class="pre">float</span></code>, or <code class="docutils literal notranslate"><span class="pre">int</span></code>.</p>
-</section>
-<section id="use-gui-parameters-in-the-run-method">
-<h3>Use GUI Parameters in the <code class="docutils literal notranslate"><span class="pre">run</span></code> Method<a class="headerlink" href="#use-gui-parameters-in-the-run-method" title="Link to this heading">#</a></h3>
-<p>Now that you have added the necessary parameters to the class, you can use these GUI-defined parameters in the <code class="docutils literal notranslate"><span class="pre">run</span></code> method.</p>
-<p>For example, you can use the <code class="docutils literal notranslate"><span class="pre">delay</span></code> parameter to add a sleep time before running the next step, and the <code class="docutils literal notranslate"><span class="pre">servo_letter</span></code> parameter to control the servo:</p>
-<a class="reference internal image-reference" href="../_images/gui-control-example.png"><img alt="GUI Control Example" class="align-center" src="../_images/gui-control-example.png" style="width: 200px;" />
-</a>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">delay1</span><span class="p">)</span>  <span class="c1"># Use the delay parameter defined in the GUI</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="o">.</span><span class="n">send_command</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">servo_letter</span><span class="p">)</span>  <span class="c1"># Send the command with the selected servo letter</span>
-    <span class="c1"># Add more sequence steps...</span>
-</pre></div>
 </div>
 </section>
 <section id="add-the-sequence-to-main-py">
@@ -556,6 +546,19 @@ Alternative approach for adding the sequence</label><div class="sd-tab-content d
 <h3>Run the Application<a class="headerlink" href="#run-the-application" title="Link to this heading">#</a></h3>
 <p>Once everything is set up, you can run the app with:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>main.py
+</pre></div>
+</div>
+</section>
+<section id="use-gui-parameters-in-the-run-method">
+<h3>Use GUI Parameters in the <code class="docutils literal notranslate"><span class="pre">run</span></code> Method<a class="headerlink" href="#use-gui-parameters-in-the-run-method" title="Link to this heading">#</a></h3>
+<p>Now that you have added the necessary parameters to the class, you can use these GUI-defined parameters of the <code class="docutils literal notranslate"><span class="pre">run</span></code> method.</p>
+<p>For example, you can use the <code class="docutils literal notranslate"><span class="pre">delay</span></code> parameter to add a sleep time before running the next step, and the <code class="docutils literal notranslate"><span class="pre">servo_letter</span></code> parameter to control witch servo is used:</p>
+<a class="reference internal image-reference" href="../_images/gui-control-example.png"><img alt="GUI Control Example" class="align-center" src="../_images/gui-control-example.png" style="width: 200px;" />
+</a>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">delay1</span><span class="p">)</span>  <span class="c1"># Use the delay parameter defined in the GUI</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="o">.</span><span class="n">send_command</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">servo_letter</span><span class="p">)</span>  <span class="c1"># Send the command with the selected servo letter</span>
+    <span class="c1"># Add more sequence steps...</span>
 </pre></div>
 </div>
 </section>
@@ -618,9 +621,9 @@ Alternative approach for adding the sequence</label><div class="sd-tab-content d
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#adding-gui-control">Adding GUI control</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#update-the-class-definition">Update the Class Definition</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#use-gui-parameters-in-the-run-method">Use GUI Parameters in the <code class="docutils literal notranslate"><span class="pre">run</span></code> Method</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#add-the-sequence-to-main-py">Add the Sequence to <code class="docutils literal notranslate"><span class="pre">main.py</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#run-the-application">Run the Application</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#use-gui-parameters-in-the-run-method">Use GUI Parameters in the <code class="docutils literal notranslate"><span class="pre">run</span></code> Method</a></li>
 </ul>
 </li>
 </ul>

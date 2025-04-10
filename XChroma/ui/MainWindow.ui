@@ -243,15 +243,6 @@ QFrame[frameShape=&quot;4&quot;], QFrame[frameShape=&quot;5&quot;] {
           <string>Spectral View</string>
          </attribute>
          <layout class="QGridLayout" name="gridLayout">
-          <item row="1" column="0">
-           <widget class="PlotWidget" name="p2">
-            <property name="styleSheet">
-             <string notr="true">padding: 0px;
-border: 0px
-</string>
-            </property>
-           </widget>
-          </item>
           <item row="0" column="0">
            <widget class="PlotWidget" name="p1">
             <property name="sizePolicy">
@@ -882,8 +873,8 @@ border: 0px
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>225</width>
-             <height>452</height>
+             <width>132</width>
+             <height>128</height>
             </rect>
            </property>
            <attribute name="label">

@@ -213,19 +213,19 @@ class MainWindow(QMainWindow):
         self.clear_static()  # Here self.static is set to [0, ..., 0], et definit le plot avec la référence
         self.leg1.addItem(self.c1_static, "Static signal")
 
-        self.c2 = self.p2.plot(
-            self.data_spectro.wavelengths,
-            self.data_spectro.compute_absorbance(self.data_spectro.intensities)
-        )
-        self.p2.setLabel("left", "Absorbance")
-        self.p2.setTitle("Absorbance")
-        self.p2.enableAutoRange("y", False)
+        # self.c2 = self.p2.plot(
+        #     self.data_spectro.wavelengths,
+        #     self.data_spectro.compute_absorbance(self.data_spectro.intensities)
+        # )
+        # self.p2.setLabel("left", "Absorbance")
+        # self.p2.setTitle("Absorbance")
+        # self.p2.enableAutoRange("y", False)
 
         self.c3 = self.p3.plot(
             self.data_spectro.wavelengths,
-            self.data_spectro.compute_absorbance(self.data_spectro.intensities)
+            self.data_spectro.intensities
         )
-        self.p3.setLabel("left", "Absorbance")
+        self.p3.setLabel("left", "Intensity")
         # self.p3.setTitle("Raw Data")
         self.p3.enableAutoRange("y", False)
         self.leg3 = self.p3.addLegend()
@@ -238,10 +238,10 @@ class MainWindow(QMainWindow):
         self.p4.setClipToView(True)
         self.c4 = self.p4.plot()
         self.p4.setLabel("bottom", "Time", units="s")
-        self.p4.setLabel("left", "Absorbance")
+        self.p4.setLabel("left", "Intensity")
 
         self.leg4 = self.p4.addLegend()
-        self.leg4.addItem(self.c4, f"Absorbance {self.roi_pos}")
+        self.leg4.addItem(self.c4, f"Intensity {self.roi_pos}")
         # print(self.leg4)
         self.update_axis_units()
 
@@ -266,7 +266,7 @@ class MainWindow(QMainWindow):
         if id == 0:
             # Revenir à l'échelle des longueurs d'onde en nm
             self.p1.setLabel("bottom", "Wavelength", units="nm")
-            self.p2.setLabel("bottom", "Wavelength", units="nm")
+            # self.p2.setLabel("bottom", "Wavelength", units="nm")
             self.p3.setLabel("bottom", "Wavelength", units="nm")
             self.data_spectro.scaledxdata = self.data_spectro.wavelengths
 
@@ -277,7 +277,7 @@ class MainWindow(QMainWindow):
         elif id == 2:
             # Convertir de nm à THz (c = 3e8 m/s)
             self.p1.setLabel("bottom", "Frequency", units="THz")
-            self.p2.setLabel("bottom", "Frequency", units="THz")
+            # self.p2.setLabel("bottom", "Frequency", units="THz")
             self.p3.setLabel("bottom", "Frequency", units="THz")
             self.data_spectro.scaledxdata = 3e5 / self.data_spectro.wavelengths  # Conversion nm -> THz
             self.region.setBounds([np.min(self.data_spectro.scaledxdata), np.max(self.data_spectro.scaledxdata)])
@@ -286,7 +286,7 @@ class MainWindow(QMainWindow):
         elif id == 1:
             # Convertir de nm à eV (E = hc/λ, h*c = 1240 eV·nm)
             self.p1.setLabel("bottom", "Energy", units="eV")
-            self.p2.setLabel("bottom", "Energy", units="eV")
+            # self.p2.setLabel("bottom", "Energy", units="eV")
             self.p3.setLabel("bottom", "Energy", units="eV")
             self.data_spectro.scaledxdata = 1240 / self.data_spectro.wavelengths  # Conversion nm -> eV
             self.region.setBounds([np.min(self.data_spectro.scaledxdata), np.max(self.data_spectro.scaledxdata)])
@@ -294,7 +294,7 @@ class MainWindow(QMainWindow):
 
         # Mettre à jour les données du graphique
         self.c1.setData(self.data_spectro.scaledxdata, self.data_spectro.intensities, pen=(154, 109, 198))
-        self.c2.setData(self.data_spectro.scaledxdata, self.data_spectro.compute_absorbance(self.data_spectro.intensities))
+        # self.c2.setData(self.data_spectro.scaledxdata, self.data_spectro.compute_absorbance(self.data_spectro.intensities))
         self.c3.setData(self.data_spectro.scaledxdata, self.data_spectro.intensities)
 
     def uplot_1(self):
@@ -333,40 +333,6 @@ class MainWindow(QMainWindow):
             self.c1_avg.clear()
         self.c1.setData(self.data_spectro.scaledxdata, self.data_spectro.intensities, pen=(128, 128, 128))
 
-    def uplot_2(self):
-        r"""
-        Updates the second plot with absorbance data.
-
-        This function updates Plot 2 (For the Spetral Tab) based on the current settings:
-
-        - If the "Static" checkbox is checked, the static data is considered when calculating absorbance.
-        - If the "Avg" checkbox is checked, the average intensity is used for absorbance calculation.
-        - If the "Avg" checkbox is not checked, the raw intensity is used instead.
-
-        The absorbance is calculated directly with the compute_absorbance method of the Dataclass
-
-        What is displayed:
-
-        - **Absorbance Data**: A plot of absorbance values.
-
-        Returns
-        -------
-        None.
-
-        """
-        if self.static_checkBox.isChecked():
-            static = self.data_spectro.static
-        else:
-            static = np.zeros(len(self.data_spectro.wavelengths))
-
-        if self.avg_checkBox.isChecked():
-            data = self.data_spectro.avg_i
-        else:
-            data = self.data_spectro.intensities
-
-        absorbance = self.data_spectro.compute_absorbance(data, static=static)
-        self.c2.setData(self.data_spectro.scaledxdata, absorbance)
-
     def uplot_3(self):
         r"""
         Updates the second plot with absorbance data.
@@ -398,8 +364,7 @@ class MainWindow(QMainWindow):
         else:
             data = self.data_spectro.intensities
 
-        absorbance = self.data_spectro.compute_absorbance(data, static=static)
-        self.c3.setData(self.data_spectro.scaledxdata, absorbance, pen=(154, 109, 198))
+        self.c3.setData(self.data_spectro.scaledxdata, data-static, pen=(154, 109, 198))
 
     def uplot_4(self):
         r"""
@@ -465,7 +430,7 @@ class MainWindow(QMainWindow):
             self.data_spectro.intensities = self.data_spectro.synthetic_data()
         self.data_spectro.update_moving_avg(avg_window = self.avgspinBox.value())
         self.uplot_1()
-        self.uplot_2()
+        # self.uplot_2()
         self.uplot_3()
         self.uplot_4()
 
@@ -479,7 +444,7 @@ class MainWindow(QMainWindow):
 
         """
         self.p1.clear()
-        self.p2.clear()
+        # self.p2.clear()
         self.p3.clear()
         self.p4.clear()
         self.init_plots()

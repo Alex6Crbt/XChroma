@@ -12,7 +12,7 @@ LEN = 2048  # Taille par défaut des données
 
 
 @dataclass
-class DataSpecro: 
+class DataSpecro:
     r"""
      A class representing spectral data and providing methods for absorbance calculations and data processing.
     """
@@ -29,19 +29,19 @@ class DataSpecro:
     def compute_absorbance(self, intensities: np.ndarray, static: np.ndarray = None, zero: np.ndarray = None) -> np.ndarray:
         r"""
         Compute absorbance based on intensity, static, and zero data.
-    
+
         The absorbance is calculated using the following formula:
-        
+
         .. math::
             A = -log_{10}\left(\frac{I_{\text{intensities}} - I_{\text{static}}}{I_{\text{zero}} - I_{\text{static}}}\right)
-    
+
         Where:
-            
+
         - :math:`( A )` is the absorbance,
         - :math:`( I_{\text{intensities}} )` are the measured intensities,
         - :math:`( I_{\text{static}} )` are the static intensities (background),
         - :math:`( I_{\text{zero}} )` are the baseline intensities (zero).
-    
+
         Parameters
         ----------
         intensities : np.ndarray
@@ -50,7 +50,7 @@ class DataSpecro:
             Static intensity values, default is `self.static` if not provided.
         zero : np.ndarray, optional
             Baseline intensity values, default is `self.zero` if not provided.
-    
+
         Returns
         -------
         np.ndarray
@@ -122,29 +122,29 @@ class DataSpecro:
         Returns
         -------
         tuple
-            The indices of the region of interest, a list of temporal absorbance data, 
+            The indices of the region of interest, a list of temporal absorbance data,
             and a list of timestamps corresponding to the temporal absorbance data.
         """
-        
+
         # self.xdata[:, None] : Ajoute une nouvelle dmension à self.xdata pour permettre la diffusion (broadcasting). Cela crée une matrice où chaque ligne correspond à un élément de self.xdata.
         idxs = np.argmin(np.abs(xdata[:, None] - np.array(roi)), axis=0)
         # pour les cas ou les x sont inversés avec le changement d'unités.'
         idxs = np.sort(idxs)
-        absorbance = self.compute_absorbance(intensities=ydata[idxs[0] : idxs[1] + 1], static=static[idxs[0] : idxs[1] + 1], zero=zero[idxs[0] : idxs[1] + 1])
+        data = ydata[idxs[0] : idxs[1] + 1]-static[idxs[0] : idxs[1] + 1]
         self.times_temp_dat.append(time.time())
-        self.temp_dat.append(np.mean(absorbance))
+        self.temp_dat.append(np.mean(data))
         return idxs, list(self.temp_dat), list(self.times_temp_dat)
 
 
     def synthetic_data(self):
         r"""
         Generate synthetic data for the spectrometer.
-    
+
         The synthetic data is created using the (arbitrary) following formula:
-    
+
         .. math::
             I_{\text{synthetic}} = 0.1 + 0.25 \cdot | N(0, 1)| + 10 \cdot \left(\sin\left(\frac{t}{10}\right)\right)^2 \cdot \exp\left(-\frac{(\lambda - \mu)^2}{2 \cdot \sigma^2}\right)
-    
+
         Returns
         -------
         np.ndarray

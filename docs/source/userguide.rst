@@ -19,7 +19,7 @@ User Guide
 .. grid:: 2
 
     .. grid-item-card:: :octicon:`eye` Photofatigue Measurements
-       :link: examples/photofatigue
+       :link: examples/photo_fatigue
        :link-type: doc
 
        Step-by-step instructions for conducting photofatigue measurements.
@@ -44,5 +44,5 @@ Setup Walk-Through
 
    examples/uiwt
    examples/customseq
-   examples/photofatigue
+   examples/photo_fatigue
    examples/qy

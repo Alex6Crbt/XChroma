@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Fit the rsEGFP WT &#8212; XChroma 1.1 documentation</title>
+    <title>rsEGFP2 WT Switching QY &#8212; XChroma 1.1 documentation</title>
   
   
   
@@ -50,7 +50,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'examples/rsEGFP2WT';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Fit to get LED power" href="actino.html" />
+    <link rel="next" title="Actinometry" href="actino.html" />
     <link rel="prev" title="Obtaining QY values for DAE" href="Fit_DAE.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -314,11 +314,12 @@
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="uiwt.html">Interface walk-through</a></li>
 <li class="toctree-l1"><a class="reference internal" href="customseq.html">Custom Sequence</a></li>
-<li class="toctree-l1"><a class="reference internal" href="photofatigue.html">Photofatigue Measurments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="photo_fatigue.html">Photofatigue Measurements</a></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="qy.html">Quantum Yield Measurments</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="Fit_DAE.html">Obtaining QY values for DAE</a></li>
-<li class="toctree-l2 current active"><a class="current reference internal" href="#">Fit the rsEGFP WT</a></li>
-<li class="toctree-l2"><a class="reference internal" href="actino.html">Fit to get LED power</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">rsEGFP2 WT Switching QY</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="actino.html">Actinometry</a></li>
 </ul>
 </details></li>
 </ul>
@@ -367,7 +368,7 @@
     
     <li class="breadcrumb-item"><a href="qy.html" class="nav-link">Quantum Yield Measurments</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Fit the rsEGFP WT</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">rsEGFP2 WT Switching QY</span></li>
   </ul>
 </nav>
 </div>
@@ -384,8 +385,14 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="fit-the-rsegfp-wt">
-<h1>Fit the rsEGFP WT<a class="headerlink" href="#fit-the-rsegfp-wt" title="Link to this heading">#</a></h1>
+  <section id="rsegfp2-wt-switching-qy">
+<h1>rsEGFP2 WT Switching QY<a class="headerlink" href="#rsegfp2-wt-switching-qy" title="Link to this heading">#</a></h1>
+<section id="on-off">
+<h2>ON-&gt;OFF<a class="headerlink" href="#on-off" title="Link to this heading">#</a></h2>
+</section>
+<section id="load-experimental-switching-data">
+<h2>Load Experimental Switching Data<a class="headerlink" href="#load-experimental-switching-data" title="Link to this heading">#</a></h2>
+<p>We begin by importing the required library and loading the actinometry measurement data from a CSV file. The dataset is stored in <code class="docutils literal notranslate"><span class="pre">exp_data</span></code> for further analysis</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
@@ -708,6 +715,1750 @@
 <p>391 rows × 2051 columns</p>
 </div></div></div>
 </div>
+</section>
+<section id="preprocess-spectral-data-and-compute-absorbance">
+<h2>Preprocess Spectral Data and Compute Absorbance<a class="headerlink" href="#preprocess-spectral-data-and-compute-absorbance" title="Link to this heading">#</a></h2>
+<p>We now prepare the spectral intensity data for analysis. The dataset contains different types of measurements:</p>
+<ul class="simple">
+<li><p><strong>“zero”</strong>: baseline measurements,</p></li>
+<li><p><strong>“static”</strong>: background noise or dark reference,</p></li>
+<li><p><strong>Other types</strong>: actual actinometry measurements over time.</p></li>
+</ul>
+<p>We extract these components, convert timestamps, and compute the absorbance spectrum using the formula:</p>
+<p>$$A(\lambda) = -\log_{10} \left( \frac{I(\lambda) - I_{\text{static}}(\lambda)}{I_{\text{zero}}(\lambda) - I_{\text{static}}(\lambda)} \right)$$</p>
+<p>This normalization corrects for both dark current and reference intensity variations.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="n">intensities</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">exp_data</span><span class="p">[(</span><span class="n">exp_data</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;zero&quot;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">exp_data</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;static&quot;</span><span class="p">)]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">3</span><span class="p">:],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+<span class="n">static</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">exp_data</span><span class="p">[(</span><span class="n">exp_data</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span><span class="o">==</span> <span class="s2">&quot;static&quot;</span><span class="p">)]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">3</span><span class="p">:],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">zero</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">exp_data</span><span class="p">[(</span><span class="n">exp_data</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span><span class="o">==</span> <span class="s2">&quot;zero&quot;</span><span class="p">)]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">3</span><span class="p">:],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">wavelengths</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">exp_data</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">3</span><span class="p">:],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+<span class="n">timestamps</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">exp_data</span><span class="p">[</span><span class="s2">&quot;timestamp&quot;</span><span class="p">][(</span><span class="n">exp_data</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;zero&quot;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">exp_data</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;static&quot;</span><span class="p">)])</span> <span class="c1"># Convert timestamp strings to datetime objects</span>
+<span class="n">timestamps</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="n">timestamps</span> <span class="o">-</span> <span class="n">timestamps</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">())</span> <span class="c1"># Convert to seconds since the first timestamp</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">compute_absorbance</span><span class="p">(</span><span class="n">intensities</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">static</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">zero</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+    <span class="n">EPS</span> <span class="o">=</span> <span class="mf">1e-12</span>
+    <span class="n">num</span> <span class="o">=</span> <span class="n">intensities</span> <span class="o">-</span> <span class="n">static</span>
+    <span class="n">den</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">zero</span> <span class="o">-</span> <span class="n">static</span><span class="p">,</span> <span class="n">EPS</span><span class="p">)</span>  <span class="c1"># Éviter division par zéro</span>
+    <span class="n">absorbance</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">num</span> <span class="o">/</span> <span class="n">den</span><span class="p">,</span> <span class="n">EPS</span><span class="p">))</span>  <span class="c1"># Éviter log(0) ou log(négatif)</span>
+    <span class="k">return</span> <span class="n">absorbance</span>
+
+<span class="n">absorbance</span> <span class="o">=</span> <span class="n">compute_absorbance</span><span class="p">(</span><span class="n">intensities</span><span class="p">,</span> <span class="n">static</span><span class="p">,</span> <span class="n">zero</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="visualizing-spectral-intensity-and-absorbance">
+<h2>Visualizing Spectral Intensity and Absorbance<a class="headerlink" href="#visualizing-spectral-intensity-and-absorbance" title="Link to this heading">#</a></h2>
+<p>This figure provides a comprehensive view of the switching data:</p>
+<ol class="arabic simple">
+<li><p><strong>Left Panel</strong>: Raw intensity spectra at three time points, along with the static and zero references.</p></li>
+<li><p><strong>Middle Panel</strong>: Corresponding absorbance spectra at the same time points, showing how absorption evolves over time.</p></li>
+<li><p><strong>Right Panel</strong>: Absorbance at two key wavelengths (482 nm and 408 nm) plotted as a function of time, highlighting dynamic changes in the sample.</p></li>
+</ol>
+<p>These plots help assess the stability and dynamics of the measured signals and the quality of the zero/static references.</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.cm</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">cm</span>
+<span class="c1"># Set global style</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s2">&quot;ggplot&quot;</span><span class="p">)</span>  <span class="c1"># Clean style</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">18</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s2">&quot;Spectral Analysis&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+
+<span class="c1"># --- Intensity Plot ---</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wavelengths</span><span class="p">,</span> <span class="n">intensities</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:],</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;I at t = </span><span class="si">{</span><span class="n">timestamps</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> s&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wavelengths</span><span class="p">,</span> <span class="n">intensities</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">intensities</span><span class="p">)</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span> <span class="p">:],</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;I at t = </span><span class="si">{</span><span class="n">timestamps</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">intensities</span><span class="p">)</span><span class="o">//</span><span class="mi">2</span><span class="p">]</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> s&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wavelengths</span><span class="p">,</span> <span class="n">intensities</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:],</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;I at t = </span><span class="si">{</span><span class="n">timestamps</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> s&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wavelengths</span><span class="p">,</span> <span class="n">static</span><span class="p">,</span> <span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Static&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wavelengths</span><span class="p">,</span> <span class="n">zero</span><span class="p">,</span> <span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Zero&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Intensity over Wavelength&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Wavelength (nm)&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Intensity&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s1">&#39;major&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">minorticks_on</span><span class="p">()</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s1">&#39;minor&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;lightgray&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="c1"># --- Absorbance Plot ---</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wavelengths</span><span class="p">,</span> <span class="n">absorbance</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:],</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;t = </span><span class="si">{</span><span class="n">timestamps</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> s&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wavelengths</span><span class="p">,</span> <span class="n">absorbance</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">absorbance</span><span class="p">)</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span> <span class="p">:],</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;t = </span><span class="si">{</span><span class="n">timestamps</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">absorbance</span><span class="p">)</span><span class="o">//</span><span class="mi">2</span><span class="p">]</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> s&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wavelengths</span><span class="p">,</span> <span class="n">absorbance</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:],</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;t = </span><span class="si">{</span><span class="n">timestamps</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> s&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Absorbance over Wavelength&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Wavelength (nm)&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Absorbance&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="mf">0.4</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s1">&#39;major&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">minorticks_on</span><span class="p">()</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s1">&#39;minor&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;lightgray&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="c1"># --- Absorbance vs Time Plot ---</span>
+<span class="n">WL</span> <span class="o">=</span> <span class="p">[</span><span class="mi">482</span><span class="p">,</span> <span class="mi">408</span><span class="p">]</span>
+<span class="n">idxs</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">wavelengths</span> <span class="o">-</span> <span class="n">wl</span><span class="p">))</span> <span class="k">for</span> <span class="n">wl</span> <span class="ow">in</span> <span class="n">WL</span><span class="p">]</span>
+
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">idxs</span><span class="p">):</span>
+    <span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">timestamps</span><span class="p">,</span> <span class="n">absorbance</span><span class="p">[:,</span> <span class="n">idx</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">wavelengths</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> nm&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Absorbance over Time&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Time (s)&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Absorbance&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s1">&#39;major&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">minorticks_on</span><span class="p">()</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s1">&#39;minor&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;lightgray&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">(</span><span class="n">rect</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">0.95</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<img alt="../_images/ac46b171134502849c4ad016e1e9ade5ec2d791dd12c50e4231ac2991a552d5d.png" src="../_images/ac46b171134502849c4ad016e1e9ade5ec2d791dd12c50e4231ac2991a552d5d.png" />
+</div>
+</div>
+</section>
+<section id="data-cleaning-and-absorbance-subset-preparation">
+<h2>Data Cleaning and Absorbance Subset Preparation<a class="headerlink" href="#data-cleaning-and-absorbance-subset-preparation" title="Link to this heading">#</a></h2>
+<p>This cell prepares the dataset for focused analysis by:</p>
+<ul class="simple">
+<li><p>Selecting a narrow wavelength range (e.g. 480–484 nm)</p></li>
+<li><p>Normalizing absorbance values</p></li>
+<li><p>Removing unwanted time points (first spectrum and last 300)</p></li>
+</ul>
+<p>The resulting cleaned subset is suitable for targeted visualization or kinetic analysis.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define wavelength range of interest</span>
+<span class="n">wavelength_range</span> <span class="o">=</span> <span class="p">[</span><span class="mi">480</span><span class="p">,</span> <span class="mi">484</span><span class="p">]</span>
+<span class="n">idx_range</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">wavelengths</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">-</span> <span class="n">wavelength_range</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="c1"># Extract and normalize absorbance data within the wavelength range</span>
+<span class="n">absorbance_subset</span> <span class="o">=</span> <span class="n">absorbance</span><span class="p">[:,</span> <span class="n">idx_range</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span><span class="n">idx_range</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+<span class="c1"># absorbance_subset -= np.min(absorbance_subset)</span>
+<span class="n">wavelengths_subset</span> <span class="o">=</span> <span class="n">wavelengths</span><span class="p">[</span><span class="n">idx_range</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span><span class="n">idx_range</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+
+<span class="c1"># Filter out specific time points (e.g., first frame and last 300 entries)</span>
+<span class="c1"># Adjust indices as needed</span>
+<span class="n">time_filter_indices</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="o">-</span><span class="mi">300</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+<span class="n">absorbance_subset</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">absorbance_subset</span><span class="p">,</span> <span class="n">time_filter_indices</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">timestamps_filtered</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">timestamps</span><span class="p">,</span> <span class="n">time_filter_indices</span><span class="p">)</span>
+
+<span class="c1"># Create subplots</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">18</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+
+<span class="c1"># --- 1. Absorbance Heatmap ---</span>
+<span class="n">X</span><span class="p">,</span> <span class="n">Y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">timestamps_filtered</span><span class="p">,</span> <span class="n">wavelengths_subset</span><span class="p">)</span>
+<span class="n">contour</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">contourf</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">absorbance_subset</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">levels</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;coolwarm&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Experimental Absorbance Data&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Time (s)&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Wavelength (nm)&quot;</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">contour</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+<span class="c1"># --- 2. Absorbance Over Time (Averaged Across Wavelength Range) ---</span>
+<span class="n">mean_absorbance</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">absorbance_subset</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">timestamps_filtered</span><span class="p">,</span> <span class="n">mean_absorbance</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Mean absorbance (</span><span class="si">{</span><span class="n">wavelengths_subset</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">wavelengths_subset</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> nm)&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;tab:blue&#39;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Mean Absorbance Over Time&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Time (s)&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Absorbance&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">45</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># --- 3. Absorbance Spectrum at Start and End ---</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wavelengths_subset</span><span class="p">,</span> <span class="n">absorbance_subset</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:],</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Spectrum at $t=0$&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wavelengths_subset</span><span class="p">,</span> <span class="n">absorbance_subset</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:],</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Spectrum at $t=end$&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Absorbance Spectra&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Wavelength (nm)&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Absorbance&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/610346f7434c58d8bee8a10226b3a3e17f94d4ddd14e426211171ceda07f55df.png" src="../_images/610346f7434c58d8bee8a10226b3a3e17f94d4ddd14e426211171ceda07f55df.png" />
+</div>
+</div>
+</section>
+<section id="qy-on-off-regression">
+<h2>QY ON-&gt;OFF Regression<a class="headerlink" href="#qy-on-off-regression" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">scipy.integrate</span><span class="w"> </span><span class="kn">import</span> <span class="n">solve_ivp</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.optimize</span><span class="w"> </span><span class="kn">import</span> <span class="n">curve_fit</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+
+<span class="c1"># === Physics constants ===</span>
+<span class="n">h</span> <span class="o">=</span> <span class="mf">6.62607004</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">**</span> <span class="p">(</span><span class="o">-</span><span class="mi">34</span><span class="p">)</span>  <span class="c1"># Planck&#39;s constant (J·s)</span>
+<span class="n">NA</span> <span class="o">=</span> <span class="mf">6.02214086</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">**</span> <span class="p">(</span><span class="mi">23</span><span class="p">)</span>  <span class="c1"># Avogadro&#39;s number (mol^-1)</span>
+<span class="n">c_vaccum</span> <span class="o">=</span> <span class="mi">299792458</span>  <span class="c1"># Speed of light in vacuum (m/s)</span>
+<span class="n">wl</span> <span class="o">=</span> <span class="mi">505</span>  <span class="c1"># Wavelength (nm)</span>
+<span class="n">v</span> <span class="o">=</span> <span class="n">c_vaccum</span> <span class="o">/</span> <span class="p">(</span><span class="n">wl</span> <span class="o">*</span> <span class="mf">1e-9</span><span class="p">)</span>  <span class="c1"># Frequency (Hz)</span>
+<span class="n">volume</span> <span class="o">=</span> <span class="mf">23e-4</span>  <span class="c1"># Volume (L)</span>
+<span class="n">l</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># Path length (cm)</span>
+<span class="n">eps_on_482</span> <span class="o">=</span> <span class="mi">65474</span>  <span class="c1"># Molar absorptivity (L·mol^-1·cm^-1)</span>
+<span class="n">eps_off_482</span> <span class="o">=</span> <span class="mi">65</span>  <span class="c1"># Molar absorptivity (L·mol^-1·cm^-1)</span>
+<span class="n">eps_on_505</span> <span class="o">=</span> <span class="mf">0.4166666667</span> <span class="o">*</span> <span class="n">eps_on_482</span>  <span class="c1"># Adjusted molar absorptivity at 505</span>
+<span class="n">eps_off_505</span> <span class="o">=</span> <span class="mf">0.4166666667</span> <span class="o">*</span> <span class="n">eps_off_482</span>  <span class="c1"># Adjusted molar absorptivity at 505</span>
+<span class="n">I_w_list</span> <span class="o">=</span> <span class="p">[</span><span class="mf">14.27e-3</span><span class="p">,</span> <span class="mf">10.4e-3</span><span class="p">]</span>  <span class="c1"># Irradiance values (W/m^2)</span>
+
+<span class="c1"># === Experimental data ===</span>
+<span class="c1"># Assuming &#39;timestamps_filtered&#39; and &#39;C_exp&#39; are already defined</span>
+
+<span class="c1"># === Initialize parameters ===</span>
+<span class="n">lpopt</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">I_w</span> <span class="ow">in</span> <span class="n">I_w_list</span><span class="p">:</span>
+    <span class="c1"># Compute initial concentration based on experimental data</span>
+    <span class="n">C_exp</span> <span class="o">=</span> <span class="n">mean_absorbance</span> <span class="o">/</span> <span class="p">(</span><span class="n">eps_on_482</span> <span class="o">*</span> <span class="n">l</span><span class="p">)</span>
+    <span class="n">C0</span> <span class="o">=</span> <span class="n">C_exp</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">I_0</span> <span class="o">=</span> <span class="n">I_w</span> <span class="o">/</span> <span class="p">(</span><span class="n">h</span> <span class="o">*</span> <span class="n">v</span> <span class="o">*</span> <span class="n">NA</span><span class="p">)</span> <span class="o">/</span> <span class="n">volume</span>  <span class="c1"># Photon irradiance (mol·L^-1·s^-1)</span>
+
+    <span class="c1"># === ODE definition ===</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">dC_dt</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">C_ON</span><span class="p">,</span> <span class="n">QY_ON2OFF</span><span class="p">,</span> <span class="n">QY_OFF2ON</span><span class="p">):</span>
+        <span class="n">C_OFF</span> <span class="o">=</span> <span class="n">C0</span> <span class="o">-</span> <span class="n">C_ON</span>
+        <span class="n">Iabs_ON</span> <span class="o">=</span> <span class="n">I_0</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">eps_on_505</span> <span class="o">*</span> <span class="n">C_ON</span> <span class="o">*</span> <span class="n">l</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">10</span><span class="p">)))</span>
+        <span class="n">Iabs_OFF</span> <span class="o">=</span> <span class="n">I_0</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">eps_off_505</span> <span class="o">*</span> <span class="n">C_OFF</span> <span class="o">*</span> <span class="n">l</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">10</span><span class="p">)))</span>
+        <span class="n">dCCF_deri</span> <span class="o">=</span> <span class="o">-</span><span class="n">QY_ON2OFF</span> <span class="o">*</span> <span class="n">Iabs_ON</span> <span class="o">+</span> <span class="n">QY_OFF2ON</span> <span class="o">*</span> <span class="n">Iabs_OFF</span>
+        <span class="k">return</span> <span class="n">dCCF_deri</span>
+
+    <span class="c1"># === Fitting function wrapper ===</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">model</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">QY_ON2OFF</span><span class="p">,</span> <span class="n">QY_OFF2ON</span><span class="p">,</span> <span class="n">offset</span><span class="p">):</span>
+        <span class="n">sol</span> <span class="o">=</span> <span class="n">solve_ivp</span><span class="p">(</span><span class="n">dC_dt</span><span class="p">,</span> <span class="p">[</span><span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">t</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]],</span> <span class="p">[</span><span class="n">C0</span><span class="p">],</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">QY_ON2OFF</span><span class="p">,</span> <span class="n">QY_OFF2ON</span><span class="p">),</span> <span class="n">t_eval</span><span class="o">=</span><span class="n">t</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">sol</span><span class="o">.</span><span class="n">success</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;⚠️ ODE solver failed:&quot;</span><span class="p">,</span> <span class="n">sol</span><span class="o">.</span><span class="n">message</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">full_like</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">sol</span><span class="o">.</span><span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span> <span class="n">offset</span>
+
+    <span class="c1"># === Fit the model to the experimental data ===</span>
+    <span class="n">initial_guess</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.001</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="c1"># QY_ON2OFF, QY_OFF2ON, offset</span>
+    <span class="n">bounds</span> <span class="o">=</span> <span class="p">([</span><span class="mf">1e-4</span><span class="p">,</span> <span class="mf">1e-4</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span> <span class="c1"># ([min1, min2, ...], [max1, max2, ...])</span>
+    <span class="n">popt</span><span class="p">,</span> <span class="n">pcov</span> <span class="o">=</span> <span class="n">curve_fit</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">timestamps_filtered</span><span class="p">,</span> <span class="n">C_exp</span><span class="p">,</span> <span class="n">p0</span><span class="o">=</span><span class="n">initial_guess</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="n">bounds</span><span class="p">)</span>
+
+    <span class="c1"># Extract fitted parameters and compute uncertainties</span>
+    <span class="n">uncertainties</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">pcov</span><span class="p">))</span>
+    <span class="n">lpopt</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">popt</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;=== Fit Results I=</span><span class="si">{</span><span class="n">I_w</span><span class="si">:</span><span class="s2">0.3e</span><span class="si">}</span><span class="s2"> W ===&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">coef</span><span class="p">,</span> <span class="n">incert</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">popt</span><span class="p">,</span> <span class="n">uncertainties</span><span class="p">),</span> <span class="n">start</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Parameter </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">coef</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> ± </span><span class="si">{</span><span class="n">incert</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Compute fitted values</span>
+    <span class="n">fitted_values</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">timestamps_filtered</span><span class="p">,</span> <span class="o">*</span><span class="n">popt</span><span class="p">)</span>
+
+    <span class="c1"># === Plotting ===</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">a</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+    <span class="n">pastel_colors</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;m&quot;</span><span class="p">,</span> <span class="s2">&quot;#f9955e&quot;</span><span class="p">,</span> <span class="s2">&quot;#5080e0&quot;</span><span class="p">]</span>  <span class="c1"># Mauve, orange, sky blue</span>
+
+    <span class="c1"># First Plot - Concentration Over Time</span>
+    <span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">timestamps_filtered</span><span class="p">,</span> <span class="n">C_exp</span><span class="p">,</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">pastel_colors</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;C exp&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.6</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">timestamps_filtered</span><span class="p">,</span> <span class="n">fitted_values</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">pastel_colors</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;C model for QY1=</span><span class="si">{</span><span class="n">popt</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s2">0.4f</span><span class="si">}</span><span class="s2">, QY2=</span><span class="si">{</span><span class="n">popt</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">0.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Time (s)&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Concentration (M)&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Concentration Over Time&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">45</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
+    <span class="c1"># Second Plot - Residuals Over Time</span>
+    <span class="n">residuals</span> <span class="o">=</span> <span class="n">C_exp</span> <span class="o">-</span> <span class="n">fitted_values</span>
+    <span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">timestamps_filtered</span><span class="p">,</span> <span class="n">residuals</span><span class="p">,</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">pastel_colors</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Residuals&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.9</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Time (s)&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Residuals&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Residuals&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">45</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>=== Fit Results I=1.427e-02 W ===
+Parameter 1: 0.0096 ± 0.0001
+Parameter 2: 0.9765 ± 0.0604
+Parameter 3: -0.0000 ± 0.0000
+</pre></div>
+</div>
+<img alt="../_images/b0344ea2c7c7becc682b2e86e113384d5bb6b37a596d765aaaaa0a81f050bd84.png" src="../_images/b0344ea2c7c7becc682b2e86e113384d5bb6b37a596d765aaaaa0a81f050bd84.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>=== Fit Results I=1.040e-02 W ===
+Parameter 1: 0.0129 ± 0.0001
+Parameter 2: 0.9972 ± 0.1030
+Parameter 3: -0.0000 ± 0.0000
+</pre></div>
+</div>
+<img alt="../_images/940f1fa2856263257b94abad39cd465c35c21feac855979ed4ed3c0791450a24.png" src="../_images/940f1fa2856263257b94abad39cd465c35c21feac855979ed4ed3c0791450a24.png" />
+</div>
+</div>
+</section>
+</section>
+<section id="off-on">
+<h1>OFF -&gt; ON<a class="headerlink" href="#off-on" title="Link to this heading">#</a></h1>
+<section id="id1">
+<h2>Load Experimental Switching Data<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
+<p>We begin by importing the required library and loading the actinometry measurement data from a CSV file. The dataset is stored in <code class="docutils literal notranslate"><span class="pre">exp_data</span></code> for further analysis</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="n">exp_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;DATA/prot1 OFF2ON.csv&quot;</span><span class="p">)</span>
+
+<span class="n">exp_data</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>timestamp</th>
+      <th>cycle</th>
+      <th>type</th>
+      <th>186.85486</th>
+      <th>187.31995223015844</th>
+      <th>187.78500323297956</th>
+      <th>188.250012996982</th>
+      <th>188.71498151068454</th>
+      <th>189.17990876260572</th>
+      <th>189.64479474126426</th>
+      <th>...</th>
+      <th>1032.9632529736894</th>
+      <th>1033.3204920667242</th>
+      <th>1033.6776665334785</th>
+      <th>1034.034776362471</th>
+      <th>1034.3918215422202</th>
+      <th>1034.7488020612445</th>
+      <th>1035.1057179080635</th>
+      <th>1035.4625690711953</th>
+      <th>1035.8193555391586</th>
+      <th>1036.176077300472</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>2025-04-04 13:18:08.282867</td>
+      <td>1</td>
+      <td>zero</td>
+      <td>16.990556</td>
+      <td>24978.543889</td>
+      <td>33.859750</td>
+      <td>28.155778</td>
+      <td>33.738389</td>
+      <td>40.898694</td>
+      <td>38.956917</td>
+      <td>...</td>
+      <td>449.157472</td>
+      <td>435.807750</td>
+      <td>441.026278</td>
+      <td>435.443667</td>
+      <td>437.021361</td>
+      <td>448.672028</td>
+      <td>442.968056</td>
+      <td>451.463333</td>
+      <td>451.463333</td>
+      <td>451.463333</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2025-04-04 13:18:36.280977</td>
+      <td>1</td>
+      <td>off</td>
+      <td>16.990556</td>
+      <td>24978.543889</td>
+      <td>45.038457</td>
+      <td>22.114691</td>
+      <td>31.823580</td>
+      <td>32.093272</td>
+      <td>49.623210</td>
+      <td>...</td>
+      <td>441.215062</td>
+      <td>443.642284</td>
+      <td>457.935926</td>
+      <td>446.339198</td>
+      <td>431.506173</td>
+      <td>445.530123</td>
+      <td>440.405988</td>
+      <td>450.384568</td>
+      <td>450.384568</td>
+      <td>450.384568</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2025-04-04 13:18:37.311192</td>
+      <td>1</td>
+      <td>off</td>
+      <td>16.990556</td>
+      <td>24978.543889</td>
+      <td>31.823580</td>
+      <td>22.114691</td>
+      <td>42.341543</td>
+      <td>53.938272</td>
+      <td>58.792716</td>
+      <td>...</td>
+      <td>450.114877</td>
+      <td>450.384568</td>
+      <td>433.933395</td>
+      <td>450.923951</td>
+      <td>459.823765</td>
+      <td>444.721049</td>
+      <td>440.136296</td>
+      <td>459.823765</td>
+      <td>459.823765</td>
+      <td>459.823765</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>2025-04-04 13:18:38.352852</td>
+      <td>1</td>
+      <td>off</td>
+      <td>16.990556</td>
+      <td>24978.543889</td>
+      <td>54.477654</td>
+      <td>32.093272</td>
+      <td>37.487099</td>
+      <td>50.162593</td>
+      <td>59.332099</td>
+      <td>...</td>
+      <td>440.675679</td>
+      <td>443.372593</td>
+      <td>440.405988</td>
+      <td>445.530123</td>
+      <td>430.966790</td>
+      <td>437.439383</td>
+      <td>452.272407</td>
+      <td>429.078951</td>
+      <td>429.078951</td>
+      <td>429.078951</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>2025-04-04 13:18:39.383552</td>
+      <td>1</td>
+      <td>off</td>
+      <td>16.990556</td>
+      <td>24978.543889</td>
+      <td>39.644630</td>
+      <td>36.947716</td>
+      <td>37.756790</td>
+      <td>31.284198</td>
+      <td>61.219938</td>
+      <td>...</td>
+      <td>425.033580</td>
+      <td>463.599444</td>
+      <td>445.530123</td>
+      <td>451.193642</td>
+      <td>443.642284</td>
+      <td>453.620864</td>
+      <td>435.012160</td>
+      <td>434.203086</td>
+      <td>434.203086</td>
+      <td>434.203086</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>2025-04-04 13:18:40.416396</td>
+      <td>1</td>
+      <td>off</td>
+      <td>16.990556</td>
+      <td>24978.543889</td>
+      <td>19.687469</td>
+      <td>33.172037</td>
+      <td>42.341543</td>
+      <td>18.608704</td>
+      <td>38.296173</td>
+      <td>...</td>
+      <td>453.620864</td>
+      <td>446.878580</td>
+      <td>429.888025</td>
+      <td>438.518148</td>
+      <td>424.494198</td>
+      <td>439.327222</td>
+      <td>434.203086</td>
+      <td>451.193642</td>
+      <td>451.193642</td>
+      <td>451.193642</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>2025-04-04 13:18:41.449506</td>
+      <td>1</td>
+      <td>off</td>
+      <td>16.990556</td>
+      <td>24978.543889</td>
+      <td>28.317593</td>
+      <td>28.317593</td>
+      <td>30.205432</td>
+      <td>32.093272</td>
+      <td>42.611235</td>
+      <td>...</td>
+      <td>461.172222</td>
+      <td>433.933395</td>
+      <td>444.181667</td>
+      <td>432.315247</td>
+      <td>436.900000</td>
+      <td>419.909444</td>
+      <td>459.014691</td>
+      <td>448.766420</td>
+      <td>448.766420</td>
+      <td>448.766420</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>2025-04-04 13:18:42.486227</td>
+      <td>1</td>
+      <td>off</td>
+      <td>16.990556</td>
+      <td>24978.543889</td>
+      <td>40.453704</td>
+      <td>46.656605</td>
+      <td>20.766235</td>
+      <td>49.623210</td>
+      <td>65.265309</td>
+      <td>...</td>
+      <td>446.878580</td>
+      <td>450.114877</td>
+      <td>426.382037</td>
+      <td>429.348642</td>
+      <td>425.842654</td>
+      <td>437.169691</td>
+      <td>444.990741</td>
+      <td>449.036111</td>
+      <td>449.036111</td>
+      <td>449.036111</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>2025-04-04 13:18:43.531508</td>
+      <td>1</td>
+      <td>off</td>
+      <td>16.990556</td>
+      <td>24978.543889</td>
+      <td>32.093272</td>
+      <td>29.126667</td>
+      <td>25.890370</td>
+      <td>38.835556</td>
+      <td>52.859506</td>
+      <td>...</td>
+      <td>447.687654</td>
+      <td>445.260432</td>
+      <td>448.766420</td>
+      <td>435.281852</td>
+      <td>428.539568</td>
+      <td>415.594383</td>
+      <td>435.012160</td>
+      <td>425.303272</td>
+      <td>425.303272</td>
+      <td>425.303272</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>2025-04-04 13:18:44.565058</td>
+      <td>1</td>
+      <td>off</td>
+      <td>16.990556</td>
+      <td>24978.543889</td>
+      <td>31.014506</td>
+      <td>39.105247</td>
+      <td>51.780741</td>
+      <td>29.396358</td>
+      <td>63.107778</td>
+      <td>...</td>
+      <td>433.124321</td>
+      <td>458.205617</td>
+      <td>449.845185</td>
+      <td>447.687654</td>
+      <td>442.833210</td>
+      <td>439.057531</td>
+      <td>423.145741</td>
+      <td>439.866605</td>
+      <td>439.866605</td>
+      <td>439.866605</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>2025-04-04 13:18:45.595041</td>
+      <td>1</td>
+      <td>off</td>
+      <td>16.990556</td>
+      <td>24978.543889</td>
+      <td>22.923765</td>
+      <td>31.553889</td>
+      <td>55.017037</td>
+      <td>56.904877</td>
+      <td>46.926296</td>
+      <td>...</td>
+      <td>417.212531</td>
+      <td>438.787840</td>
+      <td>431.506173</td>
+      <td>446.069506</td>
+      <td>422.066975</td>
+      <td>419.370062</td>
+      <td>452.272407</td>
+      <td>428.539568</td>
+      <td>428.539568</td>
+      <td>428.539568</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>2025-04-04 13:18:46.624883</td>
+      <td>1</td>
+      <td>off</td>
+      <td>16.990556</td>
+      <td>24978.543889</td>
+      <td>32.093272</td>
+      <td>27.238827</td>
+      <td>28.047901</td>
+      <td>29.126667</td>
+      <td>47.735370</td>
+      <td>...</td>
+      <td>431.506173</td>
+      <td>435.821235</td>
+      <td>436.630309</td>
+      <td>460.363148</td>
+      <td>428.809259</td>
+      <td>440.405988</td>
+      <td>453.890556</td>
+      <td>438.787840</td>
+      <td>438.787840</td>
+      <td>438.787840</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>2025-04-04 13:18:47.658044</td>
+      <td>1</td>
+      <td>off</td>
+      <td>16.990556</td>
+      <td>24978.543889</td>
+      <td>26.699444</td>
+      <td>39.105247</td>
+      <td>36.678025</td>
+      <td>15.642099</td>
+      <td>52.050432</td>
+      <td>...</td>
+      <td>454.429938</td>
+      <td>436.360617</td>
+      <td>442.024136</td>
+      <td>430.157716</td>
+      <td>414.245926</td>
+      <td>442.293827</td>
+      <td>455.239012</td>
+      <td>451.463333</td>
+      <td>451.463333</td>
+      <td>451.463333</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>2025-04-04 13:18:48.687960</td>
+      <td>1</td>
+      <td>off</td>
+      <td>16.990556</td>
+      <td>24978.543889</td>
+      <td>28.856975</td>
+      <td>48.005062</td>
+      <td>20.226852</td>
+      <td>31.553889</td>
+      <td>71.198519</td>
+      <td>...</td>
+      <td>450.384568</td>
+      <td>430.697099</td>
+      <td>435.281852</td>
+      <td>444.451358</td>
+      <td>427.730494</td>
+      <td>423.685123</td>
+      <td>427.191111</td>
+      <td>448.766420</td>
+      <td>448.766420</td>
+      <td>448.766420</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>2025-04-04 13:18:49.728411</td>
+      <td>1</td>
+      <td>off</td>
+      <td>16.990556</td>
+      <td>24978.543889</td>
+      <td>46.386914</td>
+      <td>16.720864</td>
+      <td>24.811605</td>
+      <td>49.353519</td>
+      <td>66.074383</td>
+      <td>...</td>
+      <td>445.530123</td>
+      <td>414.515617</td>
+      <td>448.227037</td>
+      <td>417.482222</td>
+      <td>448.496728</td>
+      <td>453.351173</td>
+      <td>438.248457</td>
+      <td>452.002716</td>
+      <td>452.002716</td>
+      <td>452.002716</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>2025-04-04 13:18:50.761486</td>
+      <td>1</td>
+      <td>off</td>
+      <td>16.990556</td>
+      <td>24978.543889</td>
+      <td>43.420309</td>
+      <td>33.711420</td>
+      <td>38.835556</td>
+      <td>42.071852</td>
+      <td>33.441728</td>
+      <td>...</td>
+      <td>426.112346</td>
+      <td>430.697099</td>
+      <td>435.551543</td>
+      <td>419.639753</td>
+      <td>442.293827</td>
+      <td>444.721049</td>
+      <td>445.799815</td>
+      <td>443.372593</td>
+      <td>443.372593</td>
+      <td>443.372593</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>2025-04-04 13:18:51.804446</td>
+      <td>1</td>
+      <td>off</td>
+      <td>16.990556</td>
+      <td>24978.543889</td>
+      <td>49.029889</td>
+      <td>31.553889</td>
+      <td>54.612500</td>
+      <td>54.855222</td>
+      <td>56.797000</td>
+      <td>...</td>
+      <td>444.424389</td>
+      <td>446.366167</td>
+      <td>434.472778</td>
+      <td>437.870889</td>
+      <td>425.249333</td>
+      <td>440.055389</td>
+      <td>437.142722</td>
+      <td>441.754444</td>
+      <td>441.754444</td>
+      <td>441.754444</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>2025-04-04 13:18:52.839511</td>
+      <td>1</td>
+      <td>off</td>
+      <td>16.990556</td>
+      <td>24978.543889</td>
+      <td>48.274753</td>
+      <td>22.923765</td>
+      <td>25.890370</td>
+      <td>37.756790</td>
+      <td>51.241358</td>
+      <td>...</td>
+      <td>440.405988</td>
+      <td>435.281852</td>
+      <td>447.417963</td>
+      <td>419.370062</td>
+      <td>424.224506</td>
+      <td>453.351173</td>
+      <td>436.900000</td>
+      <td>436.360617</td>
+      <td>436.360617</td>
+      <td>436.360617</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>2025-04-04 13:18:53.878424</td>
+      <td>1</td>
+      <td>off</td>
+      <td>16.990556</td>
+      <td>24978.543889</td>
+      <td>42.476389</td>
+      <td>30.097556</td>
+      <td>45.146333</td>
+      <td>61.894167</td>
+      <td>50.971667</td>
+      <td>...</td>
+      <td>430.346500</td>
+      <td>416.754056</td>
+      <td>439.569944</td>
+      <td>423.793000</td>
+      <td>442.968056</td>
+      <td>466.269389</td>
+      <td>450.735167</td>
+      <td>458.259556</td>
+      <td>458.259556</td>
+      <td>458.259556</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>2025-04-04 13:18:54.916155</td>
+      <td>1</td>
+      <td>off</td>
+      <td>16.990556</td>
+      <td>24978.543889</td>
+      <td>25.890370</td>
+      <td>25.890370</td>
+      <td>51.780741</td>
+      <td>30.475123</td>
+      <td>61.489630</td>
+      <td>...</td>
+      <td>437.978765</td>
+      <td>442.024136</td>
+      <td>432.584938</td>
+      <td>438.518148</td>
+      <td>450.654259</td>
+      <td>449.575494</td>
+      <td>460.632840</td>
+      <td>452.272407</td>
+      <td>452.272407</td>
+      <td>452.272407</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>2025-04-04 13:18:55.948033</td>
+      <td>1</td>
+      <td>off</td>
+      <td>16.990556</td>
+      <td>24978.543889</td>
+      <td>59.601790</td>
+      <td>38.296173</td>
+      <td>29.666049</td>
+      <td>50.162593</td>
+      <td>24.541914</td>
+      <td>...</td>
+      <td>444.181667</td>
+      <td>463.599444</td>
+      <td>450.114877</td>
+      <td>422.606358</td>
+      <td>468.184198</td>
+      <td>443.102901</td>
+      <td>443.642284</td>
+      <td>439.596914</td>
+      <td>439.596914</td>
+      <td>439.596914</td>
+    </tr>
+    <tr>
+      <th>21</th>
+      <td>2025-04-04 13:18:56.982133</td>
+      <td>1</td>
+      <td>off</td>
+      <td>16.990556</td>
+      <td>24978.543889</td>
+      <td>30.744815</td>
+      <td>42.611235</td>
+      <td>33.441728</td>
+      <td>31.823580</td>
+      <td>69.040988</td>
+      <td>...</td>
+      <td>418.021605</td>
+      <td>428.000185</td>
+      <td>425.572963</td>
+      <td>442.833210</td>
+      <td>442.024136</td>
+      <td>445.260432</td>
+      <td>419.639753</td>
+      <td>460.363148</td>
+      <td>460.363148</td>
+      <td>460.363148</td>
+    </tr>
+    <tr>
+      <th>22</th>
+      <td>2025-04-04 13:18:58.028200</td>
+      <td>1</td>
+      <td>off</td>
+      <td>16.990556</td>
+      <td>24978.543889</td>
+      <td>27.427611</td>
+      <td>38.835556</td>
+      <td>20.145944</td>
+      <td>31.553889</td>
+      <td>34.466556</td>
+      <td>...</td>
+      <td>440.298111</td>
+      <td>455.589611</td>
+      <td>441.269000</td>
+      <td>441.026278</td>
+      <td>425.006611</td>
+      <td>456.803222</td>
+      <td>439.569944</td>
+      <td>443.938944</td>
+      <td>443.938944</td>
+      <td>443.938944</td>
+    </tr>
+    <tr>
+      <th>23</th>
+      <td>2025-04-04 13:18:59.065314</td>
+      <td>1</td>
+      <td>off</td>
+      <td>16.990556</td>
+      <td>24978.543889</td>
+      <td>46.117222</td>
+      <td>22.654074</td>
+      <td>29.666049</td>
+      <td>25.890370</td>
+      <td>47.195988</td>
+      <td>...</td>
+      <td>450.923951</td>
+      <td>437.169691</td>
+      <td>430.966790</td>
+      <td>448.496728</td>
+      <td>440.405988</td>
+      <td>447.417963</td>
+      <td>440.945370</td>
+      <td>438.248457</td>
+      <td>438.248457</td>
+      <td>438.248457</td>
+    </tr>
+    <tr>
+      <th>24</th>
+      <td>2025-04-04 13:19:00.095774</td>
+      <td>1</td>
+      <td>off</td>
+      <td>16.990556</td>
+      <td>24978.543889</td>
+      <td>27.427611</td>
+      <td>19.175056</td>
+      <td>21.845000</td>
+      <td>35.437444</td>
+      <td>56.311556</td>
+      <td>...</td>
+      <td>459.230444</td>
+      <td>430.346500</td>
+      <td>448.550667</td>
+      <td>450.007000</td>
+      <td>441.511722</td>
+      <td>440.055389</td>
+      <td>448.065222</td>
+      <td>437.628167</td>
+      <td>437.628167</td>
+      <td>437.628167</td>
+    </tr>
+    <tr>
+      <th>25</th>
+      <td>2025-04-04 13:19:01.128261</td>
+      <td>1</td>
+      <td>off</td>
+      <td>16.990556</td>
+      <td>24978.543889</td>
+      <td>37.217407</td>
+      <td>14.293642</td>
+      <td>28.317593</td>
+      <td>41.532469</td>
+      <td>47.735370</td>
+      <td>...</td>
+      <td>436.090926</td>
+      <td>438.518148</td>
+      <td>440.405988</td>
+      <td>449.575494</td>
+      <td>436.630309</td>
+      <td>434.472778</td>
+      <td>456.857160</td>
+      <td>436.900000</td>
+      <td>436.900000</td>
+      <td>436.900000</td>
+    </tr>
+    <tr>
+      <th>26</th>
+      <td>2025-04-04 13:19:02.160391</td>
+      <td>1</td>
+      <td>off</td>
+      <td>16.990556</td>
+      <td>24978.543889</td>
+      <td>38.350111</td>
+      <td>26.942167</td>
+      <td>51.699833</td>
+      <td>39.321000</td>
+      <td>55.097944</td>
+      <td>...</td>
+      <td>447.579778</td>
+      <td>415.055000</td>
+      <td>426.220222</td>
+      <td>448.065222</td>
+      <td>453.890556</td>
+      <td>439.084500</td>
+      <td>436.171833</td>
+      <td>442.968056</td>
+      <td>442.968056</td>
+      <td>442.968056</td>
+    </tr>
+    <tr>
+      <th>27</th>
+      <td>2025-04-04 13:19:03.202006</td>
+      <td>1</td>
+      <td>off</td>
+      <td>16.990556</td>
+      <td>24978.543889</td>
+      <td>17.529938</td>
+      <td>40.993086</td>
+      <td>41.532469</td>
+      <td>46.926296</td>
+      <td>44.499074</td>
+      <td>...</td>
+      <td>450.114877</td>
+      <td>456.048086</td>
+      <td>430.427407</td>
+      <td>442.563519</td>
+      <td>452.002716</td>
+      <td>427.460802</td>
+      <td>436.090926</td>
+      <td>438.248457</td>
+      <td>438.248457</td>
+      <td>438.248457</td>
+    </tr>
+    <tr>
+      <th>28</th>
+      <td>2025-04-04 13:19:04.242210</td>
+      <td>1</td>
+      <td>off</td>
+      <td>16.990556</td>
+      <td>24978.543889</td>
+      <td>40.777333</td>
+      <td>30.583000</td>
+      <td>21.845000</td>
+      <td>37.864667</td>
+      <td>57.767889</td>
+      <td>...</td>
+      <td>445.395278</td>
+      <td>432.045556</td>
+      <td>443.210778</td>
+      <td>457.531389</td>
+      <td>459.230444</td>
+      <td>443.453500</td>
+      <td>444.181667</td>
+      <td>436.414556</td>
+      <td>436.414556</td>
+      <td>436.414556</td>
+    </tr>
+    <tr>
+      <th>29</th>
+      <td>2025-04-04 13:19:05.280109</td>
+      <td>1</td>
+      <td>off</td>
+      <td>16.990556</td>
+      <td>24978.543889</td>
+      <td>39.914321</td>
+      <td>42.341543</td>
+      <td>25.890370</td>
+      <td>47.735370</td>
+      <td>55.286728</td>
+      <td>...</td>
+      <td>420.988210</td>
+      <td>461.981296</td>
+      <td>433.933395</td>
+      <td>445.530123</td>
+      <td>432.315247</td>
+      <td>430.966790</td>
+      <td>468.184198</td>
+      <td>435.551543</td>
+      <td>435.551543</td>
+      <td>435.551543</td>
+    </tr>
+    <tr>
+      <th>30</th>
+      <td>2025-04-04 13:19:06.334964</td>
+      <td>1</td>
+      <td>off</td>
+      <td>16.990556</td>
+      <td>24978.543889</td>
+      <td>47.330833</td>
+      <td>22.815889</td>
+      <td>44.418167</td>
+      <td>56.797000</td>
+      <td>54.127056</td>
+      <td>...</td>
+      <td>436.171833</td>
+      <td>445.395278</td>
+      <td>470.152944</td>
+      <td>423.550278</td>
+      <td>433.744611</td>
+      <td>440.055389</td>
+      <td>435.686389</td>
+      <td>432.288278</td>
+      <td>432.288278</td>
+      <td>432.288278</td>
+    </tr>
+    <tr>
+      <th>31</th>
+      <td>2025-04-04 13:19:07.367506</td>
+      <td>1</td>
+      <td>off</td>
+      <td>16.990556</td>
+      <td>24978.543889</td>
+      <td>37.217407</td>
+      <td>27.778210</td>
+      <td>31.553889</td>
+      <td>29.935741</td>
+      <td>46.117222</td>
+      <td>...</td>
+      <td>450.654259</td>
+      <td>430.427407</td>
+      <td>424.763889</td>
+      <td>450.654259</td>
+      <td>428.539568</td>
+      <td>447.957346</td>
+      <td>458.205617</td>
+      <td>414.515617</td>
+      <td>414.515617</td>
+      <td>414.515617</td>
+    </tr>
+    <tr>
+      <th>32</th>
+      <td>2025-04-04 13:19:08.397854</td>
+      <td>1</td>
+      <td>off</td>
+      <td>16.990556</td>
+      <td>24978.543889</td>
+      <td>19.417778</td>
+      <td>21.602278</td>
+      <td>53.156167</td>
+      <td>47.816278</td>
+      <td>58.738778</td>
+      <td>...</td>
+      <td>425.734778</td>
+      <td>431.074667</td>
+      <td>465.055778</td>
+      <td>443.453500</td>
+      <td>457.774111</td>
+      <td>450.007000</td>
+      <td>429.375611</td>
+      <td>440.055389</td>
+      <td>440.055389</td>
+      <td>440.055389</td>
+    </tr>
+    <tr>
+      <th>33</th>
+      <td>2025-04-04 13:19:09.427097</td>
+      <td>1</td>
+      <td>off</td>
+      <td>16.990556</td>
+      <td>24978.543889</td>
+      <td>31.014506</td>
+      <td>16.990556</td>
+      <td>30.475123</td>
+      <td>34.250802</td>
+      <td>61.759321</td>
+      <td>...</td>
+      <td>450.923951</td>
+      <td>466.835741</td>
+      <td>455.778395</td>
+      <td>454.969321</td>
+      <td>448.496728</td>
+      <td>444.181667</td>
+      <td>456.048086</td>
+      <td>430.697099</td>
+      <td>430.697099</td>
+      <td>430.697099</td>
+    </tr>
+    <tr>
+      <th>34</th>
+      <td>2025-04-04 13:19:10.459716</td>
+      <td>1</td>
+      <td>off</td>
+      <td>16.990556</td>
+      <td>24978.543889</td>
+      <td>42.880926</td>
+      <td>25.350988</td>
+      <td>49.353519</td>
+      <td>52.859506</td>
+      <td>56.904877</td>
+      <td>...</td>
+      <td>453.620864</td>
+      <td>463.329753</td>
+      <td>446.608889</td>
+      <td>450.384568</td>
+      <td>426.382037</td>
+      <td>446.878580</td>
+      <td>425.033580</td>
+      <td>424.763889</td>
+      <td>424.763889</td>
+      <td>424.763889</td>
+    </tr>
+    <tr>
+      <th>35</th>
+      <td>2025-04-04 13:19:11.491974</td>
+      <td>1</td>
+      <td>off</td>
+      <td>16.990556</td>
+      <td>24978.543889</td>
+      <td>48.274753</td>
+      <td>23.732840</td>
+      <td>23.193457</td>
+      <td>43.420309</td>
+      <td>68.231914</td>
+      <td>...</td>
+      <td>464.138827</td>
+      <td>446.878580</td>
+      <td>434.472778</td>
+      <td>427.191111</td>
+      <td>429.348642</td>
+      <td>449.575494</td>
+      <td>443.911975</td>
+      <td>432.045556</td>
+      <td>432.045556</td>
+      <td>432.045556</td>
+    </tr>
+    <tr>
+      <th>36</th>
+      <td>2025-04-04 13:19:12.537711</td>
+      <td>1</td>
+      <td>off</td>
+      <td>16.990556</td>
+      <td>24978.543889</td>
+      <td>26.429753</td>
+      <td>11.866420</td>
+      <td>58.253333</td>
+      <td>47.195988</td>
+      <td>54.477654</td>
+      <td>...</td>
+      <td>428.539568</td>
+      <td>410.200556</td>
+      <td>443.911975</td>
+      <td>435.281852</td>
+      <td>435.281852</td>
+      <td>451.193642</td>
+      <td>427.460802</td>
+      <td>444.990741</td>
+      <td>444.990741</td>
+      <td>444.990741</td>
+    </tr>
+    <tr>
+      <th>37</th>
+      <td>2025-04-04 13:19:13.572105</td>
+      <td>1</td>
+      <td>off</td>
+      <td>16.990556</td>
+      <td>24978.543889</td>
+      <td>39.105247</td>
+      <td>12.405802</td>
+      <td>27.508519</td>
+      <td>33.711420</td>
+      <td>52.050432</td>
+      <td>...</td>
+      <td>438.787840</td>
+      <td>444.721049</td>
+      <td>435.551543</td>
+      <td>450.384568</td>
+      <td>452.811790</td>
+      <td>440.405988</td>
+      <td>443.911975</td>
+      <td>448.496728</td>
+      <td>448.496728</td>
+      <td>448.496728</td>
+    </tr>
+    <tr>
+      <th>38</th>
+      <td>2025-04-04 13:19:14.604002</td>
+      <td>1</td>
+      <td>off</td>
+      <td>16.990556</td>
+      <td>24978.543889</td>
+      <td>28.047901</td>
+      <td>20.766235</td>
+      <td>52.589815</td>
+      <td>32.902346</td>
+      <td>50.971667</td>
+      <td>...</td>
+      <td>430.157716</td>
+      <td>430.966790</td>
+      <td>440.675679</td>
+      <td>451.463333</td>
+      <td>422.336667</td>
+      <td>423.145741</td>
+      <td>442.293827</td>
+      <td>432.045556</td>
+      <td>432.045556</td>
+      <td>432.045556</td>
+    </tr>
+    <tr>
+      <th>39</th>
+      <td>2025-04-04 13:19:15.637091</td>
+      <td>1</td>
+      <td>off</td>
+      <td>16.990556</td>
+      <td>24978.543889</td>
+      <td>24.272222</td>
+      <td>48.544444</td>
+      <td>36.947716</td>
+      <td>49.623210</td>
+      <td>57.174568</td>
+      <td>...</td>
+      <td>441.754444</td>
+      <td>445.260432</td>
+      <td>443.372593</td>
+      <td>440.136296</td>
+      <td>447.417963</td>
+      <td>464.408519</td>
+      <td>452.002716</td>
+      <td>450.654259</td>
+      <td>450.654259</td>
+      <td>450.654259</td>
+    </tr>
+    <tr>
+      <th>40</th>
+      <td>2025-04-04 13:19:16.672483</td>
+      <td>1</td>
+      <td>off</td>
+      <td>16.990556</td>
+      <td>24978.543889</td>
+      <td>30.744815</td>
+      <td>46.656605</td>
+      <td>33.172037</td>
+      <td>44.229383</td>
+      <td>35.059877</td>
+      <td>...</td>
+      <td>442.024136</td>
+      <td>443.911975</td>
+      <td>449.305802</td>
+      <td>473.578025</td>
+      <td>440.945370</td>
+      <td>427.730494</td>
+      <td>444.990741</td>
+      <td>448.496728</td>
+      <td>448.496728</td>
+      <td>448.496728</td>
+    </tr>
+    <tr>
+      <th>41</th>
+      <td>2025-04-04 13:19:17.706073</td>
+      <td>1</td>
+      <td>off</td>
+      <td>16.990556</td>
+      <td>24978.543889</td>
+      <td>26.699444</td>
+      <td>25.485833</td>
+      <td>38.835556</td>
+      <td>39.563722</td>
+      <td>34.223833</td>
+      <td>...</td>
+      <td>427.919278</td>
+      <td>464.570333</td>
+      <td>442.968056</td>
+      <td>430.589222</td>
+      <td>443.210778</td>
+      <td>447.822500</td>
+      <td>436.414556</td>
+      <td>434.230056</td>
+      <td>434.230056</td>
+      <td>434.230056</td>
+    </tr>
+    <tr>
+      <th>42</th>
+      <td>2025-04-04 13:19:18.742677</td>
+      <td>1</td>
+      <td>off</td>
+      <td>16.990556</td>
+      <td>24978.543889</td>
+      <td>42.341543</td>
+      <td>25.350988</td>
+      <td>37.217407</td>
+      <td>48.814136</td>
+      <td>53.398889</td>
+      <td>...</td>
+      <td>433.663704</td>
+      <td>434.742469</td>
+      <td>429.618333</td>
+      <td>416.673148</td>
+      <td>452.002716</td>
+      <td>450.384568</td>
+      <td>427.191111</td>
+      <td>437.709074</td>
+      <td>437.709074</td>
+      <td>437.709074</td>
+    </tr>
+    <tr>
+      <th>43</th>
+      <td>2025-04-04 13:19:19.775702</td>
+      <td>1</td>
+      <td>off</td>
+      <td>16.990556</td>
+      <td>24978.543889</td>
+      <td>19.957160</td>
+      <td>19.148086</td>
+      <td>30.205432</td>
+      <td>35.059877</td>
+      <td>60.950247</td>
+      <td>...</td>
+      <td>436.630309</td>
+      <td>451.733025</td>
+      <td>443.372593</td>
+      <td>444.721049</td>
+      <td>439.057531</td>
+      <td>449.575494</td>
+      <td>452.542099</td>
+      <td>426.382037</td>
+      <td>426.382037</td>
+      <td>426.382037</td>
+    </tr>
+    <tr>
+      <th>44</th>
+      <td>2025-04-04 13:19:20.805906</td>
+      <td>1</td>
+      <td>off</td>
+      <td>16.990556</td>
+      <td>24978.543889</td>
+      <td>28.856975</td>
+      <td>18.608704</td>
+      <td>24.811605</td>
+      <td>34.250802</td>
+      <td>48.274753</td>
+      <td>...</td>
+      <td>453.890556</td>
+      <td>457.126852</td>
+      <td>443.102901</td>
+      <td>454.429938</td>
+      <td>430.427407</td>
+      <td>456.587469</td>
+      <td>459.014691</td>
+      <td>438.248457</td>
+      <td>438.248457</td>
+      <td>438.248457</td>
+    </tr>
+    <tr>
+      <th>45</th>
+      <td>2025-04-04 13:19:21.836857</td>
+      <td>1</td>
+      <td>off</td>
+      <td>16.990556</td>
+      <td>24978.543889</td>
+      <td>39.374938</td>
+      <td>45.308148</td>
+      <td>22.923765</td>
+      <td>46.926296</td>
+      <td>51.780741</td>
+      <td>...</td>
+      <td>432.854630</td>
+      <td>438.248457</td>
+      <td>461.981296</td>
+      <td>421.257901</td>
+      <td>444.990741</td>
+      <td>424.763889</td>
+      <td>445.260432</td>
+      <td>432.854630</td>
+      <td>432.854630</td>
+      <td>432.854630</td>
+    </tr>
+    <tr>
+      <th>46</th>
+      <td>2025-04-04 13:19:22.871144</td>
+      <td>1</td>
+      <td>off</td>
+      <td>16.990556</td>
+      <td>24978.543889</td>
+      <td>46.117222</td>
+      <td>30.825722</td>
+      <td>21.359556</td>
+      <td>50.971667</td>
+      <td>54.612500</td>
+      <td>...</td>
+      <td>439.812667</td>
+      <td>450.007000</td>
+      <td>443.210778</td>
+      <td>427.919278</td>
+      <td>446.123444</td>
+      <td>436.657278</td>
+      <td>435.686389</td>
+      <td>438.113611</td>
+      <td>438.113611</td>
+      <td>438.113611</td>
+    </tr>
+    <tr>
+      <th>47</th>
+      <td>2025-04-04 13:19:23.908302</td>
+      <td>1</td>
+      <td>off</td>
+      <td>16.990556</td>
+      <td>24978.543889</td>
+      <td>36.678025</td>
+      <td>40.184012</td>
+      <td>36.678025</td>
+      <td>38.026481</td>
+      <td>49.623210</td>
+      <td>...</td>
+      <td>456.857160</td>
+      <td>446.339198</td>
+      <td>452.002716</td>
+      <td>449.036111</td>
+      <td>438.248457</td>
+      <td>430.966790</td>
+      <td>444.990741</td>
+      <td>429.078951</td>
+      <td>429.078951</td>
+      <td>429.078951</td>
+    </tr>
+    <tr>
+      <th>48</th>
+      <td>2025-04-04 13:19:24.941178</td>
+      <td>1</td>
+      <td>off</td>
+      <td>16.990556</td>
+      <td>24978.543889</td>
+      <td>42.476389</td>
+      <td>23.058611</td>
+      <td>19.417778</td>
+      <td>60.437833</td>
+      <td>46.359944</td>
+      <td>...</td>
+      <td>444.181667</td>
+      <td>419.666722</td>
+      <td>431.074667</td>
+      <td>431.802833</td>
+      <td>450.977889</td>
+      <td>439.327222</td>
+      <td>444.667111</td>
+      <td>449.764278</td>
+      <td>449.764278</td>
+      <td>449.764278</td>
+    </tr>
+    <tr>
+      <th>49</th>
+      <td>2025-04-04 13:19:25.976058</td>
+      <td>1</td>
+      <td>off</td>
+      <td>16.990556</td>
+      <td>24978.543889</td>
+      <td>51.511049</td>
+      <td>24.272222</td>
+      <td>33.711420</td>
+      <td>52.320123</td>
+      <td>46.656605</td>
+      <td>...</td>
+      <td>439.327222</td>
+      <td>427.191111</td>
+      <td>442.293827</td>
+      <td>436.090926</td>
+      <td>438.787840</td>
+      <td>457.396543</td>
+      <td>440.945370</td>
+      <td>476.005247</td>
+      <td>476.005247</td>
+      <td>476.005247</td>
+    </tr>
+    <tr>
+      <th>50</th>
+      <td>2025-04-04 13:19:27.008444</td>
+      <td>1</td>
+      <td>off</td>
+      <td>16.990556</td>
+      <td>24978.543889</td>
+      <td>39.105247</td>
+      <td>31.823580</td>
+      <td>39.374938</td>
+      <td>48.544444</td>
+      <td>43.959691</td>
+      <td>...</td>
+      <td>465.756975</td>
+      <td>429.888025</td>
+      <td>436.090926</td>
+      <td>446.069506</td>
+      <td>452.811790</td>
+      <td>452.272407</td>
+      <td>422.606358</td>
+      <td>450.923951</td>
+      <td>450.923951</td>
+      <td>450.923951</td>
+    </tr>
+    <tr>
+      <th>51</th>
+      <td>2025-04-04 13:19:28.045717</td>
+      <td>1</td>
+      <td>off</td>
+      <td>16.990556</td>
+      <td>24978.543889</td>
+      <td>49.892901</td>
+      <td>51.511049</td>
+      <td>49.083827</td>
+      <td>28.856975</td>
+      <td>68.501605</td>
+      <td>...</td>
+      <td>464.678210</td>
+      <td>440.136296</td>
+      <td>429.618333</td>
+      <td>453.081481</td>
+      <td>443.372593</td>
+      <td>436.900000</td>
+      <td>429.078951</td>
+      <td>444.451358</td>
+      <td>444.451358</td>
+      <td>444.451358</td>
+    </tr>
+    <tr>
+      <th>52</th>
+      <td>2025-04-04 13:19:29.076808</td>
+      <td>1</td>
+      <td>off</td>
+      <td>16.990556</td>
+      <td>24978.543889</td>
+      <td>31.553889</td>
+      <td>12.405802</td>
+      <td>43.690000</td>
+      <td>38.565864</td>
+      <td>67.153148</td>
+      <td>...</td>
+      <td>446.069506</td>
+      <td>463.869136</td>
+      <td>433.933395</td>
+      <td>441.754444</td>
+      <td>440.136296</td>
+      <td>431.775864</td>
+      <td>449.575494</td>
+      <td>435.012160</td>
+      <td>435.012160</td>
+      <td>435.012160</td>
+    </tr>
+    <tr>
+      <th>53</th>
+      <td>2025-04-04 13:19:30.113538</td>
+      <td>1</td>
+      <td>off</td>
+      <td>16.990556</td>
+      <td>24978.543889</td>
+      <td>45.308148</td>
+      <td>30.475123</td>
+      <td>34.520494</td>
+      <td>14.023951</td>
+      <td>46.117222</td>
+      <td>...</td>
+      <td>460.632840</td>
+      <td>444.181667</td>
+      <td>438.248457</td>
+      <td>440.405988</td>
+      <td>437.978765</td>
+      <td>444.451358</td>
+      <td>427.191111</td>
+      <td>440.405988</td>
+      <td>440.405988</td>
+      <td>440.405988</td>
+    </tr>
+    <tr>
+      <th>54</th>
+      <td>2025-04-04 13:19:31.146010</td>
+      <td>1</td>
+      <td>off</td>
+      <td>16.990556</td>
+      <td>24978.543889</td>
+      <td>54.207963</td>
+      <td>27.508519</td>
+      <td>37.217407</td>
+      <td>35.599259</td>
+      <td>51.780741</td>
+      <td>...</td>
+      <td>447.687654</td>
+      <td>442.024136</td>
+      <td>470.341728</td>
+      <td>459.554074</td>
+      <td>424.494198</td>
+      <td>434.742469</td>
+      <td>444.181667</td>
+      <td>436.360617</td>
+      <td>436.360617</td>
+      <td>436.360617</td>
+    </tr>
+    <tr>
+      <th>55</th>
+      <td>2025-04-04 13:19:32.180604</td>
+      <td>1</td>
+      <td>off</td>
+      <td>16.990556</td>
+      <td>24978.543889</td>
+      <td>30.475123</td>
+      <td>33.981111</td>
+      <td>43.690000</td>
+      <td>40.993086</td>
+      <td>52.050432</td>
+      <td>...</td>
+      <td>429.348642</td>
+      <td>444.990741</td>
+      <td>419.909444</td>
+      <td>431.506173</td>
+      <td>430.427407</td>
+      <td>437.709074</td>
+      <td>461.981296</td>
+      <td>444.181667</td>
+      <td>444.181667</td>
+      <td>444.181667</td>
+    </tr>
+    <tr>
+      <th>56</th>
+      <td>2025-04-04 13:19:33.213159</td>
+      <td>1</td>
+      <td>off</td>
+      <td>16.990556</td>
+      <td>24978.543889</td>
+      <td>35.329568</td>
+      <td>29.666049</td>
+      <td>16.990556</td>
+      <td>37.217407</td>
+      <td>57.983642</td>
+      <td>...</td>
+      <td>433.124321</td>
+      <td>441.484753</td>
+      <td>441.484753</td>
+      <td>455.778395</td>
+      <td>451.463333</td>
+      <td>437.439383</td>
+      <td>442.563519</td>
+      <td>438.787840</td>
+      <td>438.787840</td>
+      <td>438.787840</td>
+    </tr>
+    <tr>
+      <th>57</th>
+      <td>2025-04-04 13:19:46.247957</td>
+      <td>1</td>
+      <td>static</td>
+      <td>16.990556</td>
+      <td>24978.543889</td>
+      <td>42.840472</td>
+      <td>38.350111</td>
+      <td>28.277139</td>
+      <td>32.767500</td>
+      <td>58.010611</td>
+      <td>...</td>
+      <td>426.220222</td>
+      <td>443.817583</td>
+      <td>446.123444</td>
+      <td>449.036111</td>
+      <td>430.467861</td>
+      <td>437.264083</td>
+      <td>419.545361</td>
+      <td>451.220611</td>
+      <td>451.220611</td>
+      <td>451.220611</td>
+    </tr>
+  </tbody>
+</table>
+<p>58 rows × 2051 columns</p>
+</div></div></div>
+</div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
@@ -792,7 +2543,7 @@
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../_images/ac46b171134502849c4ad016e1e9ade5ec2d791dd12c50e4231ac2991a552d5d.png" src="../_images/ac46b171134502849c4ad016e1e9ade5ec2d791dd12c50e4231ac2991a552d5d.png" />
+<img alt="../_images/31eb06c6a122139dae6835321a655f484eecf3466581de8434a7fe2bc530a8bf.png" src="../_images/31eb06c6a122139dae6835321a655f484eecf3466581de8434a7fe2bc530a8bf.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -810,7 +2561,7 @@
 
 <span class="c1"># Filter out specific time points (e.g., first frame and last 300 entries)</span>
 <span class="c1"># Adjust indices as needed</span>
-<span class="n">time_filter_indices</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="o">-</span><span class="mi">200</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+<span class="n">time_filter_indices</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="c1">#+ list(range(-45, 0))</span>
 <span class="n">absorbance_subset</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">absorbance_subset</span><span class="p">,</span> <span class="n">time_filter_indices</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 <span class="n">timestamps_filtered</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">timestamps</span><span class="p">,</span> <span class="n">time_filter_indices</span><span class="p">)</span>
 
@@ -850,177 +2601,114 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/0326a853021372555090a8e0f95dd3d06dd0c20a07c5a5fb3f2e9de7b6189b3f.png" src="../_images/0326a853021372555090a8e0f95dd3d06dd0c20a07c5a5fb3f2e9de7b6189b3f.png" />
+<img alt="../_images/0f9e33400b0b704009240943080f29ba68064fcba543a20323e3705ce3d6b718.png" src="../_images/0f9e33400b0b704009240943080f29ba68064fcba543a20323e3705ce3d6b718.png" />
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">scipy.integrate</span><span class="w"> </span><span class="kn">import</span> <span class="n">solve_ivp</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.optimize</span><span class="w"> </span><span class="kn">import</span> <span class="n">curve_fit</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 
-<span class="c1"># Physics constants :</span>
+<span class="c1"># === Physics constants ===</span>
+<span class="n">h</span> <span class="o">=</span> <span class="mf">6.62607004</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">**</span> <span class="p">(</span><span class="o">-</span><span class="mi">34</span><span class="p">)</span>  <span class="c1"># Planck&#39;s constant (J·s)</span>
+<span class="n">NA</span> <span class="o">=</span> <span class="mf">6.02214086</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">**</span> <span class="p">(</span><span class="mi">23</span><span class="p">)</span>  <span class="c1"># Avogadro&#39;s number (mol^-1)</span>
+<span class="n">c_vaccum</span> <span class="o">=</span> <span class="mi">299792458</span>  <span class="c1"># Speed of light in vacuum (m/s)</span>
+<span class="n">wl</span> <span class="o">=</span> <span class="mi">405</span>  <span class="c1"># Wavelength (nm)</span>
+<span class="n">v</span> <span class="o">=</span> <span class="n">c_vaccum</span> <span class="o">/</span> <span class="p">(</span><span class="n">wl</span> <span class="o">*</span> <span class="mf">1e-9</span><span class="p">)</span>  <span class="c1"># Frequency (Hz)</span>
+<span class="n">volume</span> <span class="o">=</span> <span class="mf">23e-4</span>  <span class="c1"># Volume (L)</span>
+<span class="n">l</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># Path length (cm)</span>
 
-<span class="n">h</span> <span class="o">=</span> <span class="mf">6.62607004</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">**</span> <span class="p">(</span><span class="o">-</span><span class="mi">34</span><span class="p">)</span>
-<span class="n">NA</span> <span class="o">=</span> <span class="mf">6.02214086</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">**</span> <span class="p">(</span><span class="mi">23</span><span class="p">)</span>
-<span class="n">c_vaccum</span> <span class="o">=</span> <span class="mi">299792458</span>
-<span class="n">wl</span> <span class="o">=</span> <span class="mi">505</span> <span class="c1"># nm</span>
-<span class="n">v</span> <span class="o">=</span> <span class="n">c_vaccum</span> <span class="o">/</span> <span class="p">(</span><span class="n">wl</span> <span class="o">*</span> <span class="mf">1e-9</span><span class="p">)</span>
-<span class="n">volume</span> <span class="o">=</span> <span class="mf">23e-4</span> <span class="c1"># L</span>
-<span class="n">l</span> <span class="o">=</span> <span class="mi">1</span> <span class="c1"># cm</span>
 <span class="n">eps_on_482</span> <span class="o">=</span> <span class="mi">65474</span>
 <span class="n">eps_off_482</span> <span class="o">=</span> <span class="mi">65</span>
-<span class="n">I_w_list</span> <span class="o">=</span> <span class="p">[</span><span class="mf">14.27e-3</span><span class="p">,</span> <span class="mf">10.9e-3</span><span class="p">,</span> <span class="mf">26e-3</span><span class="p">]</span>
-<span class="n">lpopt</span><span class="o">=</span><span class="p">[]</span>
+<span class="n">eps_on_405</span> <span class="o">=</span> <span class="mf">0.1847826087</span><span class="o">*</span><span class="n">eps_on_482</span>
+<span class="n">eps_off_405</span> <span class="o">=</span> <span class="mi">25343</span>
+
+<span class="n">I_w_list</span> <span class="o">=</span> <span class="p">[</span> <span class="mf">3.8e-3</span> <span class="p">]</span> <span class="c1"># No actinometry for 405nm LED</span>
+
+<span class="c1"># === Experimental data ===</span>
+<span class="c1"># Assuming &#39;timestamps_filtered&#39; and &#39;C_exp&#39; are already defined</span>
+
+<span class="c1"># === Initialize parameters ===</span>
+<span class="n">lpopt</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="k">for</span> <span class="n">I_w</span> <span class="ow">in</span> <span class="n">I_w_list</span><span class="p">:</span>
-    <span class="n">C_exp</span> <span class="o">=</span> <span class="n">mean_absorbance</span><span class="o">/</span><span class="p">(</span><span class="n">eps_on_482</span><span class="o">*</span><span class="n">l</span><span class="p">)</span>
-    
-    <span class="n">C0</span> <span class="o">=</span> <span class="n">C_exp</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-    
-    <span class="n">I_0</span> <span class="o">=</span> <span class="n">I_w</span>  <span class="o">/</span> <span class="p">(</span><span class="n">h</span> <span class="o">*</span> <span class="n">v</span> <span class="o">*</span> <span class="n">NA</span><span class="p">)</span> <span class="o">/</span> <span class="n">volume</span> <span class="c1"># mole de photons.L-1</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">I_0</span><span class="p">)</span>
-    
-    <span class="k">def</span><span class="w"> </span><span class="nf">f</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">C_ON</span><span class="p">,</span> <span class="n">QY_ON2OFF</span><span class="p">,</span> <span class="n">QY_OFF2ON</span><span class="p">):</span>
-        <span class="n">C_OFF</span> <span class="o">=</span> <span class="n">C0</span><span class="o">-</span><span class="n">C_ON</span>
-        <span class="n">Iabs_ON</span> <span class="o">=</span>  <span class="n">I_0</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span> <span class="n">eps_on_482</span> <span class="o">*</span> <span class="n">C_ON</span> <span class="o">*</span> <span class="n">l</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">10</span><span class="p">)))</span>
-        <span class="n">Iabs_OFF</span> <span class="o">=</span>  <span class="n">I_0</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span> <span class="n">eps_off_482</span> <span class="o">*</span> <span class="n">C_OFF</span> <span class="o">*</span> <span class="n">l</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">10</span><span class="p">)))</span>
-        <span class="n">dCCF_deri</span> <span class="o">=</span> <span class="o">-</span><span class="n">QY_ON2OFF</span> <span class="o">*</span> <span class="n">Iabs_ON</span> <span class="o">+</span> <span class="n">QY_OFF2ON</span><span class="o">*</span><span class="n">Iabs_OFF</span>
+    <span class="c1"># Compute initial concentration based on experimental data</span>
+    <span class="n">C_exp</span> <span class="o">=</span> <span class="n">mean_absorbance</span> <span class="o">/</span> <span class="p">(</span><span class="n">eps_on_482</span> <span class="o">*</span> <span class="n">l</span><span class="p">)</span>
+    <span class="n">C0</span> <span class="o">=</span> <span class="n">C_exp</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">I_0</span> <span class="o">=</span> <span class="n">I_w</span> <span class="o">/</span> <span class="p">(</span><span class="n">h</span> <span class="o">*</span> <span class="n">v</span> <span class="o">*</span> <span class="n">NA</span><span class="p">)</span> <span class="o">/</span> <span class="n">volume</span>  <span class="c1"># Photon irradiance (mol·L^-1·s^-1)</span>
+
+    <span class="c1"># === ODE definition ===</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">dC_dt</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">C_ON</span><span class="p">,</span> <span class="n">QY_ON2OFF</span><span class="p">,</span> <span class="n">QY_OFF2ON</span><span class="p">):</span>
+        <span class="n">C_OFF</span> <span class="o">=</span> <span class="n">C0</span> <span class="o">-</span> <span class="n">C_ON</span>
+        <span class="n">Iabs_ON</span> <span class="o">=</span> <span class="n">I_0</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">eps_on_405</span> <span class="o">*</span> <span class="n">C_ON</span> <span class="o">*</span> <span class="n">l</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">10</span><span class="p">)))</span>
+        <span class="n">Iabs_OFF</span> <span class="o">=</span> <span class="n">I_0</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">eps_on_405</span> <span class="o">*</span> <span class="n">C_OFF</span> <span class="o">*</span> <span class="n">l</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">10</span><span class="p">)))</span>
+        <span class="n">dCCF_deri</span> <span class="o">=</span> <span class="o">-</span><span class="n">QY_ON2OFF</span> <span class="o">*</span> <span class="n">Iabs_ON</span> <span class="o">+</span> <span class="n">QY_OFF2ON</span> <span class="o">*</span> <span class="n">Iabs_OFF</span>
         <span class="k">return</span> <span class="n">dCCF_deri</span>
-    
-    <span class="k">def</span><span class="w"> </span><span class="nf">fi</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">q1</span><span class="p">,</span><span class="n">q2</span><span class="p">):</span>
-        <span class="n">sol</span> <span class="o">=</span> <span class="n">solve_ivp</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">t_span</span><span class="p">,</span> <span class="n">y0</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">q1</span><span class="p">,</span><span class="n">q2</span><span class="p">),</span> <span class="n">t_eval</span><span class="o">=</span><span class="n">timestamps_filtered</span><span class="p">)</span>
+
+    <span class="c1"># === Fitting function wrapper ===</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">model</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">QY_ON2OFF</span><span class="p">,</span> <span class="n">QY_OFF2ON</span><span class="p">,</span> <span class="n">offset</span><span class="p">):</span>
+        <span class="n">sol</span> <span class="o">=</span> <span class="n">solve_ivp</span><span class="p">(</span><span class="n">dC_dt</span><span class="p">,</span> <span class="p">[</span><span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">t</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]],</span> <span class="p">[</span><span class="n">C_exp</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">QY_ON2OFF</span><span class="p">,</span> <span class="n">QY_OFF2ON</span><span class="p">),</span> <span class="n">t_eval</span><span class="o">=</span><span class="n">t</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">sol</span><span class="o">.</span><span class="n">success</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;⚠️ solve_ivp failed:&quot;</span><span class="p">,</span> <span class="n">sol</span><span class="o">.</span><span class="n">message</span><span class="p">)</span>
-            <span class="k">return</span> <span class="kc">None</span>  <span class="c1"># Retourne None en cas d&#39;échec</span>
-        <span class="k">return</span> <span class="n">sol</span><span class="o">.</span><span class="n">y</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span><span class="c1">#+c</span>
-    
-    
-    
-    <span class="n">QY1</span> <span class="o">=</span> <span class="mf">0.2</span><span class="o">*</span><span class="mf">9.3e-3</span>
-    <span class="n">QY2</span> <span class="o">=</span> <span class="mf">0.2</span><span class="o">*</span><span class="mf">2.3e-1</span>
-    <span class="n">QY1_real</span> <span class="o">=</span> <span class="mf">9.3e-3</span>
-    <span class="n">QY2_real</span> <span class="o">=</span> <span class="mf">2.3e-1</span>
-    <span class="n">initial_guess</span> <span class="o">=</span> <span class="p">(</span><span class="n">QY1</span><span class="p">,</span><span class="n">QY2</span><span class="p">)</span>
-    <span class="n">bounds</span> <span class="o">=</span> <span class="p">([</span><span class="mf">1e-4</span><span class="p">,</span> <span class="mf">1e-4</span><span class="p">],</span>  <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
-    
-    <span class="n">t_span</span> <span class="o">=</span> <span class="p">[</span><span class="n">timestamps_filtered</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">timestamps_filtered</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span>
-    <span class="n">y0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">C0</span><span class="p">])</span>
-    <span class="c1"># y = solve_ivp(f, t_span, y0, args=(QY,), t_eval=timestamps)</span>
-    
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Reg start&quot;</span><span class="p">)</span>
-    <span class="n">popt</span><span class="p">,</span> <span class="n">pcov</span> <span class="o">=</span> <span class="n">curve_fit</span><span class="p">(</span><span class="n">fi</span><span class="p">,</span> <span class="n">timestamps_filtered</span><span class="p">,</span> <span class="n">C_exp</span><span class="p">,</span> <span class="n">p0</span><span class="o">=</span><span class="n">initial_guess</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="n">bounds</span><span class="p">,</span><span class="n">method</span><span class="o">=</span><span class="s2">&quot;dogbox&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;⚠️ ODE solver failed:&quot;</span><span class="p">,</span> <span class="n">sol</span><span class="o">.</span><span class="n">message</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">full_like</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">sol</span><span class="o">.</span><span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span> <span class="n">offset</span>
+
+    <span class="c1"># === Fit the model to the experimental data ===</span>
+    <span class="n">initial_guess</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.001</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="c1"># QY_ON2OFF, QY_OFF2ON, offset</span>
+    <span class="n">bounds</span> <span class="o">=</span> <span class="p">([</span><span class="mf">1e-4</span><span class="p">,</span> <span class="mf">1e-4</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span> <span class="c1"># ([min1, min2, ...], [max1, max2, ...])</span>
+    <span class="n">popt</span><span class="p">,</span> <span class="n">pcov</span> <span class="o">=</span> <span class="n">curve_fit</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">timestamps_filtered</span><span class="p">,</span> <span class="n">C_exp</span><span class="p">,</span> <span class="n">p0</span><span class="o">=</span><span class="n">initial_guess</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="n">bounds</span><span class="p">)</span>
+
+    <span class="c1"># Extract fitted parameters and compute uncertainties</span>
     <span class="n">uncertainties</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">pcov</span><span class="p">))</span>
     <span class="n">lpopt</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">popt</span><span class="p">)</span>
-    <span class="c1"># Print results</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=== Fit Results ===&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;=== Fit Results I=</span><span class="si">{</span><span class="n">I_w</span><span class="si">:</span><span class="s2">0.3e</span><span class="si">}</span><span class="s2"> W ===&quot;</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">coef</span><span class="p">,</span> <span class="n">incert</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">popt</span><span class="p">,</span> <span class="n">uncertainties</span><span class="p">),</span> <span class="n">start</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Parameter </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">coef</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> ± </span><span class="si">{</span><span class="n">incert</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    
+
     <span class="c1"># Compute fitted values</span>
-    <span class="n">fitted_values</span> <span class="o">=</span> <span class="n">fi</span><span class="p">(</span><span class="n">timestamps_filtered</span><span class="p">,</span> <span class="o">*</span><span class="n">popt</span><span class="p">)</span>
-        
-    
+    <span class="n">fitted_values</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">timestamps_filtered</span><span class="p">,</span> <span class="o">*</span><span class="n">popt</span><span class="p">)</span>
+
+    <span class="c1"># === Plotting ===</span>
     <span class="n">fig</span><span class="p">,</span> <span class="n">a</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
-    <span class="n">pastel_colors</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;m&quot;</span><span class="p">,</span> <span class="s2">&quot;#f9955e&quot;</span><span class="p">,</span> <span class="s2">&quot;#81a3e8&quot;</span><span class="p">]</span>  <span class="c1"># Mauve, orange, sky blue</span>
+    <span class="n">pastel_colors</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;m&quot;</span><span class="p">,</span> <span class="s2">&quot;#f9955e&quot;</span><span class="p">,</span> <span class="s2">&quot;#5080e0&quot;</span><span class="p">]</span>  <span class="c1"># Mauve, orange, sky blue</span>
 
     <span class="c1"># First Plot - Concentration Over Time</span>
     <span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">timestamps_filtered</span><span class="p">,</span> <span class="n">C_exp</span><span class="p">,</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">pastel_colors</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;C exp&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.6</span><span class="p">)</span>
-    <span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">timestamps_filtered</span><span class="p">,</span> <span class="n">fitted_values</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">pastel_colors</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;C model for QY1=</span><span class="si">{</span><span class="n">popt</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s2">0.4f</span><span class="si">}</span><span class="s2">,QY2=</span><span class="si">{</span><span class="n">popt</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">0.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="n">litt_values</span> <span class="o">=</span> <span class="n">fi</span><span class="p">(</span><span class="n">timestamps_filtered</span><span class="p">,</span> <span class="n">QY1</span><span class="p">,</span> <span class="n">QY2</span><span class="p">)</span>
-    <span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">timestamps_filtered</span><span class="p">,</span> <span class="n">litt_values</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">pastel_colors</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;C Litt for QY1=</span><span class="si">{</span><span class="n">QY1_real</span><span class="si">:</span><span class="s2">0.4f</span><span class="si">}</span><span class="s2">,QY2=</span><span class="si">{</span><span class="n">QY2_real</span><span class="si">:</span><span class="s2">0.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-
-    
-    <span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Timestamp&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">)</span>
-    <span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;C $M$&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">timestamps_filtered</span><span class="p">,</span> <span class="n">fitted_values</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">pastel_colors</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;C model for QY1=</span><span class="si">{</span><span class="n">popt</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s2">0.4f</span><span class="si">}</span><span class="s2">, QY2=</span><span class="si">{</span><span class="n">popt</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">0.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Time (s)&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Concentration (M)&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">)</span>
     <span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Concentration Over Time&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">)</span>
     <span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">45</span><span class="p">)</span>
     <span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
     <span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-    
-    <span class="c1"># Second Plot - Error Over Time</span>
-    <span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">timestamps_filtered</span><span class="p">,</span> <span class="p">(</span><span class="n">C_exp</span> <span class="o">-</span> <span class="n">fitted_values</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span> <span class="o">/</span> <span class="n">C_exp</span><span class="p">,</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">pastel_colors</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Errors Model/Data&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.9</span><span class="p">)</span>
-    
-    <span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Timestamp&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">)</span>
-    <span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Error %&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">)</span>
-    <span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Error Over Time&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Second Plot - Residuals Over Time</span>
+    <span class="n">residuals</span> <span class="o">=</span> <span class="n">C_exp</span> <span class="o">-</span> <span class="n">fitted_values</span>
+    <span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">timestamps_filtered</span><span class="p">,</span> <span class="n">residuals</span><span class="p">,</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">pastel_colors</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Residuals&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.9</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Time (s)&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Residuals&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Residuals&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">)</span>
     <span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">45</span><span class="p">)</span>
     <span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
     <span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-    
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2.6191470393152487e-05
-Reg start
-=== Fit Results ===
-Parameter 1: 0.0048 ± 0.0000
-Parameter 2: 0.3049 ± 0.0230
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>=== Fit Results I=3.800e-03 W ===
+Parameter 1: 0.0014 ± 0.0013
+Parameter 2: 0.4951 ± 0.0044
+Parameter 3: 0.0000 ± 0.0000
 </pre></div>
 </div>
-<img alt="../_images/9bbad764c1410ec21690142d11f16d7895ebe0fb9d3d52f7209a162169447603.png" src="../_images/9bbad764c1410ec21690142d11f16d7895ebe0fb9d3d52f7209a162169447603.png" />
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2.000609861845565e-05
-Reg start
-=== Fit Results ===
-Parameter 1: 0.0062 ± 0.0000
-Parameter 2: 0.3748 ± 0.0303
-</pre></div>
-</div>
-<img alt="../_images/eb4fc11a3eb09a474bb6628ee67ac5adaf4aedfe7cb346d11213bd5557e07e35.png" src="../_images/eb4fc11a3eb09a474bb6628ee67ac5adaf4aedfe7cb346d11213bd5557e07e35.png" />
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>4.7720969181637326e-05
-Reg start
-=== Fit Results ===
-Parameter 1: 0.0026 ± 0.0000
-Parameter 2: 0.1632 ± 0.0125
-</pre></div>
-</div>
-<img alt="../_images/7b429aafa74413edef92b54fab957796869dff5d4404b4c3253afde341c8de9d.png" src="../_images/7b429aafa74413edef92b54fab957796869dff5d4404b4c3253afde341c8de9d.png" />
+<img alt="../_images/93fc12bf5f308987a694fc461fdd3a517113c396d5f0214c09dddcb5c603828d.png" src="../_images/93fc12bf5f308987a694fc461fdd3a517113c396d5f0214c09dddcb5c603828d.png" />
 </div>
 </div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">a</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
-<span class="n">pastel_colors</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;m&quot;</span><span class="p">,</span> <span class="s2">&quot;#f9955e&quot;</span><span class="p">,</span> <span class="s2">&quot;#81a3e8&quot;</span><span class="p">]</span>  <span class="c1"># Mauve, orange, sky blue</span>
-<span class="n">t_span</span> <span class="o">=</span> <span class="p">[</span><span class="n">timestamps</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">timestamps</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">fi</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">q1</span><span class="p">,</span><span class="n">q2</span><span class="p">):</span>
-        <span class="n">sol</span> <span class="o">=</span> <span class="n">solve_ivp</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">t_span</span><span class="p">,</span> <span class="n">y0</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">q1</span><span class="p">,</span><span class="n">q2</span><span class="p">),</span> <span class="n">t_eval</span><span class="o">=</span><span class="n">timestamps</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">sol</span><span class="o">.</span><span class="n">success</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;⚠️ solve_ivp failed:&quot;</span><span class="p">,</span> <span class="n">sol</span><span class="o">.</span><span class="n">message</span><span class="p">)</span>
-            <span class="k">return</span> <span class="kc">None</span>  <span class="c1"># Retourne None en cas d&#39;échec</span>
-        <span class="k">return</span> <span class="n">sol</span><span class="o">.</span><span class="n">y</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span><span class="c1">#+c</span>
-    
-<span class="n">litt_values</span> <span class="o">=</span> <span class="n">fi</span><span class="p">(</span><span class="n">timestamps</span><span class="p">,</span> <span class="n">QY1</span><span class="p">,</span> <span class="n">QY2</span><span class="p">)</span>
-<span class="n">a</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">timestamps</span><span class="p">,</span> <span class="n">litt_values</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">pastel_colors</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;C Litt&quot;</span><span class="p">)</span>
-
-
-<span class="n">a</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Timestamp&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">)</span>
-<span class="n">a</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;C $M$&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">)</span>
-<span class="n">a</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Concentration Over Time&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">)</span>
-<span class="n">a</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">45</span><span class="p">)</span>
-<span class="n">a</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
-<span class="n">a</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-
-
-
-<span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">fitted_values</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">C_exp</span><span class="p">))</span>
-
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1.5468539277396307e-06 1.3420840890125958e-06
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/var/folders/rp/81d4rqnx363g9dhpw9xfl9bh0000gn/T/ipykernel_42963/4179636634.py:27: RuntimeWarning: overflow encountered in exp
-  Iabs_ON =  I_0 * (1 - np.exp(- eps_on_482 * C_ON * l * np.log(10)))
-/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/scipy/integrate/_ivp/rk.py:109: RuntimeWarning: invalid value encountered in divide
-  return norm(self._estimate_error(K, h) / scale)
-</pre></div>
-</div>
-<img alt="../_images/1e753181d3be8230b0ba8f994ed38aa15cd557b397c1a4deaf4806241f20b9e2.png" src="../_images/1e753181d3be8230b0ba8f994ed38aa15cd557b397c1a4deaf4806241f20b9e2.png" />
-</div>
-</div>
+</section>
 </section>
 
 
@@ -1047,7 +2735,7 @@ Parameter 2: 0.1632 ± 0.0125
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Fit to get LED power</p>
+        <p class="prev-next-title">Actinometry</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -1061,6 +2749,31 @@ Parameter 2: 0.1632 ± 0.0125
                 <dialog id="pst-secondary-sidebar-modal"></dialog>
                 <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">rsEGFP2 WT Switching QY</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#on-off">ON-&gt;OFF</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#load-experimental-switching-data">Load Experimental Switching Data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#preprocess-spectral-data-and-compute-absorbance">Preprocess Spectral Data and Compute Absorbance</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#visualizing-spectral-intensity-and-absorbance">Visualizing Spectral Intensity and Absorbance</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-cleaning-and-absorbance-subset-preparation">Data Cleaning and Absorbance Subset Preparation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#qy-on-off-regression">QY ON-&gt;OFF Regression</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#off-on">OFF -&gt; ON</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Load Experimental Switching Data</a></li>
+</ul>
+</li>
+</ul>
+
+  </nav></div>
 
   <div class="sidebar-secondary-item">
   <div role="note" aria-label="source link">

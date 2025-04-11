@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Fit to get LED power &#8212; XChroma 1.1 documentation</title>
+    <title>Actinometry &#8212; XChroma 1.1 documentation</title>
   
   
   
@@ -51,7 +51,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Reference" href="../code/XChroma.html" />
-    <link rel="prev" title="Fit the rsEGFP WT" href="rsEGFP2WT.html" />
+    <link rel="prev" title="rsEGFP2 WT Switching QY" href="rsEGFP2WT.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -314,11 +314,12 @@
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="uiwt.html">Interface walk-through</a></li>
 <li class="toctree-l1"><a class="reference internal" href="customseq.html">Custom Sequence</a></li>
-<li class="toctree-l1"><a class="reference internal" href="photofatigue.html">Photofatigue Measurments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="photo_fatigue.html">Photofatigue Measurements</a></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="qy.html">Quantum Yield Measurments</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="Fit_DAE.html">Obtaining QY values for DAE</a></li>
-<li class="toctree-l2"><a class="reference internal" href="rsEGFP2WT.html">Fit the rsEGFP WT</a></li>
-<li class="toctree-l2 current active"><a class="current reference internal" href="#">Fit to get LED power</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rsEGFP2WT.html">rsEGFP2 WT Switching QY</a></li>
+
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Actinometry</a></li>
 </ul>
 </details></li>
 </ul>
@@ -367,7 +368,7 @@
     
     <li class="breadcrumb-item"><a href="qy.html" class="nav-link">Quantum Yield Measurments</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Fit to get LED power</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Actinometry</span></li>
   </ul>
 </nav>
 </div>
@@ -384,13 +385,19 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <div class="cell docutils container">
+  <section id="actinometry">
+<h1>Actinometry<a class="headerlink" href="#actinometry" title="Link to this heading">#</a></h1>
+<section id="load-experimental-actinometry-data">
+<h2>Load Experimental Actinometry Data<a class="headerlink" href="#load-experimental-actinometry-data" title="Link to this heading">#</a></h2>
+<p>We begin by importing the required library and loading the actinometry measurement data from a CSV file. The dataset is stored in <code class="docutils literal notranslate"><span class="pre">exp_data</span></code> for further analysis</p>
+<div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>  <span class="c1"># Import the pandas library for data handling</span>
 
+<span class="c1"># Load the actinometry experiment data from the specified CSV file</span>
 <span class="n">exp_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;DATA/DAE.csv&quot;</span><span class="p">)</span>
 
-<span class="n">exp_data</span>
+<span class="n">exp_data</span>  <span class="c1"># Display the loaded dataset</span>
 </pre></div>
 </div>
 </div>
@@ -706,68 +713,133 @@
 <p>619 rows × 2051 columns</p>
 </div></div></div>
 </div>
+</section>
+<section id="preprocess-spectral-data-and-compute-absorbance">
+<h2>Preprocess Spectral Data and Compute Absorbance<a class="headerlink" href="#preprocess-spectral-data-and-compute-absorbance" title="Link to this heading">#</a></h2>
+<p>We now prepare the spectral intensity data for analysis. The dataset contains different types of measurements:</p>
+<ul class="simple">
+<li><p><strong>“zero”</strong>: baseline measurements,</p></li>
+<li><p><strong>“static”</strong>: background noise or dark reference,</p></li>
+<li><p><strong>Other types</strong>: actual actinometry measurements over time.</p></li>
+</ul>
+<p>We extract these components, convert timestamps, and compute the absorbance spectrum using the formula:</p>
+<p>$$A(\lambda) = -\log_{10} \left( \frac{I(\lambda) - I_{\text{static}}(\lambda)}{I_{\text{zero}}(\lambda) - I_{\text{static}}(\lambda)} \right)$$</p>
+<p>This normalization corrects for both dark current and reference intensity variations.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>  <span class="c1"># NumPy for numerical operations</span>
 
-<span class="n">intensities</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">exp_data</span><span class="p">[(</span><span class="n">exp_data</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;zero&quot;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">exp_data</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;static&quot;</span><span class="p">)]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">3</span><span class="p">:],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
-<span class="n">static</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">exp_data</span><span class="p">[(</span><span class="n">exp_data</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span><span class="o">==</span> <span class="s2">&quot;static&quot;</span><span class="p">)]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">3</span><span class="p">:],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-<span class="n">zero</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">exp_data</span><span class="p">[(</span><span class="n">exp_data</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span><span class="o">==</span> <span class="s2">&quot;zero&quot;</span><span class="p">)]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">3</span><span class="p">:],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<span class="c1"># Extract intensity data excluding &#39;zero&#39; and &#39;static&#39; types</span>
+<span class="n">intensities</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+    <span class="n">exp_data</span><span class="p">[(</span><span class="n">exp_data</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;zero&quot;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">exp_data</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;static&quot;</span><span class="p">)]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">3</span><span class="p">:],</span> 
+    <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span>
+<span class="p">)</span>
+
+<span class="c1"># Extract static (dark) reference spectrum</span>
+<span class="n">static</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+    <span class="n">exp_data</span><span class="p">[</span><span class="n">exp_data</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;static&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">3</span><span class="p">:],</span> 
+    <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span>
+<span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="c1"># Extract zero (reference light) spectrum</span>
+<span class="n">zero</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+    <span class="n">exp_data</span><span class="p">[</span><span class="n">exp_data</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;zero&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">3</span><span class="p">:],</span> 
+    <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span>
+<span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="c1"># Extract wavelengths from column names (assuming columns 3+ are spectral data)</span>
 <span class="n">wavelengths</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">exp_data</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">3</span><span class="p">:],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
-<span class="n">timestamps</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">exp_data</span><span class="p">[</span><span class="s2">&quot;timestamp&quot;</span><span class="p">][(</span><span class="n">exp_data</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;zero&quot;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">exp_data</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;static&quot;</span><span class="p">)])</span> <span class="c1"># Convert timestamp strings to datetime objects</span>
-<span class="n">timestamps</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="n">timestamps</span> <span class="o">-</span> <span class="n">timestamps</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">())</span> <span class="c1"># Convert to seconds since the first timestamp</span>
 
+<span class="c1"># Convert timestamp strings to seconds since the first measurement</span>
+<span class="n">timestamps</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span>
+    <span class="n">exp_data</span><span class="p">[</span><span class="s2">&quot;timestamp&quot;</span><span class="p">][(</span><span class="n">exp_data</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;zero&quot;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">exp_data</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;static&quot;</span><span class="p">)]</span>
+<span class="p">)</span>
+<span class="n">timestamps</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="n">timestamps</span> <span class="o">-</span> <span class="n">timestamps</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">())</span>
+
+<span class="c1"># Function to compute absorbance spectrum</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">compute_absorbance</span><span class="p">(</span><span class="n">intensities</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">static</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">zero</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-    <span class="n">EPS</span> <span class="o">=</span> <span class="mf">1e-12</span>
+    <span class="n">EPS</span> <span class="o">=</span> <span class="mf">1e-12</span>  <span class="c1"># Small epsilon to avoid division by zero or log of zero</span>
     <span class="n">num</span> <span class="o">=</span> <span class="n">intensities</span> <span class="o">-</span> <span class="n">static</span>
-    <span class="n">den</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">zero</span> <span class="o">-</span> <span class="n">static</span><span class="p">,</span> <span class="n">EPS</span><span class="p">)</span>  <span class="c1"># Éviter division par zéro</span>
-    <span class="n">absorbance</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">num</span> <span class="o">/</span> <span class="n">den</span><span class="p">,</span> <span class="n">EPS</span><span class="p">))</span>  <span class="c1"># Éviter log(0) ou log(négatif)</span>
+    <span class="n">den</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">zero</span> <span class="o">-</span> <span class="n">static</span><span class="p">,</span> <span class="n">EPS</span><span class="p">)</span>  <span class="c1"># Ensure denominator is not zero</span>
+    <span class="n">absorbance</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">num</span> <span class="o">/</span> <span class="n">den</span><span class="p">,</span> <span class="n">EPS</span><span class="p">))</span>  <span class="c1"># Log transform with safety check</span>
     <span class="k">return</span> <span class="n">absorbance</span>
 
+<span class="c1"># Calculate absorbance for each measurement</span>
 <span class="n">absorbance</span> <span class="o">=</span> <span class="n">compute_absorbance</span><span class="p">(</span><span class="n">intensities</span><span class="p">,</span> <span class="n">static</span><span class="p">,</span> <span class="n">zero</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
-<div class="cell docutils container">
+</section>
+<section id="visualizing-spectral-intensity-and-absorbance">
+<h2>Visualizing Spectral Intensity and Absorbance<a class="headerlink" href="#visualizing-spectral-intensity-and-absorbance" title="Link to this heading">#</a></h2>
+<p>This figure provides a comprehensive view of the actinometry data:</p>
+<ol class="arabic simple">
+<li><p><strong>Left Panel</strong>: Raw intensity spectra at three time points, along with the static and zero references.</p></li>
+<li><p><strong>Middle Panel</strong>: Corresponding absorbance spectra at the same time points, showing how absorption evolves over time.</p></li>
+<li><p><strong>Right Panel</strong>: Absorbance at two key wavelengths (505 nm and 562 nm) plotted as a function of time, highlighting dynamic changes in the sample.</p></li>
+</ol>
+<p>These plots help assess the stability and dynamics of the measured signals and the quality of the zero/static references.</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.cm</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">cm</span>
-<span class="c1"># Set global style</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s2">&quot;ggplot&quot;</span><span class="p">)</span>  <span class="c1"># Clean style</span>
 
+<span class="c1"># Use a clean, readable plotting style</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s2">&quot;ggplot&quot;</span><span class="p">)</span>
+
+<span class="c1"># Set up a figure with 3 subplots side by side</span>
 <span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">18</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
 <span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s2">&quot;Spectral Analysis&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
 
-<span class="c1"># --- Intensity Plot ---</span>
+<span class="c1"># === Plot 1: Raw Intensities ===</span>
+<span class="c1"># Show intensity at beginning, middle, and end of acquisition</span>
 <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wavelengths</span><span class="p">,</span> <span class="n">intensities</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:],</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;I at t = </span><span class="si">{</span><span class="n">timestamps</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> s&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wavelengths</span><span class="p">,</span> <span class="n">intensities</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">intensities</span><span class="p">)</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span> <span class="p">:],</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;I at t = </span><span class="si">{</span><span class="n">timestamps</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">intensities</span><span class="p">)</span><span class="o">//</span><span class="mi">2</span><span class="p">]</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> s&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wavelengths</span><span class="p">,</span> <span class="n">intensities</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:],</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;I at t = </span><span class="si">{</span><span class="n">timestamps</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> s&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="c1"># Add static and zero reference spectra for comparison</span>
 <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wavelengths</span><span class="p">,</span> <span class="n">static</span><span class="p">,</span> <span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Static&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wavelengths</span><span class="p">,</span> <span class="n">zero</span><span class="p">,</span> <span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Zero&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
 <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Intensity over Wavelength&quot;</span><span class="p">)</span>
 <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Wavelength (nm)&quot;</span><span class="p">)</span>
 <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Intensity&quot;</span><span class="p">)</span>
 <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
+<span class="c1"># Add major and minor grid for clarity</span>
 <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s1">&#39;major&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">minorticks_on</span><span class="p">()</span>
 <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s1">&#39;minor&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;lightgray&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-<span class="c1"># --- Absorbance Plot ---</span>
+
+<span class="c1"># === Plot 2: Absorbance Spectra ===</span>
+<span class="c1"># Show absorbance at beginning, middle, and end of acquisition</span>
 <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wavelengths</span><span class="p">,</span> <span class="n">absorbance</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:],</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;t = </span><span class="si">{</span><span class="n">timestamps</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> s&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wavelengths</span><span class="p">,</span> <span class="n">absorbance</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">absorbance</span><span class="p">)</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span> <span class="p">:],</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;t = </span><span class="si">{</span><span class="n">timestamps</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">absorbance</span><span class="p">)</span><span class="o">//</span><span class="mi">2</span><span class="p">]</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> s&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wavelengths</span><span class="p">,</span> <span class="n">absorbance</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:],</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;t = </span><span class="si">{</span><span class="n">timestamps</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> s&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
 <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Absorbance over Wavelength&quot;</span><span class="p">)</span>
 <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Wavelength (nm)&quot;</span><span class="p">)</span>
 <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Absorbance&quot;</span><span class="p">)</span>
 <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="mf">0.4</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
 <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
+<span class="c1"># Grid setup</span>
 <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s1">&#39;major&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">minorticks_on</span><span class="p">()</span>
 <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s1">&#39;minor&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;lightgray&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-<span class="c1"># --- Absorbance vs Time Plot ---</span>
-<span class="n">WL</span> <span class="o">=</span> <span class="p">[</span><span class="mi">505</span><span class="p">,</span> <span class="mi">562</span><span class="p">]</span>
-<span class="n">idxs</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">wavelengths</span> <span class="o">-</span> <span class="n">wl</span><span class="p">))</span> <span class="k">for</span> <span class="n">wl</span> <span class="ow">in</span> <span class="n">WL</span><span class="p">]</span>
 
+<span class="c1"># === Plot 3: Absorbance vs Time at Key Wavelengths ===</span>
+<span class="c1"># Choose wavelengths of interest (e.g. peaks)</span>
+<span class="n">WL</span> <span class="o">=</span> <span class="p">[</span><span class="mi">505</span><span class="p">,</span> <span class="mi">562</span><span class="p">]</span>
+<span class="n">idxs</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">wavelengths</span> <span class="o">-</span> <span class="n">wl</span><span class="p">))</span> <span class="k">for</span> <span class="n">wl</span> <span class="ow">in</span> <span class="n">WL</span><span class="p">]</span>  <span class="c1"># Find closest actual wavelength index</span>
+
+<span class="c1"># Plot absorbance vs time for selected wavelengths</span>
 <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">idxs</span><span class="p">):</span>
     <span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">timestamps</span><span class="p">,</span> <span class="n">absorbance</span><span class="p">[:,</span> <span class="n">idx</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">wavelengths</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> nm&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 
@@ -775,49 +847,76 @@
 <span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Time (s)&quot;</span><span class="p">)</span>
 <span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Absorbance&quot;</span><span class="p">)</span>
 <span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
+<span class="c1"># Grid setup</span>
 <span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s1">&#39;major&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 <span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">minorticks_on</span><span class="p">()</span>
 <span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s1">&#39;minor&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;lightgray&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="c1"># Adjust layout to prevent overlap</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">(</span><span class="n">rect</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">0.95</span><span class="p">])</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <img alt="../_images/1094a6e5f0868edec7e355cada4e954f87654dbbb71c0f7e14863638bf35bfed.png" src="../_images/1094a6e5f0868edec7e355cada4e954f87654dbbb71c0f7e14863638bf35bfed.png" />
 </div>
 </div>
+</section>
+<section id="data-cleaning-and-absorbance-subset-preparation">
+<h2>Data Cleaning and Absorbance Subset Preparation<a class="headerlink" href="#data-cleaning-and-absorbance-subset-preparation" title="Link to this heading">#</a></h2>
+<p>This cell prepares the dataset for focused analysis by:</p>
+<ul class="simple">
+<li><p>Selecting a narrow wavelength range (e.g. 560–565 nm)</p></li>
+<li><p>Normalizing absorbance values</p></li>
+<li><p>Removing unwanted time points (first spectrum and last 300)</p></li>
+</ul>
+<p>The resulting cleaned subset is suitable for targeted visualization or kinetic analysis.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define wavelength range of interest</span>
-<span class="n">wavelength_range</span> <span class="o">=</span> <span class="p">[</span><span class="mi">560</span><span class="p">,</span> <span class="mi">565</span><span class="p">]</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># === USER PARAMETERS ===</span>
+<span class="n">wavelength_range</span> <span class="o">=</span> <span class="p">[</span><span class="mi">560</span><span class="p">,</span> <span class="mi">565</span><span class="p">]</span>  <span class="c1"># Wavelength range of interest (nm)</span>
+<span class="n">remove_first</span> <span class="o">=</span> <span class="kc">True</span>            <span class="c1"># Whether to remove the first time point</span>
+<span class="n">remove_last_n</span> <span class="o">=</span> <span class="mi">300</span>            <span class="c1"># Number of last time points to remove</span>
+<span class="n">time_filter_indices</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="o">-</span><span class="mi">300</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+
+<span class="c1"># === Select wavelength index range ===</span>
 <span class="n">idx_range</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">wavelengths</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">-</span> <span class="n">wavelength_range</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
-<span class="c1"># Extract and normalize absorbance data within the wavelength range</span>
+<span class="c1"># Extract absorbance data in selected range</span>
 <span class="n">absorbance_subset</span> <span class="o">=</span> <span class="n">absorbance</span><span class="p">[:,</span> <span class="n">idx_range</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span><span class="n">idx_range</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
-<span class="n">absorbance_subset</span> <span class="o">-=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">absorbance_subset</span><span class="p">)</span>
+<span class="n">absorbance_subset</span> <span class="o">-=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">absorbance_subset</span><span class="p">)</span>  <span class="c1"># Normalize (set min to 0)</span>
+
+<span class="c1"># Corresponding wavelengths</span>
 <span class="n">wavelengths_subset</span> <span class="o">=</span> <span class="n">wavelengths</span><span class="p">[</span><span class="n">idx_range</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span><span class="n">idx_range</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
 
-<span class="c1"># Filter out specific time points (e.g., first frame and last 300 entries)</span>
-<span class="c1"># Adjust indices as needed</span>
-<span class="n">time_filter_indices</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="o">-</span><span class="mi">300</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+<span class="c1"># === Filter time points ===</span>
+<span class="c1"># Build index list for rows to remove</span>
+
+<span class="c1"># Apply filtering</span>
 <span class="n">absorbance_subset</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">absorbance_subset</span><span class="p">,</span> <span class="n">time_filter_indices</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 <span class="n">timestamps_filtered</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">timestamps</span><span class="p">,</span> <span class="n">time_filter_indices</span><span class="p">)</span>
 
-<span class="c1"># Create subplots</span>
+
+
+<span class="c1"># --- Create 3 plots ---</span>
 <span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">18</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
 
-<span class="c1"># --- 1. Absorbance Heatmap ---</span>
-<span class="n">X</span><span class="p">,</span> <span class="n">Y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">timestamps_filtered</span><span class="p">,</span> <span class="n">wavelengths_subset</span><span class="p">)</span>
+<span class="c1"># === 1. Heatmap of absorbance over time and wavelength ===</span>
+<span class="n">X</span><span class="p">,</span> <span class="n">Y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">timestamps_filtered</span><span class="p">,</span> <span class="n">wavelengths_subset</span><span class="p">)</span>  <span class="c1"># Create grids for contour plot</span>
 <span class="n">contour</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">contourf</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">absorbance_subset</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">levels</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;coolwarm&quot;</span><span class="p">)</span>
 <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Experimental Absorbance Data&quot;</span><span class="p">)</span>
 <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Time (s)&quot;</span><span class="p">)</span>
 <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Wavelength (nm)&quot;</span><span class="p">)</span>
-<span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">contour</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">contour</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>  <span class="c1"># Add colorbar to show absorbance scale</span>
 
-<span class="c1"># --- 2. Absorbance Over Time (Averaged Across Wavelength Range) ---</span>
+<span class="c1"># === 2. Mean absorbance over time ===</span>
 <span class="n">mean_absorbance</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">absorbance_subset</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">timestamps_filtered</span><span class="p">,</span> <span class="n">mean_absorbance</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Mean absorbance (</span><span class="si">{</span><span class="n">wavelengths_subset</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">wavelengths_subset</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> nm)&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;tab:blue&#39;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">timestamps_filtered</span><span class="p">,</span> <span class="n">mean_absorbance</span><span class="p">,</span>
+            <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Mean absorbance (</span><span class="si">{</span><span class="n">wavelengths_subset</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">wavelengths_subset</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> nm)&quot;</span><span class="p">,</span>
+            <span class="n">color</span><span class="o">=</span><span class="s1">&#39;tab:blue&#39;</span><span class="p">)</span>
 <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Mean Absorbance Over Time&quot;</span><span class="p">)</span>
 <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Time (s)&quot;</span><span class="p">)</span>
 <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Absorbance&quot;</span><span class="p">)</span>
@@ -825,7 +924,7 @@
 <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
 <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
 
-<span class="c1"># --- 3. Absorbance Spectrum at Start and End ---</span>
+<span class="c1"># === 3. Compare start and end absorbance spectra ===</span>
 <span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wavelengths_subset</span><span class="p">,</span> <span class="n">absorbance_subset</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:],</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Spectrum at $t=0$&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">)</span>
 <span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wavelengths_subset</span><span class="p">,</span> <span class="n">absorbance_subset</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:],</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Spectrum at $t=end$&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">)</span>
 <span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Absorbance Spectra&quot;</span><span class="p">)</span>
@@ -834,6 +933,7 @@
 <span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
 <span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
 
+<span class="c1"># Improve layout spacing</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
@@ -843,122 +943,112 @@
 <img alt="../_images/8a9bc18995a8422482283c74bb28fe2198057b9ce088d6e3b1bfcadcf5397fa9.png" src="../_images/8a9bc18995a8422482283c74bb28fe2198057b9ce088d6e3b1bfcadcf5397fa9.png" />
 </div>
 </div>
-<section id="fit-to-get-led-power">
-<h1>Fit to get LED power<a class="headerlink" href="#fit-to-get-led-power" title="Link to this heading">#</a></h1>
+</section>
+<section id="kinetic-modeling-and-led-power-estimation">
+<h2>Kinetic Modeling and LED Power Estimation<a class="headerlink" href="#kinetic-modeling-and-led-power-estimation" title="Link to this heading">#</a></h2>
+<p>This section fits the photokinetics model to the experimental concentration curve derived from absorbance data, to estimate the effective LED power.</p>
+<ul class="simple">
+<li><p>Assumes first-order photon absorption</p></li>
+<li><p>Uses <code class="docutils literal notranslate"><span class="pre">scipy.integrate.solve_ivp</span></code> for integration</p></li>
+<li><p>Fits using <code class="docutils literal notranslate"><span class="pre">curve_fit</span></code> with LED power as a free parameter</p></li>
+</ul>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">scipy.integrate</span><span class="w"> </span><span class="kn">import</span> <span class="n">solve_ivp</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># === USER PARAMETERS ===</span>
+<span class="n">wl</span> <span class="o">=</span> <span class="mi">505</span>  <span class="c1"># nm (LED wavelength)</span>
+<span class="n">volume</span> <span class="o">=</span> <span class="mf">14e-4</span>  <span class="c1"># L</span>
+<span class="n">l</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># cm (optical path length)</span>
+<span class="n">eps_closed_505</span> <span class="o">=</span> <span class="mf">0.6e4</span>  <span class="c1"># M^-1.cm^-1</span>
+<span class="n">eps_closed_562</span> <span class="o">=</span> <span class="mf">1.1e4</span>  <span class="c1"># M^-1.cm^-1</span>
+<span class="n">I_w_initial_guess</span> <span class="o">=</span> <span class="mf">14.27e-3</span>  <span class="c1"># Initial guess (W)</span>
+<span class="n">QY_CF2OF</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="o">-</span><span class="mf">2.67</span> <span class="o">+</span> <span class="mi">526</span> <span class="o">/</span> <span class="n">wl</span><span class="p">)</span>  <span class="c1"># Quantum yield estimation from literature</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Quantum Yield (QY_CF2OF): </span><span class="si">{</span><span class="n">QY_CF2OF</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.integrate</span><span class="w"> </span><span class="kn">import</span> <span class="n">solve_ivp</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.optimize</span><span class="w"> </span><span class="kn">import</span> <span class="n">curve_fit</span>
 
-<span class="c1"># Physics constants :</span>
+<span class="c1"># === Physics constants ===</span>
+<span class="n">h</span> <span class="o">=</span> <span class="mf">6.62607004e-34</span>  <span class="c1"># Planck constant (J.s)</span>
+<span class="n">NA</span> <span class="o">=</span> <span class="mf">6.02214086e23</span>  <span class="c1"># Avogadro number (mol^-1)</span>
+<span class="n">c_vacuum</span> <span class="o">=</span> <span class="mi">299792458</span>  <span class="c1"># m/s</span>
+<span class="n">v</span> <span class="o">=</span> <span class="n">c_vacuum</span> <span class="o">/</span> <span class="p">(</span><span class="n">wl</span> <span class="o">*</span> <span class="mf">1e-9</span><span class="p">)</span>  <span class="c1"># Frequency (Hz)</span>
 
-<span class="n">h</span> <span class="o">=</span> <span class="mf">6.62607004</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">**</span> <span class="p">(</span><span class="o">-</span><span class="mi">34</span><span class="p">)</span>
-<span class="n">NA</span> <span class="o">=</span> <span class="mf">6.02214086</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">**</span> <span class="p">(</span><span class="mi">23</span><span class="p">)</span>
-<span class="n">c_vaccum</span> <span class="o">=</span> <span class="mi">299792458</span>
-<span class="n">wl</span> <span class="o">=</span> <span class="mi">505</span> <span class="c1"># nm</span>
-<span class="n">v</span> <span class="o">=</span> <span class="n">c_vaccum</span> <span class="o">/</span> <span class="p">(</span><span class="n">wl</span> <span class="o">*</span> <span class="mf">1e-9</span><span class="p">)</span>
-<span class="n">volume</span> <span class="o">=</span> <span class="mf">14e-4</span> <span class="c1"># L</span>
-<span class="n">l</span> <span class="o">=</span> <span class="mi">1</span> <span class="c1"># cm</span>
-<span class="n">eps_closed_505</span> <span class="o">=</span> <span class="mf">0.6e4</span> <span class="c1"># M-1 . cm-1</span>
-<span class="n">eps_closed_562</span> <span class="o">=</span> <span class="mf">1.1e4</span> <span class="c1"># M-1 . cm-1</span>
-<span class="n">I_w</span> <span class="o">=</span> <span class="mf">14.27e-3</span>
-
-<span class="n">QY_CF2OF</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="o">-</span><span class="mf">2.67</span><span class="o">+</span><span class="mi">526</span><span class="o">/</span><span class="mi">505</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">QY_CF2OF</span><span class="p">)</span>
-<span class="c1">#QY_CF2OF = 0.0233</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.023527953784075146
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">C_exp</span> <span class="o">=</span> <span class="n">mean_absorbance</span><span class="o">/</span><span class="p">(</span><span class="n">eps_closed_562</span><span class="o">*</span><span class="n">l</span><span class="p">)</span>
-
+<span class="c1"># === Experimental concentration from absorbance ===</span>
+<span class="n">C_exp</span> <span class="o">=</span> <span class="n">mean_absorbance</span> <span class="o">/</span> <span class="p">(</span><span class="n">eps_closed_562</span> <span class="o">*</span> <span class="n">l</span><span class="p">)</span>
 <span class="n">C0</span> <span class="o">=</span> <span class="n">C_exp</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
+<span class="c1"># === ODE definition ===</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">dC_dt</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">C_closed</span><span class="p">,</span> <span class="n">I_w</span><span class="p">):</span>
+    <span class="n">I_0</span> <span class="o">=</span> <span class="n">I_w</span> <span class="o">/</span> <span class="p">(</span><span class="n">h</span> <span class="o">*</span> <span class="n">v</span> <span class="o">*</span> <span class="n">NA</span><span class="p">)</span> <span class="o">/</span> <span class="n">volume</span>  <span class="c1"># Photon flux [mol photons / L]</span>
+    <span class="n">I_abs</span> <span class="o">=</span> <span class="n">I_0</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">eps_closed_505</span> <span class="o">*</span> <span class="n">C_closed</span> <span class="o">*</span> <span class="n">l</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">10</span><span class="p">)))</span>
+    <span class="k">return</span> <span class="o">-</span><span class="n">QY_CF2OF</span> <span class="o">*</span> <span class="n">I_abs</span>
 
-<span class="k">def</span><span class="w"> </span><span class="nf">f</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">C_closed</span><span class="p">,</span> <span class="n">I_w</span><span class="p">):</span>
-    <span class="c1"># Con[Con&lt;0]=0</span>
-    <span class="n">I_0</span> <span class="o">=</span> <span class="n">I_w</span>  <span class="o">/</span> <span class="p">(</span><span class="n">h</span> <span class="o">*</span> <span class="n">v</span> <span class="o">*</span> <span class="n">NA</span><span class="p">)</span> <span class="o">/</span> <span class="n">volume</span> <span class="c1"># mole de photons.L-1</span>
-    <span class="n">Iabs_CF</span> <span class="o">=</span>  <span class="n">I_0</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span> <span class="n">eps_closed_505</span> <span class="o">*</span> <span class="n">C_closed</span> <span class="o">*</span> <span class="n">l</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">10</span><span class="p">)))</span>
-    <span class="n">dCCF_deri</span> <span class="o">=</span> <span class="o">-</span><span class="n">QY_CF2OF</span> <span class="o">*</span> <span class="n">Iabs_CF</span> 
-    <span class="c1"># print(f&quot;Con = {Con}, dC = {dCon_deri}, t = {t}&quot;)</span>
-    <span class="k">return</span> <span class="n">dCCF_deri</span>
-
-<span class="k">def</span><span class="w"> </span><span class="nf">fi</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">q1</span><span class="p">,</span> <span class="n">c</span><span class="p">):</span>
-    <span class="n">sol</span> <span class="o">=</span> <span class="n">solve_ivp</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">t_span</span><span class="p">,</span> <span class="n">y0</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">q1</span><span class="p">,),</span> <span class="n">t_eval</span><span class="o">=</span><span class="n">timestamps_filtered</span><span class="p">)</span>
+<span class="c1"># === Fitting function wrapper ===</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">model</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">I_w</span><span class="p">,</span> <span class="n">offset</span><span class="p">):</span>
+    <span class="n">sol</span> <span class="o">=</span> <span class="n">solve_ivp</span><span class="p">(</span><span class="n">dC_dt</span><span class="p">,</span> <span class="p">[</span><span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">t</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]],</span> <span class="p">[</span><span class="n">C0</span><span class="p">],</span> <span class="n">t_eval</span><span class="o">=</span><span class="n">t</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">I_w</span><span class="p">,))</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">sol</span><span class="o">.</span><span class="n">success</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;⚠️ solve_ivp failed:&quot;</span><span class="p">,</span> <span class="n">sol</span><span class="o">.</span><span class="n">message</span><span class="p">)</span>
-        <span class="k">return</span> <span class="kc">None</span>  <span class="c1"># Retourne None en cas d&#39;échec</span>
-    <span class="k">return</span> <span class="n">sol</span><span class="o">.</span><span class="n">y</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span><span class="c1">#+c</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;⚠️ ODE solver failed:&quot;</span><span class="p">,</span> <span class="n">sol</span><span class="o">.</span><span class="n">message</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">full_like</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">sol</span><span class="o">.</span><span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">offset</span>
 
+<span class="c1"># === Fit parameters ===</span>
+<span class="n">initial_guess</span> <span class="o">=</span> <span class="p">(</span><span class="n">I_w_initial_guess</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">bounds</span> <span class="o">=</span> <span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mf">100e-3</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>  <span class="c1"># Bounds for I_w and offset</span>
 
-
-<span class="n">initial_guess</span> <span class="o">=</span> <span class="p">(</span><span class="n">I_w</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-<span class="n">bounds</span> <span class="o">=</span> <span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span>  <span class="p">[</span><span class="mf">100e-3</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
-
-<span class="n">t_span</span> <span class="o">=</span> <span class="p">[</span><span class="n">timestamps_filtered</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">timestamps_filtered</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span>
-<span class="n">y0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">C0</span><span class="p">])</span>
-<span class="c1"># y = solve_ivp(f, t_span, y0, args=(QY,), t_eval=timestamps)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Reg start&quot;</span><span class="p">)</span>
-<span class="n">popt</span><span class="p">,</span> <span class="n">pcov</span> <span class="o">=</span> <span class="n">curve_fit</span><span class="p">(</span><span class="n">fi</span><span class="p">,</span> <span class="n">timestamps_filtered</span><span class="p">,</span> <span class="n">C_exp</span><span class="p">,</span> <span class="n">p0</span><span class="o">=</span><span class="n">initial_guess</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="n">bounds</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=== Starting curve fit ===&quot;</span><span class="p">)</span>
+<span class="n">popt</span><span class="p">,</span> <span class="n">pcov</span> <span class="o">=</span> <span class="n">curve_fit</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">timestamps_filtered</span><span class="p">,</span> <span class="n">C_exp</span><span class="p">,</span> <span class="n">p0</span><span class="o">=</span><span class="n">initial_guess</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="n">bounds</span><span class="p">)</span>
 <span class="n">uncertainties</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">pcov</span><span class="p">))</span>
 
-<span class="c1"># Print results</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=== Fit Results ===&quot;</span><span class="p">)</span>
-<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">coef</span><span class="p">,</span> <span class="n">incert</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">popt</span><span class="p">,</span> <span class="n">uncertainties</span><span class="p">),</span> <span class="n">start</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Parameter </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">coef</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> ± </span><span class="si">{</span><span class="n">incert</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="c1"># === Report fitted parameters ===</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">=== Fit Results ===&quot;</span><span class="p">)</span>
+<span class="n">params</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;I_w (W)&quot;</span><span class="p">,</span> <span class="s2">&quot;Offset (M)&quot;</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">val</span><span class="p">,</span> <span class="n">err</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">popt</span><span class="p">,</span> <span class="n">uncertainties</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">val</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2"> ± </span><span class="si">{</span><span class="n">err</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-<span class="c1"># Compute fitted values</span>
-<span class="n">fitted_values</span> <span class="o">=</span> <span class="n">fi</span><span class="p">(</span><span class="n">timestamps_filtered</span><span class="p">,</span> <span class="o">*</span><span class="n">popt</span><span class="p">)</span>
-    
+<span class="c1"># === Compute fitted curve ===</span>
+<span class="n">fitted_values</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">timestamps_filtered</span><span class="p">,</span> <span class="o">*</span><span class="n">popt</span><span class="p">)</span>
 
-<span class="n">fig</span><span class="p">,</span> <span class="n">a</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
-<span class="n">pastel_colors</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;m&quot;</span><span class="p">,</span> <span class="s2">&quot;#f9955e&quot;</span><span class="p">,</span> <span class="s2">&quot;#81a3e8&quot;</span><span class="p">]</span>  <span class="c1"># Mauve, orange, sky blue</span>
+<span class="c1"># === Plotting ===</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="n">colors</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;#81a3e8&quot;</span><span class="p">,</span> <span class="s2">&quot;#f9955e&quot;</span><span class="p">,</span> <span class="s2">&quot;m&quot;</span><span class="p">]</span>
 
-<span class="c1"># First Plot - Concentration Over Time</span>
-<span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">timestamps_filtered</span><span class="p">,</span> <span class="n">C_exp</span><span class="p">,</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">pastel_colors</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;C exp&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.6</span><span class="p">)</span>
-<span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">timestamps_filtered</span><span class="p">,</span> <span class="n">fitted_values</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">pastel_colors</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;C model for I_w=</span><span class="si">{</span><span class="n">popt</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s2">0.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="c1"># Plot: Concentration vs Time</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">timestamps_filtered</span><span class="p">,</span> <span class="n">C_exp</span><span class="p">,</span> <span class="s2">&quot;o&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Experimental&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.6</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">timestamps_filtered</span><span class="p">,</span> <span class="n">fitted_values</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Model (I_w=</span><span class="si">{</span><span class="n">popt</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="mf">1e3</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> mW)&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Concentration Over Time&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Time (s)&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Concentration (M)&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
 
+<span class="c1"># Plot: Relative Error</span>
+<span class="n">relative_error</span> <span class="o">=</span> <span class="p">(</span><span class="n">C_exp</span> <span class="o">-</span> <span class="n">fitted_values</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span> <span class="o">/</span> <span class="n">C_exp</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">timestamps_filtered</span><span class="p">,</span> <span class="n">relative_error</span><span class="p">,</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Relative Error (%)&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.8</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Relative Error&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Time (s)&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Error (%)&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
 
-<span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Timestamp&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">)</span>
-<span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;C $M$&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">)</span>
-<span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Concentration Over Time&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">)</span>
-<span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">45</span><span class="p">)</span>
-<span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
-<span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-
-<span class="c1"># Second Plot - Error Over Time</span>
-<span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">timestamps_filtered</span><span class="p">,</span> <span class="p">(</span><span class="n">C_exp</span> <span class="o">-</span> <span class="n">fitted_values</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span> <span class="o">/</span> <span class="n">C_exp</span><span class="p">,</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">pastel_colors</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Errors Model/Data&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.9</span><span class="p">)</span>
-
-
-<span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Timestamp&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">)</span>
-<span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Error %&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">)</span>
-<span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Error Over Time&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">)</span>
-<span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">45</span><span class="p">)</span>
-<span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
-<span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Reg start
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Quantum Yield (QY_CF2OF): 0.0235
+=== Starting curve fit ===
+
 === Fit Results ===
-Parameter 1: 0.0109 ± 0.0000
-Parameter 2: 1.0000 ± 0.0000
+I_w (W): 0.010431 ± 0.000024
+Offset (M): 0.000000 ± 0.000000
 </pre></div>
 </div>
-<img alt="../_images/2b71b5fb7b1c2c9fac340b39a91802d1f43f5bbee02343024739e26101d23bd9.png" src="../_images/2b71b5fb7b1c2c9fac340b39a91802d1f43f5bbee02343024739e26101d23bd9.png" />
+<img alt="../_images/770317b69a96004c1e35e3924fbb48dc8fc0e015122ff70523143fc6c199fd22.png" src="../_images/770317b69a96004c1e35e3924fbb48dc8fc0e015122ff70523143fc6c199fd22.png" />
 </div>
 </div>
+</section>
 </section>
 
 
@@ -977,7 +1067,7 @@ Parameter 2: 1.0000 ± 0.0000
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Fit the rsEGFP WT</p>
+        <p class="prev-next-title">rsEGFP2 WT Switching QY</p>
       </div>
     </a>
     <a class="right-next"
@@ -999,6 +1089,22 @@ Parameter 2: 1.0000 ± 0.0000
                 <dialog id="pst-secondary-sidebar-modal"></dialog>
                 <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#load-experimental-actinometry-data">Load Experimental Actinometry Data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#preprocess-spectral-data-and-compute-absorbance">Preprocess Spectral Data and Compute Absorbance</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#visualizing-spectral-intensity-and-absorbance">Visualizing Spectral Intensity and Absorbance</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-cleaning-and-absorbance-subset-preparation">Data Cleaning and Absorbance Subset Preparation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kinetic-modeling-and-led-power-estimation">Kinetic Modeling and LED Power Estimation</a></li>
+</ul>
+  </nav></div>
 
   <div class="sidebar-secondary-item">
   <div role="note" aria-label="source link">

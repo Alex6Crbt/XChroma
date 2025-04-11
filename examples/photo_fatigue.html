@@ -1,0 +1,1058 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" data-theme="auto">
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Photofatigue Measurements &#8212; XChroma 1.1 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "auto";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "auto";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/documentation_options.js?v=56dcb7b8"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'examples/photo_fatigue';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Quantum Yield Measurments" href="qy.html" />
+    <link rel="prev" title="Custom Sequence" href="customseq.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="auto">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/captX.png" class="logo__image only-light" alt=""/>
+    <img src="../_static/captX.png" class="logo__image only-dark pst-js-only" alt=""/>
+  
+  
+    <p class="title logo__title">XChroma</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../quickstart.html">
+    QuickStart
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../userguide.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../code/XChroma.html">
+    Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/Alex6Crbt/XChroma" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../quickstart.html">
+    QuickStart
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../userguide.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../code/XChroma.html">
+    Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/Alex6Crbt/XChroma" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><p aria-level="2" class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="uiwt.html">Interface walk-through</a></li>
+<li class="toctree-l1"><a class="reference internal" href="customseq.html">Custom Sequence</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Photofatigue Measurements</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="qy.html">Quantum Yield Measurments</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="Fit_DAE.html">Obtaining QY values for DAE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rsEGFP2WT.html">rsEGFP2 WT Switching QY</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="actino.html">Actinometry</a></li>
+</ul>
+</details></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../userguide.html" class="nav-link">User Guide</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Photofatigue Measurements</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="photofatigue-measurements">
+<h1>Photofatigue Measurements<a class="headerlink" href="#photofatigue-measurements" title="Link to this heading">#</a></h1>
+<section id="import-data-and-preprocess-for-photofatigue-measurements">
+<h2>1. Import Data and Preprocess for Photofatigue Measurements<a class="headerlink" href="#import-data-and-preprocess-for-photofatigue-measurements" title="Link to this heading">#</a></h2>
+<p>In this first step, we import the necessary experimental data from a CSV file.</p>
+<ul class="simple">
+<li><p><strong>Timestamp filtering</strong>: Only data after <code class="docutils literal notranslate"><span class="pre">2025-04-08</span></code> is used for analysis.</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="c1"># Load experimental data</span>
+<span class="n">exp_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;DATA/Spectrumsfatigue.csv&quot;</span><span class="p">)</span>
+
+<span class="c1"># Filter data to include only entries after a specific timestamp</span>
+<span class="n">exp_data</span> <span class="o">=</span> <span class="n">exp_data</span><span class="p">[</span><span class="n">exp_data</span><span class="p">[</span><span class="s2">&quot;timestamp&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="s2">&quot;2025-04-08&quot;</span><span class="p">]</span>
+
+<span class="c1"># Display the filtered dataset</span>
+<span class="n">exp_data</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>timestamp</th>
+      <th>cycle</th>
+      <th>type</th>
+      <th>186.85486</th>
+      <th>187.31995223015844</th>
+      <th>187.78500323297956</th>
+      <th>188.250012996982</th>
+      <th>188.71498151068454</th>
+      <th>189.17990876260572</th>
+      <th>189.64479474126426</th>
+      <th>...</th>
+      <th>1032.9632529736894</th>
+      <th>1033.3204920667242</th>
+      <th>1033.6776665334785</th>
+      <th>1034.034776362471</th>
+      <th>1034.3918215422202</th>
+      <th>1034.7488020612445</th>
+      <th>1035.1057179080635</th>
+      <th>1035.4625690711953</th>
+      <th>1035.8193555391586</th>
+      <th>1036.176077300472</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>863</th>
+      <td>2025-04-08 09:38:38.241780</td>
+      <td>0</td>
+      <td>zero</td>
+      <td>16.990556</td>
+      <td>24978.543889</td>
+      <td>347.456861</td>
+      <td>334.956667</td>
+      <td>350.490889</td>
+      <td>359.228889</td>
+      <td>371.365000</td>
+      <td>...</td>
+      <td>759.235111</td>
+      <td>750.739833</td>
+      <td>755.958361</td>
+      <td>750.497111</td>
+      <td>755.715639</td>
+      <td>744.793139</td>
+      <td>754.866111</td>
+      <td>767.123583</td>
+      <td>767.123583</td>
+      <td>767.123583</td>
+    </tr>
+    <tr>
+      <th>864</th>
+      <td>2025-04-08 09:39:44.486116</td>
+      <td>1</td>
+      <td>on</td>
+      <td>16.990556</td>
+      <td>24978.543889</td>
+      <td>352.796750</td>
+      <td>356.680306</td>
+      <td>352.796750</td>
+      <td>362.262917</td>
+      <td>357.772556</td>
+      <td>...</td>
+      <td>746.977639</td>
+      <td>739.453250</td>
+      <td>747.220361</td>
+      <td>749.162139</td>
+      <td>757.050611</td>
+      <td>759.720556</td>
+      <td>766.516778</td>
+      <td>749.768944</td>
+      <td>749.768944</td>
+      <td>749.768944</td>
+    </tr>
+    <tr>
+      <th>865</th>
+      <td>2025-04-08 09:40:19.529467</td>
+      <td>1</td>
+      <td>off</td>
+      <td>16.990556</td>
+      <td>24978.543889</td>
+      <td>358.986167</td>
+      <td>352.554028</td>
+      <td>341.631528</td>
+      <td>371.365000</td>
+      <td>379.010750</td>
+      <td>...</td>
+      <td>750.133028</td>
+      <td>751.468000</td>
+      <td>743.458167</td>
+      <td>763.968194</td>
+      <td>746.128111</td>
+      <td>754.866111</td>
+      <td>750.254389</td>
+      <td>757.414694</td>
+      <td>757.414694</td>
+      <td>757.414694</td>
+    </tr>
+    <tr>
+      <th>866</th>
+      <td>2025-04-08 09:40:25.564251</td>
+      <td>1</td>
+      <td>static</td>
+      <td>16.990556</td>
+      <td>24978.543889</td>
+      <td>357.408472</td>
+      <td>358.500722</td>
+      <td>346.850056</td>
+      <td>365.418306</td>
+      <td>381.802056</td>
+      <td>...</td>
+      <td>757.293333</td>
+      <td>741.273667</td>
+      <td>763.361389</td>
+      <td>770.643056</td>
+      <td>762.754583</td>
+      <td>767.244944</td>
+      <td>753.773861</td>
+      <td>760.327361</td>
+      <td>760.327361</td>
+      <td>760.327361</td>
+    </tr>
+    <tr>
+      <th>867</th>
+      <td>2025-04-08 09:40:40.608372</td>
+      <td>2</td>
+      <td>on</td>
+      <td>16.990556</td>
+      <td>24978.543889</td>
+      <td>365.054222</td>
+      <td>348.063667</td>
+      <td>360.199778</td>
+      <td>361.170667</td>
+      <td>372.093167</td>
+      <td>...</td>
+      <td>748.676694</td>
+      <td>744.914500</td>
+      <td>757.293333</td>
+      <td>764.089556</td>
+      <td>756.079722</td>
+      <td>753.167056</td>
+      <td>758.992389</td>
+      <td>746.249472</td>
+      <td>746.249472</td>
+      <td>746.249472</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>1546</th>
+      <td>2025-04-08 13:12:50.290246</td>
+      <td>228</td>
+      <td>off</td>
+      <td>16.990556</td>
+      <td>24978.543889</td>
+      <td>133.861306</td>
+      <td>130.705917</td>
+      <td>121.361111</td>
+      <td>138.230306</td>
+      <td>137.987583</td>
+      <td>...</td>
+      <td>527.192667</td>
+      <td>531.561667</td>
+      <td>525.979056</td>
+      <td>522.823667</td>
+      <td>544.425944</td>
+      <td>529.255806</td>
+      <td>546.489083</td>
+      <td>529.741250</td>
+      <td>529.741250</td>
+      <td>529.741250</td>
+    </tr>
+    <tr>
+      <th>1547</th>
+      <td>2025-04-08 13:12:56.349038</td>
+      <td>228</td>
+      <td>static</td>
+      <td>16.990556</td>
+      <td>24978.543889</td>
+      <td>114.928972</td>
+      <td>119.540694</td>
+      <td>125.001944</td>
+      <td>127.065083</td>
+      <td>139.686639</td>
+      <td>...</td>
+      <td>534.595694</td>
+      <td>513.721583</td>
+      <td>545.032750</td>
+      <td>522.459583</td>
+      <td>520.153722</td>
+      <td>537.629722</td>
+      <td>546.246361</td>
+      <td>533.867528</td>
+      <td>533.867528</td>
+      <td>533.867528</td>
+    </tr>
+    <tr>
+      <th>1548</th>
+      <td>2025-04-08 13:13:11.473565</td>
+      <td>229</td>
+      <td>on</td>
+      <td>16.990556</td>
+      <td>24978.543889</td>
+      <td>118.448444</td>
+      <td>124.880583</td>
+      <td>126.094194</td>
+      <td>121.482472</td>
+      <td>145.026528</td>
+      <td>...</td>
+      <td>532.047111</td>
+      <td>529.377167</td>
+      <td>523.915917</td>
+      <td>534.959778</td>
+      <td>522.338222</td>
+      <td>530.712139</td>
+      <td>535.930667</td>
+      <td>543.455056</td>
+      <td>543.455056</td>
+      <td>543.455056</td>
+    </tr>
+    <tr>
+      <th>1549</th>
+      <td>2025-04-08 13:13:46.542295</td>
+      <td>229</td>
+      <td>off</td>
+      <td>16.990556</td>
+      <td>24978.543889</td>
+      <td>122.332000</td>
+      <td>109.103639</td>
+      <td>114.564889</td>
+      <td>131.070000</td>
+      <td>147.332389</td>
+      <td>...</td>
+      <td>528.527639</td>
+      <td>536.658833</td>
+      <td>526.221778</td>
+      <td>529.983972</td>
+      <td>530.712139</td>
+      <td>527.678111</td>
+      <td>536.294750</td>
+      <td>537.022917</td>
+      <td>537.022917</td>
+      <td>537.022917</td>
+    </tr>
+    <tr>
+      <th>1550</th>
+      <td>2025-04-08 13:13:52.603917</td>
+      <td>229</td>
+      <td>static</td>
+      <td>16.990556</td>
+      <td>24978.543889</td>
+      <td>117.113472</td>
+      <td>109.710444</td>
+      <td>104.491917</td>
+      <td>120.754306</td>
+      <td>151.580028</td>
+      <td>...</td>
+      <td>547.824056</td>
+      <td>526.585861</td>
+      <td>545.275472</td>
+      <td>530.590778</td>
+      <td>553.285306</td>
+      <td>511.051639</td>
+      <td>528.891722</td>
+      <td>517.241056</td>
+      <td>517.241056</td>
+      <td>517.241056</td>
+    </tr>
+  </tbody>
+</table>
+<p>688 rows × 2051 columns</p>
+</div></div></div>
+</div>
+</section>
+<section id="data-preparation-intensity-arrays-absorbance-calculation">
+<h2>2. Data Preparation: Intensity Arrays &amp; Absorbance Calculation<a class="headerlink" href="#data-preparation-intensity-arrays-absorbance-calculation" title="Link to this heading">#</a></h2>
+<p>Now, we prepare the intensity data based on the “on”, “off”, “static”, and “zero” conditions. These intensity values will be used to compute the absorbance values.</p>
+<ul class="simple">
+<li><p><strong>Intensity arrays</strong>: Data for “on” and “off” states are extracted, along with the static and zero intensity references.</p></li>
+<li><p><strong>Absorbance formula</strong>: Absorbance is calculated from the intensity data using the formula:</p></li>
+</ul>
+<p>$$ A = -\log_{10}\left(\frac{I_{\text{on}} - I_{\text{static}}}{I_{\text{zero}} - I_{\text{static}}}\right) $$</p>
+<p>where:</p>
+<ul class="simple">
+<li><p>$I_{\text{on}}$ is the intensity during the “on” state,</p></li>
+<li><p>$I_{\text{static}}$ is the static reference intensity,</p></li>
+<li><p>$I_{\text{zero}}$ is the zero intensity reference.</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="c1"># Extract relevant data for &#39;on&#39;, &#39;off&#39;, &#39;static&#39;, and &#39;zero&#39; conditions</span>
+<span class="n">I_on</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">exp_data</span><span class="p">[</span><span class="n">exp_data</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;on&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">3</span><span class="p">:],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+<span class="n">I_off</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">exp_data</span><span class="p">[</span><span class="n">exp_data</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;off&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">3</span><span class="p">:],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+<span class="n">static</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">exp_data</span><span class="p">[(</span><span class="n">exp_data</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;static&quot;</span><span class="p">)]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">3</span><span class="p">:],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+<span class="n">zero</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">exp_data</span><span class="p">[(</span><span class="n">exp_data</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;zero&quot;</span><span class="p">)]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">3</span><span class="p">:],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+
+<span class="c1"># Extract wavelengths (assumed to be in columns from 3 onward)</span>
+<span class="n">wavelengths</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">exp_data</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">3</span><span class="p">:],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+
+<span class="c1"># Convert timestamps to seconds since the first &quot;on&quot; timestamp</span>
+<span class="n">t_on</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">exp_data</span><span class="p">[</span><span class="s2">&quot;timestamp&quot;</span><span class="p">][</span><span class="n">exp_data</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;on&quot;</span><span class="p">])</span>
+<span class="n">t_on</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="n">t_on</span> <span class="o">-</span> <span class="n">t_on</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">())</span>
+
+<span class="n">t_off</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">exp_data</span><span class="p">[</span><span class="s2">&quot;timestamp&quot;</span><span class="p">][</span><span class="n">exp_data</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;off&quot;</span><span class="p">])</span>
+<span class="n">t_off</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="n">t_off</span> <span class="o">-</span> <span class="n">t_off</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">())</span>
+
+<span class="c1"># Function to calculate absorbance</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">compute_absorbance</span><span class="p">(</span><span class="n">intensities</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">static</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">zero</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+    <span class="n">EPS</span> <span class="o">=</span> <span class="mf">1e-12</span>  <span class="c1"># Small epsilon to avoid division by zero</span>
+    <span class="n">num</span> <span class="o">=</span> <span class="n">intensities</span> <span class="o">-</span> <span class="n">static</span>
+    <span class="n">den</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">zero</span> <span class="o">-</span> <span class="n">static</span><span class="p">,</span> <span class="n">EPS</span><span class="p">)</span>  <span class="c1"># Prevent division by zero</span>
+    <span class="n">absorbance</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">num</span> <span class="o">/</span> <span class="n">den</span><span class="p">,</span> <span class="n">EPS</span><span class="p">))</span>  <span class="c1"># Avoid log(0) or negative</span>
+    <span class="k">return</span> <span class="n">absorbance</span>
+
+<span class="c1"># Calculate absorbance for &quot;on&quot; and &quot;off&quot; intensities</span>
+<span class="n">A_on</span> <span class="o">=</span> <span class="n">compute_absorbance</span><span class="p">(</span><span class="n">I_on</span><span class="p">,</span> <span class="n">static</span><span class="p">,</span> <span class="n">zero</span><span class="p">)</span>
+<span class="n">A_off</span> <span class="o">=</span> <span class="n">compute_absorbance</span><span class="p">(</span><span class="n">I_off</span><span class="p">,</span> <span class="n">static</span><span class="p">,</span> <span class="n">zero</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="plot-absorbance-vs-time-for-selected-wavelengths">
+<h2>3. Plot Absorbance vs Time for Selected Wavelengths<a class="headerlink" href="#plot-absorbance-vs-time-for-selected-wavelengths" title="Link to this heading">#</a></h2>
+<p>In this section, we visualize the absorbance data over time for selected wavelengths (408 nm and 480 nm). This helps to assess the photofatigue effects at these specific wavelengths.</p>
+<ul class="simple">
+<li><p><strong>Plotting</strong>: We plot the absorbance for both “on” and “off” conditions for each of the selected wavelengths.</p></li>
+</ul>
+<p>The absorbance is shown as a function of time for the given wavelength range.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+
+<span class="c1"># Define target wavelengths (in nm)</span>
+<span class="n">wavelength_target</span> <span class="o">=</span> <span class="p">[</span><span class="mi">408</span><span class="p">,</span> <span class="mi">480</span><span class="p">]</span>
+<span class="n">wavelength_idxs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">wavelengths</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">wavelength_target</span><span class="p">)),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="c1"># Create the figure and axis</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">colors</span> <span class="o">=</span> <span class="p">[[</span><span class="s2">&quot;#FF00FF&quot;</span><span class="p">,</span> <span class="s2">&quot;#412544&quot;</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;blue&quot;</span><span class="p">,</span> <span class="s2">&quot;red&quot;</span><span class="p">]]</span>  <span class="c1"># Colors for different wavelengths</span>
+
+<span class="c1"># Plot absorbance over time for selected wavelengths</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">wavelength_idxs</span><span class="p">):</span>
+    <span class="n">t_combined</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">t_on</span><span class="p">,</span> <span class="n">t_off</span><span class="p">])</span>  <span class="c1"># Combine on and off times</span>
+    <span class="n">A_combined</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">A_on</span><span class="p">[:,</span> <span class="n">idx</span><span class="p">],</span> <span class="n">A_off</span><span class="p">[:,</span> <span class="n">idx</span><span class="p">]])</span>  <span class="c1"># Combine on and off absorbance</span>
+
+    <span class="c1"># Sort by time</span>
+    <span class="n">sorted_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">t_combined</span><span class="p">)</span>
+    <span class="n">t_sorted</span> <span class="o">=</span> <span class="n">t_combined</span><span class="p">[</span><span class="n">sorted_indices</span><span class="p">]</span>
+    <span class="n">A_sorted</span> <span class="o">=</span> <span class="n">A_combined</span><span class="p">[</span><span class="n">sorted_indices</span><span class="p">]</span>
+
+    <span class="c1"># Plot combined data</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+        <span class="n">t_sorted</span><span class="p">,</span> <span class="n">A_sorted</span><span class="p">,</span>
+        <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Fatigue @ </span><span class="si">{</span><span class="n">wavelengths</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> nm&quot;</span><span class="p">,</span>
+        <span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>  <span class="c1"># Color for each wavelength</span>
+        <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="n">alpha</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span>
+    <span class="p">)</span>
+
+<span class="c1"># Set axis labels and title</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Absorbance over Time&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Time (s)&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Absorbance&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+
+<span class="c1"># Add legend and grid</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">minorticks_on</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">which</span><span class="o">=</span><span class="s1">&#39;major&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.4</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">which</span><span class="o">=</span><span class="s1">&#39;minor&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+
+<span class="c1"># Ensure layout is tidy</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_axisbelow</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/fbe795587b5403bde0e9095f9297a52e54ec862edd65037a14b40550d164c30f.png" src="../_images/fbe795587b5403bde0e9095f9297a52e54ec862edd65037a14b40550d164c30f.png" />
+</div>
+</div>
+</section>
+<section id="adjust-absorbance-for-offset-and-plot">
+<h2>4. Adjust Absorbance for Offset and Plot<a class="headerlink" href="#adjust-absorbance-for-offset-and-plot" title="Link to this heading">#</a></h2>
+<p>Here, we adjust the absorbance data for the “on” and “off” conditions by subtracting the absorbance at a reference wavelength (550 nm) to account for baseline shifts. This correction ensures a more accurate comparison between wavelengths.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define target wavelengths</span>
+<span class="n">wavelength_target</span> <span class="o">=</span> <span class="p">[</span><span class="mi">480</span><span class="p">,</span> <span class="mi">408</span><span class="p">]</span>
+<span class="n">wavelength_idxs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">wavelengths</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">wavelength_target</span><span class="p">)),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="c1"># Reference wavelength for adjustment (e.g., 550 nm)</span>
+<span class="n">wlt</span> <span class="o">=</span> <span class="mi">550</span>
+<span class="n">id2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">wavelengths</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">wlt</span><span class="p">)))</span>
+
+<span class="c1"># Create the figure and axis</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">colors</span> <span class="o">=</span> <span class="p">[[</span><span class="s2">&quot;#FF00FF&quot;</span><span class="p">,</span> <span class="s2">&quot;#412544&quot;</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;blue&quot;</span><span class="p">,</span> <span class="s2">&quot;red&quot;</span><span class="p">]]</span>  <span class="c1"># Colors for different wavelengths</span>
+
+<span class="c1"># Plot absorbance over time with adjustments</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">wavelength_idxs</span><span class="p">):</span>
+    <span class="c1"># Adjust &quot;on&quot; absorbance data</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+        <span class="n">A_on</span><span class="p">[:,</span> <span class="n">idx</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">*</span> <span class="p">(</span><span class="n">A_on</span><span class="p">[:,</span> <span class="n">id2</span><span class="p">]</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">A_on</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">id2</span><span class="p">])),</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span>
+        <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;On @ </span><span class="si">{</span><span class="n">wavelengths</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> nm&quot;</span><span class="p">,</span>
+        <span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
+        <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Adjust &quot;off&quot; absorbance data</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+        <span class="n">A_off</span><span class="p">[:,</span> <span class="n">idx</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">*</span> <span class="p">(</span><span class="n">A_off</span><span class="p">[:,</span> <span class="n">id2</span><span class="p">]</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">A_off</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">id2</span><span class="p">])),</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span>
+        <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Off @ </span><span class="si">{</span><span class="n">wavelengths</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> nm&quot;</span><span class="p">,</span>
+        <span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span>
+        <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span>
+    <span class="p">)</span>
+
+<span class="c1"># Set axis labels and title</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Absorbance over Time at Selected Wavelengths&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Time (s)&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Absorbance&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+
+<span class="c1"># Add legend and grid</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">minorticks_on</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">which</span><span class="o">=</span><span class="s1">&#39;major&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.4</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">which</span><span class="o">=</span><span class="s1">&#39;minor&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+
+<span class="c1"># Ensure layout is tidy</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_axisbelow</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/d91038d757ef55d7d7f9c06685d464cb5fd5171f380b5ceeee7203217293393f.png" src="../_images/d91038d757ef55d7d7f9c06685d464cb5fd5171f380b5ceeee7203217293393f.png" />
+</div>
+</div>
+</section>
+<section id="linear-fit-and-time-constant-estimation">
+<h2>5. Linear Fit and Time Constant Estimation<a class="headerlink" href="#linear-fit-and-time-constant-estimation" title="Link to this heading">#</a></h2>
+<p>We now perform a linear regression on the absorbance data to estimate the time constant (τ) for the photofatigue process. This is calculated by fitting the absorbance data to a linear model, where the slope gives us the decay rate.</p>
+<ul class="simple">
+<li><p><strong>Linear regression</strong>: We fit the absorbance data after the initial part of the signal (after 50 seconds) to a linear model.</p></li>
+<li><p><strong>Time constant</strong>: From the linear regression results, we calculate the time constant as $( \tau_{1/2} = \frac{-\text{intercept}}{2 \times \text{slope}} )$, and express it in hours.</p></li>
+</ul>
+<p>The time constant helps to quantify the rate of photofatigue.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">linregress</span>
+
+<span class="c1"># Define target wavelength (480 nm)</span>
+<span class="n">wavelength_target</span> <span class="o">=</span> <span class="p">[</span><span class="mi">480</span><span class="p">]</span>
+<span class="n">wavelength_idxs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">wavelengths</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">wavelength_target</span><span class="p">)),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="c1"># Create the figure and axis</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">colors</span> <span class="o">=</span> <span class="p">[[</span><span class="s2">&quot;#FF00FF&quot;</span><span class="p">,</span> <span class="s2">&quot;#412544&quot;</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;blue&quot;</span><span class="p">,</span> <span class="s2">&quot;red&quot;</span><span class="p">]]</span>  <span class="c1"># Colors for different wavelengths</span>
+
+<span class="c1"># Compute adjusted absorbance data</span>
+<span class="n">dat</span> <span class="o">=</span> <span class="n">A_on</span><span class="p">[:,</span> <span class="n">idx</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">*</span> <span class="p">(</span><span class="n">A_on</span><span class="p">[:,</span> <span class="n">id2</span><span class="p">]</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">A_on</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">id2</span><span class="p">]))</span>
+
+<span class="c1"># Plot absorbance data with linear regression</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">wavelength_idxs</span><span class="p">):</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">t_on</span><span class="p">[</span><span class="mi">50</span><span class="p">:]</span>  <span class="c1"># Start from second 50 onward</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">dat</span><span class="p">[</span><span class="mi">50</span><span class="p">:]</span>
+
+    <span class="c1"># Plot raw absorbance data</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;On @ </span><span class="si">{</span><span class="n">wavelengths</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> nm&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+    <span class="c1"># Perform linear regression</span>
+    <span class="n">slope</span><span class="p">,</span> <span class="n">intercept</span><span class="p">,</span> <span class="n">r_value</span><span class="p">,</span> <span class="n">p_value</span><span class="p">,</span> <span class="n">std_err</span> <span class="o">=</span> <span class="n">linregress</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+    <span class="n">y_fit</span> <span class="o">=</span> <span class="n">slope</span> <span class="o">*</span> <span class="n">t</span> <span class="o">+</span> <span class="n">intercept</span>
+
+    <span class="c1"># Plot regression line and annotate with R^2 and time constant</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">y_fit</span><span class="p">,</span> <span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Linear Fit @ </span><span class="si">{</span><span class="n">wavelengths</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> nm (R²=</span><span class="si">{</span><span class="n">r_value</span><span class="o">**</span><span class="mi">2</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">), τ₁/₂=</span><span class="si">{</span><span class="o">-</span><span class="n">intercept</span><span class="o">/</span><span class="mi">2</span><span class="o">*</span><span class="mi">1</span><span class="o">/</span><span class="n">slope</span><span class="o">/</span><span class="mi">60</span><span class="o">/</span><span class="mi">60</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2">h&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="c1"># Set axis labels and title</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Absorbance over Time at Selected Wavelengths&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Time (s)&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Absorbance&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+
+<span class="c1"># Add legend and grid</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">minorticks_on</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">which</span><span class="o">=</span><span class="s1">&#39;major&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.4</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">which</span><span class="o">=</span><span class="s1">&#39;minor&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+
+<span class="c1"># Final layout</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_axisbelow</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/0d89efd2223b628b673a090bef39e687ba63c37bab571cbfe535d3058d7e734c.png" src="../_images/0d89efd2223b628b673a090bef39e687ba63c37bab571cbfe535d3058d7e734c.png" />
+</div>
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="customseq.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Custom Sequence</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="qy.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Quantum Yield Measurments</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#import-data-and-preprocess-for-photofatigue-measurements">1. Import Data and Preprocess for Photofatigue Measurements</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-preparation-intensity-arrays-absorbance-calculation">2. Data Preparation: Intensity Arrays &amp; Absorbance Calculation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#plot-absorbance-vs-time-for-selected-wavelengths">3. Plot Absorbance vs Time for Selected Wavelengths</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#adjust-absorbance-for-offset-and-plot">4. Adjust Absorbance for Offset and Plot</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#linear-fit-and-time-constant-estimation">5. Linear Fit and Time Constant Estimation</a></li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/examples/photo_fatigue.ipynb.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2025, Alexis C.
+      <br/>
+    
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+  </body>
+</html>
